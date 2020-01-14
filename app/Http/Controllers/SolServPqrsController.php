@@ -23,7 +23,7 @@ class SolServPqrsController extends Controller
 
             $solucion = new SolServPqrs();
              // $solucion = SolServPqrs::findOrFail($request->id);
-             $solucion->id_servpqrs = $request->id_servpqrs;        
+             $solucion->id_serv_pqrs = $request->id_servpqrs;        
              $solucion->solucion = $request->solucion;        
              $solucion->fecha = $mytime->toDateTimeString();      
              $solucion->id_tecnico = \Auth::user()->id;        

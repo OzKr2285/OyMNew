@@ -129,20 +129,27 @@
                       </template>
                     </td>
                     <td>
-                      <md-button
+                      <md-button v-show="objeto.edo==2"
+                        class="md-icon-button"
+                        @click="abrirModal4(objeto)"
+                        title="Actualizar"
+                      >
+                        <i class="material-icons Color1">archive</i>
+                      </md-button>
+                      <md-button v-show="objeto.edo!=2"
                         class="md-icon-button"
                         @click="mostrarActualizar(objeto)"
                         title="Actualizar"
                       >
                         <i class="material-icons Color3">edit</i>
                       </md-button>
-                      <md-button
+                      <!-- <md-button
                         class="md-icon-button md-primary"
                         @click="eliminarEstacion(objeto)"
                         title="Eliminar"
                       >
                         <i class="material-icons Color4">delete</i>
-                      </md-button>
+                      </md-button> -->
                     </td>
                   </tr>
                 </tbody>
@@ -972,6 +979,125 @@
     <!-- /.modal-dialog -->
 
     <!--Fin del modal-->
+    <!--Inicio del modal agregar/actualizar-->
+    <div
+      class="modal fade"
+      tabindex="-1"
+      :class="{ mostrar: modal4 }"
+      role="dialog"
+      aria-labelledby="myModalLabel"
+      style="display: none;"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dark modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" v-text="tituloModal"></h4>
+            <button type="button" class="close" @click="cerrarModal4()" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group row">
+              <div class="col-md-6">
+                <div class="input-group">
+                  <button
+                    type="submit"
+                    @click="getPerso(1, buscar, this.criterio)"
+                    class="btn btn-primary"
+                  >
+                    <i class="fa fa-search"></i> Buscar
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped table-sm">
+                <thead>
+                  <tr>
+                    <th>Ticket</th>
+                    <th>Fecha</th>
+                    <th>Descripción</th>
+                    <th>Selección</th>
+                  </tr>
+                </thead>
+                <tbody v-if="arrayDispoA.length">
+                  <tr v-for="(objeto, index) in arrayDispoA" :key="`objeto-${index}`">
+                    <td v-text="objeto.idticket"></td>
+                    <td v-text="objeto.fecha"></td>
+                    <td v-text="objeto.desc"></td>
+                    <td>
+                      <button
+                        type="button"
+                        @click="agregarDispoA(objeto)"
+                        class="btn btn-success btn-sm"
+                      >
+                        <i class="icon-check"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody v-else>
+                  <tr>
+                    <td colspan="5">NO hay Disponibilidades APROBADAS.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <nav>
+              <ul class="pagination">
+                <li class="page-item" v-if="pagination.current_page > 1">
+                  <a
+                    class="page-link"
+                    href="#"
+                    @click.prevent="
+                      cambiarPaginaTec(
+                        pagination.current_page - 1,
+                        buscar,
+                        criterio
+                      )
+                    "
+                  >Ant</a>
+                </li>
+                <li
+                  class="page-item"
+                  v-for="page in pagesNumber"
+                  :key="page"
+                  :class="[page == isActived ? 'active' : '']"
+                >
+                  <a
+                    class="page-link"
+                    href="#"
+                    @click.prevent="cambiarPaginaTec(page, buscar, criterio)"
+                    v-text="page"
+                  ></a>
+                </li>
+                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+                  <a
+                    class="page-link"
+                    href="#"
+                    @click.prevent="
+                      cambiarPaginaTec(
+                        pagination.current_page + 1,
+                        buscar,
+                        criterio
+                      )
+                    "
+                  >Sig</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="cerrarModal4()">Cerrar</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+    </div>
+    <!-- /.modal-dialog -->
+
+    <!--Fin del modal-->
   </main>
 </template>
 
@@ -1044,6 +1170,7 @@ export default {
       modal5: 0,
       modal2: 0,
       modal3: 0,
+      modal4: 0,
       mostrarDisp: 0,
       idArea: 0,
       fecI: format(now, dateFormat),
@@ -1260,6 +1387,16 @@ export default {
     },
     cerrarModal3() {
       this.modal3 = 0;
+      this.tituloModal = "";
+    },
+    abrirModal4(data=[]) {
+      // this.idRefE=data["idref"];
+      this.modal4 = 1;
+      this.tituloModal = "Cerrar caso # " + data["id"] + " - " + data["nombreFull"];
+      this.getDispoA(1, this.buscar, this.criterio);
+    },
+    cerrarModal4() {
+      this.modal4 = 0;
       this.tituloModal = "";
     },
     abrirModal5() {
