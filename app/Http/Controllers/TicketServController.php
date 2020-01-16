@@ -65,6 +65,43 @@ class TicketServController extends Controller
             'ticket' => $ticket 
         ];
     }
+    public function indexFecha(Request $request)
+    {
+        // if (!$request->ajax()) return redirect('/');
+
+        $fecI = $request->fecI;
+        $fecF = $request->fecF;
+        
+
+            $ticket = TicketServ::join('personas','serv_pqrs.id_usuario','=','personas.id')  
+            ->join('personas as p','serv_pqrs.id_lider','=','p.id')  
+            ->join('cargos','p.id_cargo','=','cargos.id')
+            ->join('areas','cargos.id_area','=','areas.id')   
+            ->join('mpios','personas.id_mpio','=','mpios.id')
+            ->join('objpqrs','serv_pqrs.id_objpqrs','=','objpqrs.id')
+            ->join('categorias','objpqrs.id_cat','=','categorias.id')
+            ->select('serv_pqrs.id as idticket','serv_pqrs.fecha','personas.id','personas.nombreFull','personas.nombres','personas.apellidos',
+            'personas.email','personas.direccion','mpios.nombre as mpio','personas.telefono', 'categorias.id as idCat','categorias.nombre as nomCat',
+            'objpqrs.id as idObjpqrs','objpqrs.nombre','serv_pqrs.desc','serv_pqrs.prioridad','serv_pqrs.medio','serv_pqrs.edo','areas.id as idArea',
+            'areas.nombre as nomArea','p.id_cargo as idCargo','cargos.nombre as nomCargo','serv_pqrs.id_lider' )
+            ->whereBetween('serv_pqrs.fecha',[$fecI,$fecF])  
+            // ->orwhere('categorias.id',$buscar)
+            ->orderBy('serv_pqrs.fecha' , 'desc')->orderBy('serv_pqrs.prioridad' , 'asc')->paginate(15);
+        
+        
+
+        return [
+            'pagination' => [
+                'total'        => $ticket ->total(),
+                'current_page' => $ticket ->currentPage(),
+                'per_page'     => $ticket ->perPage(),
+                'last_page'    => $ticket ->lastPage(),
+                'from'         => $ticket ->firstItem(),
+                'to'           => $ticket ->lastItem(),
+            ],
+            'ticket' => $ticket 
+        ];
+    }
     public function indexEstado(Request $request)
     {
         // if (!$request->ajax()) return redirect('/');

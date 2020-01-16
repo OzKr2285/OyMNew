@@ -1185,7 +1185,7 @@ export default {
 
             axios
                 .post("/SolServPqrs/registrar", {
-                    id_servpqrs: this.idUsuario,
+                    id_servpqrs: this.ticket_id,
                     solucion: this.solucion                
                 })
                 .then(function (response) {

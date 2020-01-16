@@ -22,6 +22,14 @@
             <i class="fas fa-clipboard-check"></i>&nbsp;
           </button>
           <button
+            title="Solicitudes Asignadas"
+            type="button"
+            @click="listarDatosEdo(1, 1, this.criterio)"
+            class="btn btn-info btn-sm"
+          >
+            <i class="fas fa-clipboard-check"></i>&nbsp;
+          </button>
+          <button
             title="Disponibilidades Aprobadas"
             type="button"
             @click="abrirModal3"
@@ -53,7 +61,7 @@
                 <md-datepicker
                   v-model="fecI"
                   value="fecI"
-                  @input="toString"
+                  @input="listarDatosFecha(1)"
                   md-immediately
                   :md-model-type="String"
                 >
@@ -64,7 +72,7 @@
                 <md-datepicker
                   v-model="fecF"
                   value="fecF"
-                  @input="toString"
+                  @input="listarDatosFecha(1)"
                   md-immediately
                   :md-model-type="String"
                 >
@@ -72,7 +80,7 @@
                 </md-datepicker>
               </div>&nbsp;&nbsp;&nbsp;
               <!-- <div class="md-layout-item">                                         -->
-              <md-checkbox v-model="demo">Finalizados</md-checkbox>
+              <!-- <md-checkbox v-model="demo">Finalizados</md-checkbox> -->
               <!-- </div> -->
             </div>
             <div class="table-responsive">
@@ -125,7 +133,7 @@
                         <span class="badge badge-success">Solucionado</span>
                       </template>
                       <template else v-if="objeto.edo==3">
-                        <span class="badge badge-success">Cerrado</span>
+                        <span class="badge badge-dark">Cerrado</span>
                       </template>
                     </td>
                     <td>
@@ -998,98 +1006,69 @@
             </button>
           </div>
           <div class="modal-body">
-            <div class="form-group row">
-              <div class="col-md-6">
-                <div class="input-group">
-                  <button
-                    type="submit"
-                    @click="getPerso(1, buscar, this.criterio)"
-                    class="btn btn-primary"
-                  >
-                    <i class="fa fa-search"></i> Buscar
-                  </button>
-                </div>
+            <!-- <div class="form-group row">
+              <div class="col-md-12"> -->
+               
+              <div class="md-layout">
+              <div class="md-layout-item">
+                  <span class="md-body">Tipo de Respuesta</span>
+                  <multiselect
+                    v-model="arrayRta"
+                    :options="arrayTpRta"
+                    placeholder="Seleccione un Tipo"
+                    :custom-label="nameWithMedio"
+                    label="name"
+                    track-by="name"
+                  ></multiselect>
+              </div>&nbsp;&nbsp;&nbsp;
+              <div class="md-layout-item">
+                  <span class="md-body">Tipo de Notificación</span>
+                  <multiselect
+                    v-model="arrayM"
+                    :options="arrayTpPres"
+                    placeholder="Seleccione un Medio"
+                    :custom-label="nameWithMedio"
+                    label="name"
+                    track-by="name"
+                  ></multiselect>
+              </div>&nbsp;&nbsp;&nbsp;
+              <div class="md-layout-item">
+                <span class="md-body">Fecha Notificación</span>
+                <datepicker @input="toString2" v-model="fecN" value="fecN" format="yyyy-MM-dd" placeholder="Seleccione Fecha"></datepicker>
+                <!-- <VueDatePicker v-model="fecN"/> -->
               </div>
+              </div>
+              <div class="md-layout">
+                  <md-field>
+                      <label>Descripción</label>
+                      <md-textarea v-model="descCierre"></md-textarea>
+                      <md-icon>description</md-icon>
+                  </md-field>
+              </div>
+              <div class="md-layout">
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                  Detalles...
+                </button>
+            <div class="collapse" id="collapseExample">
+              <div class="card card-body">
+                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+              </div>
+               </div>
             </div>
-            <div class="table-responsive">
-              <table class="table table-bordered table-striped table-sm">
-                <thead>
-                  <tr>
-                    <th>Ticket</th>
-                    <th>Fecha</th>
-                    <th>Descripción</th>
-                    <th>Selección</th>
-                  </tr>
-                </thead>
-                <tbody v-if="arrayDispoA.length">
-                  <tr v-for="(objeto, index) in arrayDispoA" :key="`objeto-${index}`">
-                    <td v-text="objeto.idticket"></td>
-                    <td v-text="objeto.fecha"></td>
-                    <td v-text="objeto.desc"></td>
-                    <td>
-                      <button
-                        type="button"
-                        @click="agregarDispoA(objeto)"
-                        class="btn btn-success btn-sm"
-                      >
-                        <i class="icon-check"></i>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-                <tbody v-else>
-                  <tr>
-                    <td colspan="5">NO hay Disponibilidades APROBADAS.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <nav>
-              <ul class="pagination">
-                <li class="page-item" v-if="pagination.current_page > 1">
-                  <a
-                    class="page-link"
-                    href="#"
-                    @click.prevent="
-                      cambiarPaginaTec(
-                        pagination.current_page - 1,
-                        buscar,
-                        criterio
-                      )
-                    "
-                  >Ant</a>
-                </li>
-                <li
-                  class="page-item"
-                  v-for="page in pagesNumber"
-                  :key="page"
-                  :class="[page == isActived ? 'active' : '']"
-                >
-                  <a
-                    class="page-link"
-                    href="#"
-                    @click.prevent="cambiarPaginaTec(page, buscar, criterio)"
-                    v-text="page"
-                  ></a>
-                </li>
-                <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                  <a
-                    class="page-link"
-                    href="#"
-                    @click.prevent="
-                      cambiarPaginaTec(
-                        pagination.current_page + 1,
-                        buscar,
-                        criterio
-                      )
-                    "
-                  >Sig</a>
-                </li>
-              </ul>
-            </nav>
+               
+              <!-- </div>
+            </div> -->
+      
+       
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" @click="cerrarModal4()">Cerrar</button>
+              <md-button
+                type="submit"                
+                class="md-dense md-raised md-primary"
+                :disabled="sending"
+                @click="registrarCierreServPqrs()"
+              >Guardar</md-button>           
           </div>
         </div>
         <!-- /.modal-content -->
@@ -1103,8 +1082,13 @@
 
 <script>
 import format from "date-fns/format";
+import Datepicker from 'vuejs-datepicker';
 import Multiselect from "vue-multiselect";
 import { validationMixin } from "vuelidate";
+// import VueDatePicker from '@mathieustan/vue-datepicker';
+// Vue.use(VueDatePicker, {
+//   lang: 'es'
+// });
 import {
   MdButton,
   MdContent,
@@ -1117,6 +1101,7 @@ import {
 } from "vue-material/dist/components";
 // import VueMaterial from 'vue-material'
 // Vue.use(VueMaterial)
+import moment from 'moment';
 import vSelect from "vue-select";
 
 Vue.component("v-select", vSelect);
@@ -1133,7 +1118,8 @@ import { required, minLength } from "vuelidate/lib/validators";
 export default {
   mixins: [validationMixin],
   components: {
-    Multiselect
+    Multiselect,
+    Datepicker
   },
   data() {
     let dateFormat = this.$material.locale.dateFormat || "yyyy-MM-dd";
@@ -1163,6 +1149,7 @@ export default {
       telefono: "",
       direccion: "",
       observacion: "",
+      descCierre: "",
       nomTecnico: "",
       isPetPQR: 0,
       isPetR: 0,
@@ -1175,6 +1162,8 @@ export default {
       idArea: 0,
       fecI: format(now, dateFormat),
       fecF: format(now, dateFormat),
+      fecN: format(now, dateFormat),
+      fecN2: "",
       // Genero M-F
       arrayPrioridad: [
         { id: "N", name: "Normal" },
@@ -1200,12 +1189,22 @@ export default {
         { id: "02", name: "NOTIFICACIÓN POR EDICTO" },
         { id: "03", name: "NO APLICA" }
       ],
+      arrayTpRta: [
+        { id: "01", name: "ACCEDE" },
+        { id: "02", name: "ACCEDE PARCIALMENTE" },
+        { id: "03", name: "NO ACCEDE" },
+        { id: "04", name: "CONFIRMA DECISIÓN" },
+        { id: "05", name: "MODIFICA" },
+        { id: "06", name: "REVOCA" },
+        { id: "07", name: "RECHAZA" }
+      ],
       // array select
       arrayO: { id: 0, nombre: "Seleccione" },
       arrayC: { id: 0, nombre: "Seleccione" },
       arrayCA: { id: 0, nombre: "Seleccione" },
       arrayA: { id: 0, nombre: "Seleccione" },
-      arrayM: { id: "T", nombre: "Seleccione" },
+      arrayM: { id: "T", name: "Seleccione" },
+      arrayRta: { id: 0, name: "Seleccione un tipo" },
       arrayP: { id: "N", nombre: "Seleccione" },
       arrayTC: { id: "", nombre: "Seleccione" },
       arrayTT: { id: 0, nombre: "Seleccione" },
@@ -1319,7 +1318,12 @@ export default {
       this.dynamicByModel =
         this.dynamicByModel && format(this.dynamicByModel, this.dateFormat);
     },
+    toString2() {       
+         this.fecN2 = this.fecN && format(this.fecN, this.dateFormat);
+        //  this.fecN = moment(this.fecN).format("YYYY-MM-DD");
+    },
     toDate() {
+      
       switch (this.type) {
         case "string":
           this.dynamicByModel = parse(
@@ -1391,8 +1395,9 @@ export default {
     },
     abrirModal4(data=[]) {
       // this.idRefE=data["idref"];
+      this.ticket_id = data["idticket"];
       this.modal4 = 1;
-      this.tituloModal = "Cerrar caso # " + data["id"] + " - " + data["nombreFull"];
+      this.tituloModal = "Cerrar caso # " + data["idticket"] + " - " + data["nombreFull"];
       this.getDispoA(1, this.buscar, this.criterio);
     },
     cerrarModal4() {
@@ -1809,7 +1814,7 @@ export default {
       let me = this;
       (this.tipoAccion = 2), (me.listado = 0);
       (this.form.cedula = data["id"]),
-        (this.ticket_id = data["id"]);
+        (this.ticket_id = data["idticket"]);
       this.idCategoria = data["idCat"];
       this.idObjeto = data["idObjpqrs"];
       this.form.nombres = data["nombres"];
@@ -1845,6 +1850,26 @@ export default {
         buscar +
         "&criterio=" +
         criterio;
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayDatos = respuesta.ticket.data;
+          me.pagination = respuesta.pagination;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    listarDatosFecha(page) {
+      let me = this;
+      var url =
+        "/ticketserv/fecha?page=" +
+        page +
+        "&fecI=" +
+        me.fecI +
+        "&fecF=" +
+        me.fecF;
       axios
         .get(url)
         .then(function(response) {
@@ -1912,6 +1937,28 @@ export default {
           console.log(error);
         });
     },
+       registrarCierreServPqrs() {
+      let me = this;
+
+      axios
+        .post("/cierrepqrs/registrar", {          
+          id_servpqrs: this.ticket_id,
+          fecha: this.fecN2,
+          estado:3,
+          desc: this.descCierre.toUpperCase(),
+          tpRta: this.arrayTpRta.id,
+          tpNotifica: this.arrayM.id
+
+        })
+        .then(function(response) {
+          me.ocultarDetalle();
+          me.listarDatos(1, "", "nombre");
+          me.mensaje("Actualizado", "Actualizó ");
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
     actualizarEstacion() {
       let me = this;
 
@@ -1951,7 +1998,7 @@ export default {
       }).then(result => {
         if (result.value) {
           let me = this;
-          this.ticket_id = data["id"];
+          this.ticket_id = data["idticket"];
           axios
             .post("/estacion/eliminar", {
               id: this.ticket_id
@@ -1993,8 +2040,9 @@ export default {
 .mostrar {
   display: list-item !important;
   opacity: 1 !important;
-  position: absolute !important;
+  position: fixed !important;
   background-color: #3c29297a !important;
+
 }
 .div-error {
   display: flex;

@@ -14,7 +14,7 @@
 Route::group(['middleware'=>['guest']],function(){
     Route::get('/','Auth\LoginController@showLoginForm');
     Route::post('/login', 'Auth\LoginController@login')->name('login');
-    Route::get('/login', 'Auth\LoginController@login');
+    // Route::get('/login', 'Auth\LoginController@login');
 });
 
 Route::group(['middleware'=>['auth']],function(){
@@ -117,6 +117,8 @@ Route::group(['middleware'=>['auth']],function(){
         Route::post('/catserv/registrar', 'CatServiciosController@store');
         Route::put('/catserv/actualizar', 'CatServiciosController@update');
         Route::get('/catserv/selectCategoria', 'CatServiciosController@selectCategoria');
+
+        Route::post('/cierrepqrs/registrar', 'CierrePqrsServController@store');
 
         Route::get('/cliente', 'ClienteController@index');
         Route::get('/tecnico', 'ClienteController@index2');
@@ -338,6 +340,7 @@ Route::group(['middleware'=>['auth']],function(){
         Route::get('/tecserv/detTecnicos', 'TecServPqrsController@detTecnicos');
 
         Route::get('/ticketserv', 'TicketServController@index');
+        Route::get('/ticketserv/fecha', 'TicketServController@indexFecha');
         Route::get('/ticketserv/estado', 'TicketServController@indexEstado');
         Route::get('/ticketserv/getDispo', 'TicketServController@getDispo');
         Route::get('/ticketserv/getDispoA', 'TicketServController@getDispoA');
