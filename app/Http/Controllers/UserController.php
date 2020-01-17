@@ -22,7 +22,7 @@ class UserController extends Controller
         if ($buscar==''){
             $personas = User::join('personas','users.id','=','personas.id')
             ->join('roles','users.idrol','=','roles.id')
-            ->select('personas.id','personas.nombre','personas.tp_doc','personas.num_doc','personas.direccion','personas.telefono','personas.email','users.usuario','users.password','users.condicion','users.idrol','roles.nombre as rol')
+            ->select('personas.id','personas.nombreFull','personas.nombres','personas.apellidos','personas.tp_doc','personas.num_doc','personas.direccion','personas.telefono','personas.email','users.usuario','users.password','users.condicion','users.idrol','roles.nombre as rol')
             ->orderBy('personas.id', 'desc')->paginate(15);
         }
         else{
@@ -49,12 +49,14 @@ class UserController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
 
+        
         try{
             DB::beginTransaction();
 
             $persona = new Persona();
             $persona->id = $request->id;
             $persona->nombres = $request->nombre;
+            $persona->apellidos = $request->apeliido;
             $persona->tp_doc = $request->tp_doc;
             $persona->num_doc = $request->num_doc;
             $persona->direccion = $request->direccion;
@@ -81,29 +83,53 @@ class UserController extends Controller
         if (!$request->ajax()) return redirect('/');
 
         try{
-            DB::beginTransaction();
 
-            $user = User::findOrFail($request->id);
-            $persona = Persona::findOrFail($user->id);
-            $persona->nombre = $request->nombre;
-            $persona->tp_doc = $request->tipo_doc;
-            $persona->num_doc = $request->num_documento;
-            $persona->direccion = $request->direccion;
-            $persona->telefono = $request->telefono;
-            $persona->email = $request->email;
-            $persona->save();
+                DB::beginTransaction();
 
-            
-            $user->usuario = $request->usuario;
-            $user->password = bcrypt( $request->password);
-            $user->condicion = '1';
-            $user->idrol = $request->idrol;
-            $user->save();
+                $user = User::findOrFail($request->id);
+                $persona = Persona::findOrFail($user->id);
+                $persona->nombres = $request->nombre;
+                $persona->apellidos = $request->apellido;
+                $persona->tp_doc = $request->tipo_doc;
+                $persona->num_doc = $request->num_documento;
+                $persona->direccion = $request->direccion;
+                $persona->telefono = $request->telefono;
+                $persona->email = $request->email;
+                $persona->save();
 
-            DB::commit();
+                $user->usuario = $request->usuario;
+                $user->password = bcrypt( $request->password);
+                $user->condicion = '1';
+                $user->idrol = $request->idrol;
+                $user->save();
+
+                DB::commit();
+            // }
         } catch (Exception $e){
             DB::rollBack();
         }
+        
+    }
+    public function updatePw(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+
+        try{
+
+                DB::beginTransaction();
+
+                $user = User::findOrFail($request->id);
+
+
+                $user->password = bcrypt( $request->password);
+                $user->save();
+
+                DB::commit();
+            // }
+        } catch (Exception $e){
+            DB::rollBack();
+        }
+        
     }
 
     public function desactivar(Request $request)

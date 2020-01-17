@@ -379,6 +379,7 @@ Route::group(['middleware'=>['auth']],function(){
         Route::get('user/export/', 'UserController@export');
         Route::post('/user/registrar', 'UserController@store');
         Route::put('/user/actualizar', 'UserController@update');
+        Route::put('/user/actualizarPw', 'UserController@updatePw');
         Route::put('/user/desactivar', 'UserController@desactivar');
         Route::put('/user/activar', 'UserController@activar');
 

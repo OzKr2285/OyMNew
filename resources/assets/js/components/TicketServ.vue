@@ -2056,7 +2056,7 @@ export default {
   color: rgb(31, 33, 34);
 }
 .material-icons.Color2 {
-  color: rgba(167, 142, 5, 0.849);
+  color: rgba(255, 162, 23, 0.849);
 }
 .material-icons.Color3 {
   color: rgb(12, 170, 91);
