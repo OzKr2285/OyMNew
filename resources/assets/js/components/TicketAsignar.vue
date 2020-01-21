@@ -1569,7 +1569,7 @@ export default {
           direccion: this.direccion,
           telefono: this.telefono,
           nomTecnico: this.nomTecnico,
-          email: this.form.email.toUpperCase(),
+          email: this.form.email,
           desc: this.observacion.toUpperCase(),
           id: this.ticket_id,
            data: this.arrayTec,

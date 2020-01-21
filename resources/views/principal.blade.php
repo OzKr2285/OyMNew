@@ -97,7 +97,7 @@
                 @elseif (Auth::user()->idrol == 2)
                     @include('plantilla.sidebarTecnico')
                 @elseif (Auth::user()->idrol == 3)
-                    @include('plantilla.sidebarSupervisor')
+                    @include('plantilla.sidebarCoordinador')
                 @else
 
                 @endif

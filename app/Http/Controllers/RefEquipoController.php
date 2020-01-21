@@ -62,11 +62,21 @@ class RefEquipoController extends Controller
     
     }
     public function selectRefEquipo(Request $request){
-        if (!$request->ajax()) return redirect('/');
+        // if (!$request->ajax()) return redirect('/');
         $buscar = $request->buscar;           
         $refequipo = RefEquipo::join('tp_equipos','ref_equipos.id_tpequipo','=','tp_equipos.id')
         ->select('ref_equipos.id','ref_equipos.nombre')
         ->where('ref_equipos.id_tpequipo',$buscar)
+        ->orderBy('ref_equipos.nombre', 'asc')->get();
+
+      return ['refequipo' => $refequipo];
+  }
+    public function selectRefEquipoComp(Request $request){
+        // if (!$request->ajax()) return redirect('/');
+        $buscar = $request->buscar;           
+        $refequipo = RefEquipo::join('tp_equipos','ref_equipos.id_tpequipo','=','tp_equipos.id')
+        ->select('ref_equipos.id','ref_equipos.nombre')
+        ->where('ref_equipos.id_tpequipo',12)
         ->orderBy('ref_equipos.nombre', 'asc')->get();
 
       return ['refequipo' => $refequipo];

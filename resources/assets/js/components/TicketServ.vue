@@ -44,14 +44,14 @@
               <div class="md-layout-item">
                 <md-field md-clearable>
                   <label>Qué desea Buscar</label>
-                  <md-input v-model="buscar" @keypress="listarDatos(page, buscar, criterio)"></md-input>
+                  <md-input v-model="buscar" @keypress="listarDatos(1, buscar, criterio)"></md-input>
                 </md-field>
               </div>&nbsp;&nbsp;&nbsp;
               <div class="md-layout-item">
                 <br />
                 <md-button
                   class="md-icon-button md-dense md-raised md-primary"
-                  @click="listarDatos(page, buscar, criterio)"
+                  @click="listarDatos(1, buscar, criterio)"
                 >
                   <md-icon>search</md-icon>
                 </md-button>

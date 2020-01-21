@@ -167,17 +167,17 @@
                   </div>&nbsp;&nbsp;&nbsp;
                   <div class="md-layout-item">
                     <md-field md-clearable>
-                      <label>Tipo de Equipo</label>
+                      <label>Seleccione una Oficina</label>
                       <md-select v-model="idTpEstacion" md-dense @input="getEstacion">
                         <md-option
-                          v-for="(tpestacion,index) in arrayTpEstacion"
+                          v-for="(tpestacion,index) in arrayOficina"
                           :key="`tpestacion-${index}`"
                           :value="tpestacion.id"
                         >{{tpestacion.nombre}}</md-option>
                       </md-select>
                     </md-field>
                   </div>&nbsp;&nbsp;&nbsp;
-                  <div class="md-layout-item">
+                  <!-- <div class="md-layout-item">
                     <md-field md-clearable>
                       <label>Equipo</label>
                       <md-select v-model="idEstacion" md-dense  @input="getNomEstacion">
@@ -188,7 +188,7 @@
                         >{{estacion.nombre}}</md-option>
                       </md-select>
                     </md-field>
-                  </div>
+                  </div> -->
                 </div>
                 <div class="md-layout"></div>
 
@@ -1374,6 +1374,7 @@ export default {
       arrayTrenByPass: [],
       arrayEquipoEtapa: [],
       arrayEstacion: [],
+      arrayOficina: [],
       arrayNomEstacion: [],
       arrayTpEstacion: [],
       arrayEtapa: [],
@@ -1591,6 +1592,21 @@ export default {
       this.bEtapa = 0;
       this.bDetEtapa = 0;
       this.getExEtapa1();
+    },
+        getOficina() {
+      let me = this;
+
+      var url = "/oficina/selectOficina";
+      axios
+        .get(url)
+        .then(function(response) {
+          //console.log(response);
+          var respuesta = response.data;
+          me.arrayOficina = respuesta.oficina;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     verEquipos(data = []) {
       this.bVerE=1;
@@ -2284,6 +2300,7 @@ export default {
     this.getPerso(1,this.buscar, this.criterio);
     this.listarMto(1,this.buscar, this.criterio);
     this.getTpEstacion();
+      this.getOficina();
     // this.getEtapa();
     this.listarEstacion(1, this.buscar, this.criterio);
     this.listarExEtapa(1, this.buscar, this.criterio);

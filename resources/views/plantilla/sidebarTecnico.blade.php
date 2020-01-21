@@ -61,7 +61,7 @@
                        
                             </ul>
                         </div>
-                        <li class="sidebar-dropdown">
+                        <!-- <li class="sidebar-dropdown">
                         <a href="#">
                             <i class="fa fa-globe"></i>
                             <span class="menu-text">PQR´S</span>
@@ -79,7 +79,7 @@
                             </li>
                             </ul>
                         </div>
-                    </li>
+                    </li> -->
                         <!-- <li class="header-menu">
                             <span>PQR´S</span>
                          </li> -->

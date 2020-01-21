@@ -22,7 +22,7 @@
             alt="User picture">
         </div>
         <div class="user-info">
-            <span class="user-name">OzKr
+            <span class="user-name">
             <strong>{{Auth::user()->usuario}}</strong>
             </span>
             <span class="user-role">Administrator</span>
@@ -124,6 +124,9 @@
                             </li>
                             <li @click="menu=33" >
                                 <a  href="#"><i class="icon-wallet"></i>Ref. Equipo</a>
+                            </li>
+                            <li @click="menu=73" >
+                                <a  href="#"><i class="icon-wallet"></i>Equipos Oficina</a>
                             </li>
                             <li @click="menu=1" >
                                 <a  href="#"><i class="icon-bag"></i>Tp. de Estaciónes</a>

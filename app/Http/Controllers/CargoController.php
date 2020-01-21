@@ -72,8 +72,8 @@ class CargoController extends Controller
         $cargo = Cargo::join('areas','cargos.id_area','=','areas.id')
         ->select('cargos.id','areas.id as idArea','areas.nombre as nomArea','cargos.nombre')
         ->where('cargos.id_area',$buscar)
-        ->orwhere('nomArea',$buscar)
-        ->orderBy('nomArea', 'asc')->get();
+        ->orwhere('areas.nombre',$buscar)
+        ->orderBy('areas.nombre', 'asc')->get();
 
         return ['cargo' => $cargo];
   }

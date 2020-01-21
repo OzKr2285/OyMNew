@@ -191,6 +191,9 @@
             <template v-if="menu==72">
                 <ticketservtec></ticketservtec>
             </template>
+            <template v-if="menu==73">
+                <oficinae></oficinae>
+            </template>
    
 
             <!-- Programacion  de Mantenimientos -->

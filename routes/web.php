@@ -180,6 +180,10 @@ Route::group(['middleware'=>['auth']],function(){
         Route::post('/detcausal/eliminar', 'DetCausalController@destroy');
         Route::get('/detcausal/DetCausal', 'DetCausalController@selectDetCausal');            
 
+        Route::get('/detoficinae', 'DetOficinaEController@index');
+        Route::post('/detoficinae/registrar', 'DetOficinaEController@store');
+        Route::post('/detoficinae/eliminar', 'DetOficinaEController@destroy');
+
         Route::get('/etapa', 'EtapaController@index');
         Route::post('/etapa/registrar', 'EtapaController@store');
         Route::put('/etapa/actualizar', 'EtapaController@update');
@@ -195,6 +199,7 @@ Route::group(['middleware'=>['auth']],function(){
                 
         Route::get('/equipo', 'EquiposController@index');
         Route::get('/equipo/computo', 'EquiposController@index2');        
+        Route::get('/equipo/computoOficina', 'EquiposController@indexEquipoOfc');        
         Route::get('/equipo/exetapa', 'EquiposController@indexExEtapa');
         Route::post('/equipo/registrar', 'EquiposController@store');
         Route::post('/equipo/registrarcomp', 'EquiposController@storeComp');
@@ -311,6 +316,7 @@ Route::group(['middleware'=>['auth']],function(){
         Route::put('/refequipo/actualizar', 'RefEquipoController@update');
         Route::post('/refequipo/eliminar', 'RefEquipoController@destroy');
         Route::get('/refequipo/selectRefEquipo', 'RefEquipoController@selectRefEquipo');
+        Route::get('/refequipo/selectRefEquipoComp', 'RefEquipoController@selectRefEquipoComp');
 
         Route::get('/refmaterial', 'RefMaterialController@index');
         Route::post('/refmaterial/registrar', 'RefMaterialController@store');

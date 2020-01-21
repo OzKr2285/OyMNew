@@ -64,6 +64,7 @@ Vue.component('areas', require('./components/Area.vue'));
 Vue.component('horario', require('./components/Horario.vue'));
 Vue.component('tptramite', require('./components/TpTramite.vue'));
 Vue.component('detcausal', require('./components/DetCausal.vue'));
+Vue.component('oficinae', require('./components/OficinaE.vue'));
 
 // Gestion de PQR´S
 Vue.component('categoria', require('./components/Categoria.vue'));

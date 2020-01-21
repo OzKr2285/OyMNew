@@ -119,6 +119,60 @@ class EquiposController extends Controller
             'equipo' => $equipo
         ];
     }
+    public function indexEquipoOfc(Request $request)
+    {
+        // if (!$request->ajax()) return redirect('/');
+
+        $buscar = $request->buscar;
+        $criterio = $request->criterio;
+        $criterio2 = $request->criterio2;
+        
+        if ($buscar==''){
+            // $equipo = Equipo::orderBy('id_refequipo', 'asc')->paginate(15);
+            $equipo = Equipo::join('proveedores','equipos.id_proveedor','=','proveedores.id')
+            ->join('ref_equipos','equipos.id_refequipo','=','ref_equipos.id')
+            ->join('modelos','equipos.id_modelo','=','modelos.id')
+            ->join('personas','equipos.id_responsable','=','personas.id')
+            ->join('tp_equipos','ref_equipos.id_tpequipo','=','tp_equipos.id')
+            ->join('marcas','modelos.id_marca','=','marcas.id')
+            ->select('equipos.id as ide','equipos.is_equipo','equipos.serial','equipos.num_fac','equipos.id_proveedor','proveedores.nombre as nomprov','ref_equipos.id','ref_equipos.nombre as nomref','modelos.nombre as modelo','modelos.id as idmodelo','equipos.id_responsable','personas.nombreFull as nomperso',
+            'equipos.tag','equipos.fec_compra','equipos.fec_garantia','equipos.fec_instala','equipos.link','equipos.datachip','equipos.id_refequipo','equipos.desc',
+            'equipos.datachip','tp_equipos.id as tpequipo','tp_equipos.nombre as nomtpequipo','marcas.id as idmarca','equipos.edo_mto')
+            ->where('equipos.is_equipo',1)
+            ->orderBy('ref_equipos.nombre', 'asc')->paginate(15);
+        }
+        else{
+            $equipo = Equipo::join('proveedores','equipos.id_proveedor','=','proveedores.id')
+            ->join('ref_equipos','equipos.id_refequipo','=','ref_equipos.id')
+            ->join('modelos','equipos.id_modelo','=','modelos.id')
+            ->join('personas','equipos.id_responsable','=','personas.id')
+            ->join('tp_equipos','ref_equipos.id_tpequipo','=','tp_equipos.id')
+            ->join('marcas','modelos.id_marca','=','marcas.id')
+            ->select('equipos.id as ide','equipos.serial','equipos.num_fac','equipos.id_proveedor','proveedores.nombre as nomprov','ref_equipos.id','ref_equipos.nombre as nomref','modelos.nombre as modelo','modelos.id as idmodelo','equipos.id_responsable','personas.nombreFull as nomperso',
+            'equipos.tag','equipos.fec_compra','equipos.fec_garantia','equipos.fec_instala','equipos.link','equipos.datachip','equipos.id_refequipo','equipos.desc',
+            'equipos.datachip','tp_equipos.id as tpequipo','tp_equipos.nombre as nomtpequipo','marcas.id as idmarca','equipos.edo_mto')
+            ->where('equipos.is_equipo',1)
+            ->Where('equipos.id_refequipo',$buscar)
+            // ->orWhere('modelos.nombre', 'like', '%'. $buscar . '%')
+            // ->orWhere('equipos.serial', 'like', '%'. $buscar . '%')
+            // ->orWhere('equipos.tag', 'like', '%'. $buscar . '%')
+            ->paginate(15);
+       
+        }
+        
+
+        return [
+            'pagination' => [
+                'total'        => $equipo->total(),
+                'current_page' => $equipo->currentPage(),
+                'per_page'     => $equipo->perPage(),
+                'last_page'    => $equipo->lastPage(),
+                'from'         => $equipo->firstItem(),
+                'to'           => $equipo->lastItem(),
+            ],
+            'equipo' => $equipo
+        ];
+    }
     public function indexExEtapa(Request $request)
     {
         // if (!$request->ajax()) return redirect('/');
@@ -130,6 +184,7 @@ class EquiposController extends Controller
             $equipo = Equipo::join('ref_equipos','equipos.id_refequipo','=','ref_equipos.id')
             ->join('modelos','equipos.id_modelo','=','modelos.id')
             ->select('equipos.id','equipos.tag','ref_equipos.nombre as nomequipo','equipos.serial','modelos.nombre as modelo','equipos.desc','equipos.edo_mto')
+            ->where('is_equipo',0)
             ->where('estado',0)
             ->orderBy('id_refequipo', 'asc')->paginate(15);
         //     $equipo = Equipo::join('proveedores','equipos.id_proveedor','proveedores.id')
@@ -140,9 +195,13 @@ class EquiposController extends Controller
         //     ->orderBy('nombre', 'asc')->paginate(15);
         }
         else{
-            $equipo = Equipo::where($criterio, 'like', '%'. $buscar . '%')
-            ->Where('estado',0)            
-            ->orderBy('nombre', 'asc')->paginate(15);
+            $equipo = Equipo::join('ref_equipos','equipos.id_refequipo','=','ref_equipos.id')
+            ->join('modelos','equipos.id_modelo','=','modelos.id')
+            ->select('equipos.id','equipos.tag','ref_equipos.nombre as nomequipo','equipos.serial','modelos.nombre as modelo','equipos.desc','equipos.edo_mto')
+            ->where('equipos.id_refequipo',$buscar)
+            ->where('is_equipo',0)
+            ->where('estado',0)
+            ->orderBy('id_refequipo', 'asc')->paginate(15);
         }
         
 
