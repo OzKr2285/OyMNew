@@ -2222,7 +2222,7 @@ export default {
             tp_mto: this.tpMto,
             frec: this.frec,
 
-            data: this.arrayTrenEquipos,
+            data: this.arrayTrenEquipos
 
           })
           .then(function(response) {

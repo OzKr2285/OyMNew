@@ -277,6 +277,10 @@ Route::group(['middleware'=>['auth']],function(){
         Route::post('/mto/registrar', 'MtoEsController@store');
         Route::put('/mto/actualizar', 'MtoEsController@update');
 
+        Route::get('/mtoec', 'MtoECController@index');
+        Route::post('/mtoec/registrar', 'MtoECController@store');
+        Route::put('/mtoec/actualizar', 'MtoECController@update');
+
         Route::get('/noveh', 'NoVehController@index');
         Route::post('/noveh/registrar', 'NoVehController@store');
 

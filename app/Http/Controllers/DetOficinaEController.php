@@ -28,7 +28,7 @@ class DetOficinaEController extends Controller
             ->join('ref_equipos','equipos.id_refequipo','=','ref_equipos.id')         
             ->join('tp_equipos','ref_equipos.id_tpequipo','=','tp_equipos.id')         
             ->join('personas','equipos.id_responsable','=','personas.id')         
-            ->select('personas.nombreFull as respo','tp_equipos.nombre','det_oficinae.id','det_oficinae.id_oficina','oficinas.nombre as nomM','ref_equipos.nombre as tpEquipo','equipos.serial')
+            ->select('personas.nombreFull as respo','tp_equipos.nombre','det_oficinae.id','det_oficinae.id_oficina','oficinas.nombre as nomM','ref_equipos.nombre as tpEquipo','equipos.serial','equipos.desc','equipos.id as idEquipo')
             ->where('det_oficinae.id_oficina',$buscar)
             ->orderBy('oficinas.nombre','asc')->paginate(15);
         }        

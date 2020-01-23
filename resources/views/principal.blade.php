@@ -8,7 +8,7 @@
         <meta name="description" content="Sistema de Operacion y Mantenimiento">
         <meta name="author" content="www.publiservicios.com">
         <meta name="keyword" content="Sistema de Operacion y Mantenimiento Laravel Vue Js">
-        <link rel="shortcut icon" href="img/favicon.png">
+        <link rel="shortcut icon" href="img/Publiservicios.png">
         <title>Sistema de Operacion y Mantenimiento - OzKr</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- Icons -->

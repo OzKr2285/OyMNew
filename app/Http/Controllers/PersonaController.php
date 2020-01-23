@@ -39,6 +39,7 @@ class PersonaController extends Controller
         ->where('personas.is_empleado','=',1)
         ->where('personas.id_cargo','=',25)
         ->orWhere('personas.id_cargo','=',26)
+        ->orWhere('personas.id_cargo','=',5)
         ->orderBy('nombreFull', 'asc')->paginate(10);
       }
       else{

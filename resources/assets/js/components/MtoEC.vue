@@ -6,12 +6,35 @@
       <div class="card">
         <div class="card-header">
           <i class="fa fa-align-justify"></i> Mantenimiento Equipos de Computo.
+        <!-- <md-button
+              class="md-dense md-raised color='rgba(52, 139, 64, 0.849)' "
+              @click="mostrarDetalle()"
+              title="Nuevo"
+            >
+              <i class="material-icons Color2">add</i>
+            Nuevo</md-button> -->
+     
           <button
             type="button"
             @click="mostrarDetalle()"
             class="btn btn-success btn-sm"
           >
             <i class="icon-plus"></i>&nbsp;Nuevo
+          </button>
+            <!-- <md-button
+              class="md-icon-button md-primary"
+              @click="eliminarDetalle(index)"
+              title="Eliminados"
+            >
+              <i class="material-icons Color4">delete_outline</i>
+            </md-button> -->
+            <button v-show="del==1"
+            title="Eliminados"
+            type="button"
+            @click="abrirModal5()"
+            class="btn btn-danger btn-sm"
+          >
+            <i class="fas fa-trash-alt"></i>&nbsp;
           </button>
         </div>
         <template v-if="listado==1">
@@ -168,7 +191,7 @@
                   <div class="md-layout-item">
                     <md-field md-clearable>
                       <label>Seleccione una Oficina</label>
-                      <md-select v-model="idTpEstacion" md-dense @input="getEstacion">
+                      <md-select v-model="idOficina" md-dense @input="listarDetalle">
                         <md-option
                           v-for="(tpestacion,index) in arrayOficina"
                           :key="`tpestacion-${index}`"
@@ -205,7 +228,7 @@
 
               <!-- </md-step> -->
 
-              <md-step id="second" md-label="Mantenimiento Equipos" :md-done.sync="third">
+              <md-step id="second" md-label="Seleccionar Equipos" :md-done.sync="second">
                 <template v-if="bDetEtapa">
 
                 <div class="md-layout">
@@ -216,36 +239,36 @@
                     <table class="table table-bordered table-striped table-sm">
                       <thead>
                         <tr>
-                          <th>Nombre</th>
-                          <th>Descripción</th>
-                          <th>Opciones</th>
+                          <th>Serial</th>                        
+                        <th>Tp Equipo</th>                        
+                        <th>Nombre</th>                        
+                        <th>Responsable</th>                        
+                        <th>Opciones</th>
                         </tr>
                       </thead>
-                      <tbody v-if="arrayEtapas.length">
-                 
-                        <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
-                        <tr v-for="(detalle, index) in arrayEtapas" :key="`detalle-${index}`">
-                          <td v-text="detalle.nombre"></td>
-                          <td v-text="detalle.desc"></td>
-
-                          <td>
-                            <md-button class="md-icon-button " @click="regEquiposPpal(detalle)" title="Equipos Etapa Principal">                         
-                              <i class="material-icons Color1">settings_input_component</i>
-                            </md-button>
-                            <md-button class="md-icon-button md-primary " @click="regEquiposByPass(detalle)" title="Equipos By Pass">
-                              <i class="material-icons Color3">group_work</i>
-                            </md-button>                            
-                            <md-button class="md-icon-button md-primary " @click="verEquipos(detalle)" title="Ver Equipos">
-                              <i class="material-icons Color2">visibility</i>
-                            </md-button>         
-                          </td>
-                        </tr>
-                      </tbody>
-                      <tbody v-else>
-                        <tr>
-                          <td colspan="5">NO hay Etapas relacionadas.</td>
-                        </tr>
-                      </tbody>
+                       <tbody v-if="arrayDetM.length">
+                      <tr
+                        v-for="(objeto, index) in arrayDetM"
+                        :key="`objeto-${index}`"
+                      >                        
+                        <td v-text="objeto.serial"></td>
+                        <td v-text="objeto.tpEquipo"></td>
+                        <td v-text="objeto.desc"></td>
+                        <td v-text="objeto.respo"></td>
+                        <td>
+                          <md-button class="md-icon-button md-primary " @click="eliminarDetalle(index,objeto)" title="Eliminar">
+                            <i class="material-icons Color4">delete</i>
+                          </md-button>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody v-else>
+                      <tr>
+                        <td colspan="5">
+                          NO hay Equipos asociados a la Oficina
+                        </td>
+                      </tr>
+                    </tbody>
                     </table>
                   </div>
                 </div>
@@ -561,12 +584,12 @@
                     </md-card-actions> -->
               </div>
             </template>
-        
+          <md-button class="md-raised md-primary" @click="setDone4('second', 'third')">Continue</md-button>
           </md-step>
           <md-step
             id="third"
             md-label="Asignar Técnicos"            
-            :md-done.sync="fourt"
+            :md-done.sync="third"
           >
           <div class="modal-body">
       <div class="md-layout">
@@ -707,7 +730,7 @@
       style="display: none;"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-primary modal-lg" role="document">
+      <div class="modal-dialog modal-dark modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title" v-text="tituloModal"></h4>
@@ -720,19 +743,19 @@
               <div class="col-md-6">
                 <div class="input-group">
                   <select class="form-control col-md-3" v-model="criterio">
-                    <option value="Serial">Serial</option>
-                    <option value="nombre">Nombre</option>
+                    <option value="Nombre">Documento</option>
+                    <option value="Descripción">Nombre Técnico</option>
                   </select>
                   <input
                     type="text"
                     v-model="buscar"
-                    @keypress="listarEtapa(1,buscar,criterio)"
+                    @keypress="getPerso(1, buscar, this.criterio)"
                     class="form-control"
                     placeholder="Texto a buscar"
                   >
                   <button
                     type="submit"
-                    @click="listarEtapa(1,buscar,criterio)"
+                    @click="getPerso(1, buscar, this.criterio)"
                     class="btn btn-primary"
                   >
                     <i class="fa fa-search"></i> Buscar
@@ -744,34 +767,40 @@
               <table class="table table-bordered table-striped table-sm">
                 <thead>
                   <tr>
-                    <th>Opciones</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
+                    <th>Documento</th>
+                    <th>Nombre Técnico</th>
+                    <th>Selección</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr v-for="(etapa, index)  in arrayEtapa" :key="`etapa-${index}`">
+                <tbody v-if="arrayPerso.length">
+                  <tr v-for="(objeto, index)  in arrayPerso" :key="`objeto-${index}`">
+                    <td v-text="objeto.id"></td>
+                    <td v-text="objeto.nombreFull"></td>
                     <td>
                       <button
                         type="button"
-                        @click="agregarDetalleModal(etapa)"
+                        @click="agregarTecnico(objeto)"
                         class="btn btn-success btn-sm"
                       >
                         <i class="icon-check"></i>
                       </button>
-                    </td>
-                    <td v-text="etapa.nombre"></td>
-                    <td v-text="etapa.desc"></td>
+                    </td>                         
+                  </tr>
+                </tbody>
+                <tbody v-else>
+                  <tr>
+                    <td colspan="5">NO hay Actividades asignadas al equipo</td>
                   </tr>
                 </tbody>
               </table>
+            </div>
               <nav>
                 <ul class="pagination">
                   <li class="page-item" v-if="pagination.current_page > 1">
                     <a
                       class="page-link"
                       href="#"
-                      @click.prevent="cambiarPaginaE(pagination.current_page - 1,buscar,criterio)"
+                      @click.prevent="cambiarPaginaTec(pagination.current_page - 1,buscar,criterio)"
                     >Ant</a>
                   </li>
                   <li
@@ -783,7 +812,7 @@
                     <a
                       class="page-link"
                       href="#"
-                      @click.prevent="cambiarPaginaE(page,buscar,criterio)"
+                      @click.prevent="cambiarPaginaTec(page,buscar,criterio)"
                       v-text="page"
                     ></a>
                   </li>
@@ -791,12 +820,11 @@
                     <a
                       class="page-link"
                       href="#"
-                      @click.prevent="cambiarPaginaE(pagination.current_page + 1,buscar,criterio)"
+                      @click.prevent="cambiarPaginaTec(pagination.current_page + 1,buscar,criterio)"
                     >Sig</a>
                   </li>
                 </ul>
               </nav>
-            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
@@ -1168,32 +1196,45 @@
       style="display: none;"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-dark modal-lg" role="document">
+    <div class="modal-dialog modal-dark modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title" v-text="tituloModal"></h4>
-            <button type="button" class="close" @click="cerrarModal5()" aria-label="Close">
+            <button
+              type="button"
+              class="close"
+              @click="cerrarModal5()"
+              aria-label="Close"
+            >
               <span aria-hidden="true">×</span>
             </button>
           </div>
           <div class="modal-body">
             <div class="form-group row">
-              <div class="col-md-6">
+              <div class="col-md-9">
                 <div class="input-group">
-                  <select class="form-control col-md-3" v-model="criterio">
-                    <option value="Nombre">Documento</option>
-                    <option value="Descripción">Nombre Técnico</option>
-                  </select>
-                  <input
+                  <!-- <select
+                    class="form-control col-md-4"
+                    v-model="idTpEquipo"
+                    @change="listarExEtapa(1, this.idTpEquipo,criterio )"
+                  >
+                    <option
+                      v-for="objeto in arrayTpEquipo"
+                      :key="objeto.id"
+                      :value="objeto.id"
+                      >{{ objeto.nombre }}</option
+                    >
+                  </select> -->
+                  <!-- <input
                     type="text"
-                    v-model="buscar"
-                    @keypress="getPerso(1, buscar, this.criterio)"
+                    v-model="criterio"
+                    @keypress="listarExEtapa(1,this.idTpEquipo,criterio)"
                     class="form-control"
                     placeholder="Texto a buscar"
-                  >
+                  > -->
                   <button
                     type="submit"
-                    @click="getPerso(1, buscar, this.criterio)"
+                    @click="listarExEtapa(1, this.idTpEquipo,criterio)"
                     class="btn btn-primary"
                   >
                     <i class="fa fa-search"></i> Buscar
@@ -1205,67 +1246,98 @@
               <table class="table table-bordered table-striped table-sm">
                 <thead>
                   <tr>
-                    <th>Documento</th>
-                    <th>Nombre Técnico</th>
+                    <th>Serial</th>
+                    <th>Tp Equipo</th>
+                    <th>Nombre</th>
+                    <th>Responsable</th>
                     <th>Selección</th>
                   </tr>
                 </thead>
-                <tbody v-if="arrayPerso.length">
-                  <tr v-for="(objeto, index)  in arrayPerso" :key="`objeto-${index}`">
-                    <td v-text="objeto.id"></td>
-                    <td v-text="objeto.nombreFull"></td>
+                <tbody v-if="arrayDel.length">
+                  <tr
+                    v-for="(objeto, index) in arrayDel"
+                    :key="`objeto-${index}`"
+                  >
+                    <td v-text="objeto.serial"></td>
+                    <td v-text="objeto.tpEquipo"></td>
+                    <td v-text="objeto.desc"></td>
+                    <td v-text="objeto.respo"></td>
                     <td>
                       <button
                         type="button"
-                        @click="agregarTecnico(objeto)"
+                        @click="agregarEquipo(index,objeto)"
                         class="btn btn-success btn-sm"
                       >
                         <i class="icon-check"></i>
                       </button>
-                    </td>                         
+                    </td>
                   </tr>
                 </tbody>
                 <tbody v-else>
-                  <tr>
-                    <td colspan="5">NO hay Actividades asignadas al equipo</td>
+                  <tr>       
+                    {{this.del=0}}             
+                    <td colspan="5">NO hay Equipos registrados en esta Categoria.</td>
                   </tr>
                 </tbody>
               </table>
             </div>
-              <nav>
-                <ul class="pagination">
-                  <li class="page-item" v-if="pagination.current_page > 1">
-                    <a
-                      class="page-link"
-                      href="#"
-                      @click.prevent="cambiarPaginaTec(pagination.current_page - 1,buscar,criterio)"
-                    >Ant</a>
-                  </li>
-                  <li
-                    class="page-item"
-                    v-for="page in pagesNumber"
-                    :key="page"
-                    :class="[page == isActived ? 'active' : '']"
+            <nav>
+              <ul class="pagination">
+                <li class="page-item" v-if="pagination.current_page > 1">
+                  <a
+                    class="page-link"
+                    href="#"
+                    @click.prevent="
+                      cambiarPaginaM(
+                        pagination.current_page - 1,
+                        buscar,
+                        criterio
+                      )
+                    "
+                    >Ant</a
                   >
-                    <a
-                      class="page-link"
-                      href="#"
-                      @click.prevent="cambiarPaginaTec(page,buscar,criterio)"
-                      v-text="page"
-                    ></a>
-                  </li>
-                  <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                    <a
-                      class="page-link"
-                      href="#"
-                      @click.prevent="cambiarPaginaTec(pagination.current_page + 1,buscar,criterio)"
-                    >Sig</a>
-                  </li>
-                </ul>
-              </nav>
+                </li>
+                <li
+                  class="page-item"
+                  v-for="page in pagesNumber"
+                  :key="page"
+                  :class="[page == isActived ? 'active' : '']"
+                >
+                  <a
+                    class="page-link"
+                    href="#"
+                    @click.prevent="cambiarPaginaM(page, buscar, criterio)"
+                    v-text="page"
+                  ></a>
+                </li>
+                <li
+                  class="page-item"
+                  v-if="pagination.current_page < pagination.last_page"
+                >
+                  <a
+                    class="page-link"
+                    href="#"
+                    @click.prevent="
+                      cambiarPaginaM(
+                        pagination.current_page + 1,
+                        buscar,
+                        criterio
+                      )
+                    "
+                    >Sig</a
+                  >
+                </li>
+              </ul>
+            </nav>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @click="cerrarModal5()">Cerrar</button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              @click="cerrarModal5()"
+            >
+              Cerrar
+            </button>
           </div>
         </div>
         <!-- /.modal-content -->
@@ -1332,12 +1404,13 @@ export default {
       // variables Mto Estacion
 
       tpMto: 1,
+      del: 0,
       frec: 0,
       idRefE:0,
       idTec:0,
       idRespo:0,
 
-      idTpEstacion: 0,
+      idOficina: 0,
       idEquipo: 0,
       idEstacion: 0,
 
@@ -1359,34 +1432,30 @@ export default {
       
       arrayTpMto: [{id: 1, name:"PREVENTIVO"},{id: 2 ,name:"CORRECTIVO"}],      
       arrayFrec: [{id:0 ,name:"INMEDIATO"},{id:1 ,name:"1 MES"},{id:2 ,name:"2 MESES"},{id:3 ,name: "3 MESES"},{id:4 ,name:"4 MESES"},{id:6 ,name:"6 MESES"},{id:9 ,name:"9 MESES"},{id:12 ,name:"12 MESES"},{id:18 ,name:"18 MESES"},{id:24 ,name:"24 MESES"},{id:36 ,name:"36 MESES"}],
-      arrayMtoPpal: [],
-      arrayMtoByPass: [],
-      arrayAct: [],
-      arrayIns: [],
+  
+
       arrayMtoAct: [],
       arrayPerso: [],
       arrayTec: [],
       arrayDatos: [],
-      arrayTrenEquipos: [],
 
 
-      arrayTrenPpal: [],
-      arrayTrenByPass: [],
-      arrayEquipoEtapa: [],
-      arrayEstacion: [],
+      arrayDel: [],
+      arrayIns: [],
+      arrayAct: [],
       arrayOficina: [],
       arrayNomEstacion: [],
-      arrayTpEstacion: [],
+      arrayDetM: [],
+      arrayDetMAct: [],
       arrayEtapa: [],
-      arrayEquipo: [],
-      arrayEtapas: [],
-      arrayTrenEtapa: [],     
+      arrayEquipo: [],   
       arrayMarca: [],
       modal: 0,
       modal2: 0,
       modal3: 0,
       modal4: 0,
       modal5: 0,
+      idTpEquipo: "",
       bDetEtapa: 1,
       bVerE: 0,
       bVerA: 0,
@@ -1540,7 +1609,7 @@ export default {
       }
     },
      setDone4(id, index) {
-      this.abrirModal5();
+      this.abrirModal();
       this[id] = true;
       this.secondStepError = null;
         if (index) {      
@@ -1553,7 +1622,8 @@ export default {
     },
     abrirModal() {
       this.modal = 1;
-      this.tituloModal = "Seleccione una o varias Etapas";
+      this.tituloModal = "Seleccione una o varios Técnicos";
+      this.getPerso(1,this.buscar, this.criterio);
     },
     abrirModal2() {
       this.modal2 = 1;
@@ -1574,8 +1644,8 @@ export default {
     abrirModal5() {
       // this.idRefE=data["idref"];
       this.modal5 = 1;
-      this.tituloModal = "Seleccione una o varios Técnicos";
-      this.getPerso(1,this.buscar, this.criterio);
+      this.tituloModal = "Restaure uno o varios Equipos";
+      // this.getPerso(1,this.buscar, this.criterio);
     },
     regEquiposPpal(data = []) {
       this.textoEtapa = data["nombre"];
@@ -1603,6 +1673,26 @@ export default {
           //console.log(response);
           var respuesta = response.data;
           me.arrayOficina = respuesta.oficina;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+        listarDetalle(page, buscar, criterio) {
+      let me = this;
+      var url =
+        "/detoficinae?page=" +
+        page +
+        "&buscar=" +
+        this.idOficina +
+        "&criterio=" +
+        criterio;
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayDetM = respuesta.refe.data;
+          me.pagination = respuesta.pagination;
         })
         .catch(function(error) {
           console.log(error);
@@ -1684,8 +1774,8 @@ export default {
     },
     encuentra3(id) {
       var sw = 0;
-      for (var i = 0; i < this.arrayMtoByPass.length; i++) {
-        if (this.arrayMtoByPass[i].id == id) {
+      for (var i = 0; i < this.arrayDetM.length; i++) {
+        if (this.arrayDetM[i].id == id) {
           sw = true;
         }
       }
@@ -1811,6 +1901,25 @@ export default {
           desc: data["desc"]
         });
           me.mensaje("Agregar", "Agrego ");
+      }
+    },
+      agregarEquipo(index, data = []) {
+      let me = this;
+      if (me.encuentra3(data["id"])) {
+        swal({
+          type: "error",
+          title: "Error...",
+          text: "El Equipo seleccionado ya se encuentra agregado!"
+        });
+      } else {
+        me.arrayDetM.push({
+            id: data["id"], 
+            tpEquipo:data["tpEquipo"],
+            serial: data["serial"],
+            respo: data["respo"],
+            desc: data["desc"]
+        });
+      me.arrayDel.splice(index, 1);
       }
     },
     agregarDetalleMto(data = []) {
@@ -2066,7 +2175,7 @@ export default {
     },
     getEstacion() {
       let me = this;
-      var url = "/estacion/selectEstacion?buscar=" + this.idTpEstacion;
+      var url = "/estacion/selectEstacion?buscar=" + this.idOficina;
       axios
         .get(url)
         .then(function(response) {
@@ -2125,7 +2234,7 @@ export default {
     mostrarActualizar(data = []) {
       let me = this;
       (this.tipoAccion = 2), (me.listado = 0);
-      (this.idTpEstacion = data["idtpes"]),     
+      (this.idOficina = data["idtpes"]),     
 
       this.getEstacion();
       this.idEstacion = data["idEs"];
@@ -2184,52 +2293,27 @@ export default {
 
     registrarEquiposEs() {
       let me = this;
-        
-        if(this.tpTren==0){
+
             axios
-          .post("/mto/registrar", {
-            id_estacion: this.idEstacion,
+          .post("/mtoec/registrar", {
+          idOficina: this.idOficina,
             fec_realiza: this.fecR,
             fec_finaliza: this.fecF,
+            obs: this.descripcion,
             tp_mto: this.tpMto,
             frec: this.frec,
-
-            data: this.arrayTrenEquipos,
+            data: this.arrayTec,
+            data2: this.arrayDetM
 
           })
           .then(function(response) {
-            me.arrayTrenEquipos=[];
-            // me.ocultarDetalle();
-          var respuesta = response.data;
-          me.idMto = respuesta.idMto;
-            // me.listarMto(1, "", "nombre");
-          
+
             me.mensaje("Guardado", "Guardo ");
           })
           .catch(function(error) {
             console.log(error);
           });
-        }else{
-            axios
-          .post("/mto/registrar", {
-            id_estacion: this.idEstacion,
-            fec_realiza: this.fecR,
-            fec_finaliza: this.fecF,
-            tp_mto: this.tpMto,
-            frec: this.frec,
-            data: this.arrayTrenEquipos,
 
-          })
-          .then(function(response) {
-            me.arrayTrenEquipos=[];
-            // me.ocultarDetalle();
-            // me.listarEstacion(1, "", "nombre");
-            me.mensaje("Guardado", "Guardo ");
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
-        }
     
     },
     actualizarEstacion() {
@@ -2237,7 +2321,7 @@ export default {
 
       axios
         .put("/estacion/actualizar", {
-          idTpEstacion: this.idTpEstacion,
+          idOficina: this.idOficina,
           nombre: this.form.nombre,
           descripcion: this.form.descripcion,
           id: this.estacion_id
@@ -2251,7 +2335,7 @@ export default {
           console.log(error);
         });
     },
-    eliminarEstacion(data = []) {
+    eliminarEquipo(data = []) {
       swal({
         title: "Esta seguro de Eliminar la Estación " + data["nombre"],
         type: "warning",
@@ -2287,9 +2371,18 @@ export default {
         }
       });
     },
-    eliminarDetalle(index){
+    eliminarDetalle(index,data=[]){
       let me = this;
-      me.arrayEtapas.splice(index, 1);
+      this.del=1;
+      me.arrayDetM.splice(index, 1);
+      me.arrayDel.push({
+            id: data["id"], 
+            tpEquipo:data["tpEquipo"],
+            serial: data["serial"],
+            respo: data["respo"],
+            desc: data["desc"]
+      
+    });
     },
     mensaje(tipo, crud) {
       swal(tipo, "El registro se " + crud + " con éxito.", "success");
@@ -2299,10 +2392,8 @@ export default {
   mounted() {
     this.getPerso(1,this.buscar, this.criterio);
     this.listarMto(1,this.buscar, this.criterio);
-    this.getTpEstacion();
       this.getOficina();
     // this.getEtapa();
-    this.listarEstacion(1, this.buscar, this.criterio);
     this.listarExEtapa(1, this.buscar, this.criterio);
   }
 };
@@ -2328,6 +2419,8 @@ export default {
 }
 .material-icons.Color1 { color: rgb(31, 33, 34); }
 .material-icons.Color2 { color: rgba(52, 139, 64, 0.849); }
+.md-raised.Verde { color: rgba(52, 139, 64, 0.849); }
 .material-icons.Color3 { color: rgb(31, 114, 134); }
 .material-icons.Color4 { color: rgb(248, 53, 46); }
+
 </style>
