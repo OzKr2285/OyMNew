@@ -77,6 +77,11 @@ Route::group(['middleware'=>['auth']],function(){
         Route::put('/actividad/actualizar', 'ActividadController@update');
         Route::post('/actividad/eliminar', 'ActividadController@destroy');
 
+        Route::get('/actividadVeh', 'ActividadVehController@index');
+        Route::post('/actividadVeh/registrar', 'ActividadVehController@store');
+        Route::put('/actividadVeh/actualizar', 'ActividadVehController@update');
+        Route::post('/actividadVeh/eliminar', 'ActividadVehController@destroy');
+
         Route::get('/actividade', 'ActividadEController@index');
 
         Route::get('/actserv', 'ActServPqrsController@detAct');
@@ -184,6 +189,10 @@ Route::group(['middleware'=>['auth']],function(){
         Route::post('/detoficinae/registrar', 'DetOficinaEController@store');
         Route::post('/detoficinae/eliminar', 'DetOficinaEController@destroy');
 
+        Route::get('/detmtoveh', 'DetMtoVehController@index');
+        Route::post('/detmtoveh/registrar', 'DetMtoVehController@store');
+        Route::post('/detmtoveh/eliminar', 'DetMtoVehController@destroy');
+
         Route::get('/etapa', 'EtapaController@index');
         Route::post('/etapa/registrar', 'EtapaController@store');
         Route::put('/etapa/actualizar', 'EtapaController@update');
@@ -220,6 +229,7 @@ Route::group(['middleware'=>['auth']],function(){
         Route::post('/fichaveh/registrar', 'FichaVehController@store');
         Route::put('/fichaveh/actualizar', 'FichaVehController@update');
         Route::post('/fichaveh/eliminar', 'FichaVehController@destroy');
+        Route::get('/fichaveh/selectVeh', 'FichaVehController@selectVeh');
         
         Route::get('/horario', 'HorarioController@index');
         Route::post('/horario/registrar', 'HorarioController@store');
@@ -280,6 +290,10 @@ Route::group(['middleware'=>['auth']],function(){
         Route::get('/mtoec', 'MtoECController@index');
         Route::post('/mtoec/registrar', 'MtoECController@store');
         Route::put('/mtoec/actualizar', 'MtoECController@update');
+
+        Route::get('/mtoveh', 'MtoVehController@index');
+        Route::post('/mtoveh/registrar', 'MtoVehController@store');
+        Route::put('/mtoveh/actualizar', 'MtoVehController@update');
 
         Route::get('/noveh', 'NoVehController@index');
         Route::post('/noveh/registrar', 'NoVehController@store');

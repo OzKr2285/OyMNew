@@ -6,23 +6,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\MtoEC;
 use App\DetMtoEC;
+use App\TecMtoEC;
 
 class MtoECController extends Controller
 {
     //
     public function index(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        // if (!$request->ajax()) return redirect('/');
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;
         
         if ($buscar==''){
-            $mto = MtoEC::join('estaciones','mto_es.id_estacion','=','estaciones.id')           
-            ->select('estaciones.id as idEstacion','estaciones.nombre','mto_es.id as idMto','mto_es.estado','mto_es.fec_realiza','mto_es.fec_finaliza','mto_es.tp_mto','mto_es.frec')
+            $mto = MtoEC::join('oficinas','mto_ec.id_oficina','=','oficinas.id')           
+            ->select('oficinas.id as idOficina','oficinas.nombre','mto_ec.id as idMto','mto_ec.edo','mto_ec.fec_realiza','mto_ec.fec_finaliza','mto_ec.tp_mto')
             ->distinct()                                   
-            ->orderBy('estaciones.nombre', 'asc')
-            ->orderBy('mto_es.estado', 'asc')->paginate(15);
+            ->orderBy('oficinas.nombre', 'asc')
+            ->orderBy('mto_ec.edo', 'asc')->paginate(15);
         }
         else{
             $mto = MtoEC::join('actividadese','det_act_equipo.id_act','=','actividadese.id')    
@@ -73,6 +74,15 @@ class MtoECController extends Controller
                 $detalle = new DetMtoEC();
                 $detalle->id_mto = $mto->id;
                 $detalle->id_equipo =$det['idEquipo'];                                                                     
+                $detalle->save();
+            }          
+
+            foreach($detalles2 as $ep=>$det)
+            {
+                $detalle = new TecMtoEC();
+                $detalle->id_mtoec = $mto->id;
+                $detalle->id_tecnico =$det['id'];                                                                     
+                $detalle->is_respo =$det['Rol'];                                                                     
                 $detalle->save();
             }          
        

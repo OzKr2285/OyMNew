@@ -41,7 +41,7 @@
                     </li>
                     <li class="sidebar-dropdown">
                         <a href="#">
-                            <i class="fa fa-tachometer-alt"></i>
+                            <i class="fas fa-cog"></i>
                             <span class="menu-text">General</span>                         
                         </a>
                         <div class="sidebar-submenu">
@@ -75,7 +75,7 @@
                                 <a  href="#"><i class="icon-bag"></i>Oficinas</a>
                             </li> 
                             <li @click="menu=63" >
-                                <a  href="#"><i class="icon-bag"></i>Horarios</a>
+                                <a  href="#"><i class="far fa-calendar"></i>Horarios</a>
                             </li>
                             <li @click="menu=37">
                                 <a href="#"><i class="icon-bag"></i>Usuarios</a>
@@ -100,7 +100,7 @@
                     </li>
                     <li class="sidebar-dropdown">
                         <a href="#">
-                            <i class="fa fa-tachometer-alt"></i>
+                            <i class="fas fa-clipboard"></i>
                             <span class="menu-text">Mantenimiento</span>                         
                         </a>
                         <div class="sidebar-submenu">
@@ -115,6 +115,9 @@
                             <li @click="menu=35" >
                                 <a  href="#"><i class="icon-bag"></i>Act. x Equipo</a>
                             </li> 
+                            <li @click="menu=74" >
+                                <a  href="#"><i class="icon-bag"></i>Act Vehículos</a>
+                            </li>
                             <li @click="menu=58" >
                                 <a  href="#"><i class="icon-bag"></i>Diámetros</a>
                             </li> 
@@ -158,7 +161,7 @@
                     </li>
                     <li class="sidebar-dropdown">
                         <a href="#">
-                            <i class="fa fa-tachometer-alt"></i>
+                            <i class="fas fa-clipboard-list"></i>
                             <span class="menu-text">Operación</span>                         
                         </a>
                         <div class="sidebar-submenu">
@@ -189,69 +192,84 @@
                     </li>
                     <li class="sidebar-dropdown">
                         <a href="#">
-                            <i class="fa fa-chart-line"></i>
+                        <i class="far fa-newspaper"></i>
                             <span class="menu-text">Gestionar Fichas</span>
                         </a>                                        
                         <div class="sidebar-submenu">
                             <ul>
                                 <li @click="menu=5" >
-                                    <a  href="#"><i class="icon-basket-loaded"></i>Estaciones</a>
+                                    <a  href="#"><i class="fas fa-charging-station"></i>Estaciones</a>
                                 </li>
                                 <li @click="menu=3" >
-                                    <a  href="#"><i class="icon-wallet"></i>E. Estación</a>
+                                    <a  href="#"><i class="fas fa-fire"></i>E. Estación</a>
                                 </li>
                                 <li @click="menu=41" >
-                                    <a  href="#"><i class="icon-basket-loaded"></i> E. de Cómputo</a>
+                                    <a  href="#"><i class="fas fa-laptop"></i>E. de Cómputo</a>
                                 </li>
                                 <li @click="menu=6" >
-                                    <a  href="#"><i class="icon-bag"></i>Vehículos</a>
+                                    <a  href="#"><i class="fas fa-car"></i>Vehículos</a>
                                 </li>
                                 <li @click="menu=9" >
-                                    <a  href="#"><i class="icon-notebook"></i>Redes</a>
+                                    <a  href="#"><i class="fas fa-project-diagram"></i>Redes</a>
                                 </li>
                                 <li @click="menu=11" >
-                                    <a  href="#"><i class="icon-notebook"></i>Pasos Especiales</a>
+                                    <a  href="#"><i class="fas fa-bacon"></i>Pasos Especiales</a>
                                 </li>
                             </ul>
                         </div>
                     </li>
                     <li class="sidebar-dropdown">
                         <a href="#">
-                            <i class="fa fa-globe"></i>
+                        <i class="far fa-calendar-alt"></i>
                             <span class="menu-text">Programar  Mantenimiento</span>
                         </a>
                         <div class="sidebar-submenu">
                             <ul>                                    
                                 <li @click="menu=20" >
-                                    <a  href="#"><i class="icon-basket-loaded"></i>Estaciones</a>
+                                    <a  href="#"><i class="fas fa-charging-station"></i>Estaciones</a>
                                 </li>
                                 <li @click="menu=54" >
-                                    <a  href="#"><i class="icon-basket-loaded"></i> E. de Cómputo</a>
+                                    <a  href="#"><i class="fas fa-laptop"></i> E. de Cómputo</a>
                                 </li>
                                 <!-- <li @click="menu=41" >
                                     <a  href="#"><i class="icon-basket-loaded"></i> E. de Estación</a>
                                 </li>                                  -->
                                 <li @click="menu=69" >
-                                    <a  href="#"><i class="icon-bag"></i>Vehículos</a>
+                                    <a  href="#"><i class="fas fa-car"></i>Vehículos</a>
                                 </li>
                                 <li @click="menu=70" >
-                                    <a  href="#"><i class="icon-notebook"></i>Redes</a>
+                                    <a  href="#"><i class="fas fa-project-diagram"></i>Redes</a>
                                 </li>
                                 <li @click="menu=71" >
-                                    <a  href="#"><i class="icon-notebook"></i>Pasos Especiales</a>
+                                    <a  href="#"><i class="fas fa-bacon"></i>Pasos Especiales</a>
                                 </li>
                             </ul>
                         </div>
                     </li> 
                     <li class="sidebar-dropdown">
                         <a href="#">
-                            <i class="fa fa-globe"></i>
+                        <i class="fas fa-tasks"></i>
                             <span class="menu-text">Ejecución  Mantenimiento</span>
                         </a>
                         <div class="sidebar-submenu">
                             <ul>                                    
-                                <li @click="menu=20" >
-                                    <a  href="#"><i class="icon-basket-loaded"></i>Ejecución</a>
+                            <li @click="menu=20" >
+                                    <a  href="#"><i class="fas fa-charging-station"></i>Estaciones</a>
+                                </li>
+                                <li @click="menu=54" >
+                                    <a  href="#"><i class="fas fa-laptop"></i> E. de Cómputo</a>
+                                </li>
+                                <!-- <li @click="menu=41" >
+                                    <a  href="#"><i class="icon-basket-loaded"></i> E. de Estación</a>
+                                </li>                                  -->
+                                <li @click="menu=69" >
+                                    <a  href="#"><i class="fas fa-car"></i>Vehículos</a>
+                                </li>
+                                <li @click="menu=70" >
+                                    <a  href="#"><i class="fas fa-project-diagram"></i>Redes</a>
+                                </li>
+                                <li @click="menu=71" >
+                                    <a  href="#"><i class="fas fa-bacon"></i>Pasos Especiales</a>
                                 </li>
                             </ul>
                         </div>

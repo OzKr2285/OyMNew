@@ -122,4 +122,15 @@ class FichaVehController extends Controller
             DB::rollBack();
         }
     }
+    public function selectVeh(Request $request){
+        // if (!$request->ajax()) return redirect('/');
+        $buscar = $request->buscar;
+
+        $fichaveh = FichaVeh::join('personas','fichaveh.id_asignado','=','personas.id')
+        ->select('personas.id','personas.nombreFull','fichaveh.id as placa','fichaveh.tipo','fichaveh.desc')
+        ->orderBy('fichaveh.id', 'asc')->get();
+     
+
+      return ['fichaveh' => $fichaveh];
+  }
 }

@@ -35,6 +35,7 @@
         "vue-material": "^1.0.0-beta-11",
         "vue-multiselect": "^2.1.6",
         "vue-select": "^2.4.0",
+        "vue-toasted": "^1.1.27",
         "vuejs-datepicker": "^1.6.2",
         "vuelidate": "^0.7.4"
     }

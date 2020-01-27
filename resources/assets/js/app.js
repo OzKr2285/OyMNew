@@ -54,6 +54,7 @@ Vue.component('insumo', require('./components/Insumo.vue'));
 Vue.component('insumoe', require('./components/InsumoE.vue'));
 Vue.component('refequipo', require('./components/RefE.vue'));
 Vue.component('actividad', require('./components/Actividad.vue'));
+Vue.component('actividadveh', require('./components/ActividadVeh.vue'));
 Vue.component('actividade', require('./components/ActividadE.vue'));
 Vue.component('persona', require('./components/Persona.vue'));
 Vue.component('tecnico', require('./components/Tecnico.vue'));

@@ -194,6 +194,9 @@
             <template v-if="menu==73">
                 <oficinae></oficinae>
             </template>
+            <template v-if="menu==74">
+                <actividadveh></actividadveh>
+            </template>
    
 
             <!-- Programacion  de Mantenimientos -->

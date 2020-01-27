@@ -43,7 +43,7 @@
               <table class="table table-bordered table-striped table-sm">
                 <thead>
                   <tr class="p-3 mb-2 bg-dark text-white">
-                    <th>Tipo Equipo</th>
+                    <th>Tipo Oficina</th>
                     <th>Fecha Realización</th>
                     <th>Fecha Finalización</th>
                     <th>Tipo</th>
@@ -65,16 +65,16 @@
                       </template>
                     </td>
                     <td>
-                      <template v-if="objeto.estado==0">
+                      <template v-if="objeto.edo==0">
                         <span class="badge badge-primary">Programado</span>
                       </template>
-                      <template v-if="objeto.estado==1">
+                      <template v-if="objeto.edo==1">
                         <span class="badge badge-warning">En Ejecución</span>
                       </template>
-                      <template v-if="objeto.estado==2">
+                      <template v-if="objeto.edo==2">
                         <span class="badge badge-success">Finalizado</span>
                       </template>
-                      <template else v-if="objeto.estado==3">
+                      <template else v-if="objeto.edo==3">
                         <span class="badge badge-dark">Reprogramado</span>
                       </template>
                     </td>
@@ -188,18 +188,7 @@
                       </md-select>
                     </md-field>
                   </div>&nbsp;&nbsp;&nbsp;
-                  <div class="md-layout-item">
-                    <md-field md-clearable>
-                      <label>Seleccione una Oficina</label>
-                      <md-select v-model="idOficina" md-dense @input="listarDetalle">
-                        <md-option
-                          v-for="(tpestacion,index) in arrayOficina"
-                          :key="`tpestacion-${index}`"
-                          :value="tpestacion.id"
-                        >{{tpestacion.nombre}}</md-option>
-                      </md-select>
-                    </md-field>
-                  </div>&nbsp;&nbsp;&nbsp;
+                
                   <!-- <div class="md-layout-item">
                     <md-field md-clearable>
                       <label>Equipo</label>
@@ -213,7 +202,18 @@
                     </md-field>
                   </div> -->
                 </div>
-                <div class="md-layout"></div>
+                  <div class="md-layout">
+                    <md-field md-clearable>
+                      <label>Seleccione una Oficina</label>
+                      <md-select v-model="idOficina" md-dense @input="listarDetalle()">
+                        <md-option
+                          v-for="(tpestacion,index) in arrayOficina"
+                          :key="`tpestacion-${index}`"
+                          :value="tpestacion.id"
+                        >{{tpestacion.nombre}}</md-option>
+                      </md-select>
+                    </md-field>
+                  </div>&nbsp;
 
                 <md-button class="md-raised md-primary" @click="setDone('first', 'second')">Continue</md-button>
               </md-step>
@@ -274,243 +274,8 @@
                 </div>
 </template>
 
-        <template v-if="bEtapa">
-          <!-- Template equipos etapa principal -->
-          <div class="table-responsive col-md-12">
-            <tr v-for="(etapa, index)  in arrayNomEstacion" :key="`etapa-${index}`">                 
-              <h5><td  v-text="'Estación - '+ etapa.nombre"></td></h5>
-            </tr>
-          <h6> {{"Registro Equipos "+this.textoEtapa +"  (Principal)"}}
-        
-          <!-- <button type="button" @click="abrirModal2()" class="btn btn-dark btn-sm">
-            <i class="icon-plus"></i>&nbsp;&nbsp;Agregar
-          </button> -->
-          </h6>                  
-          <br>
 
-            <table class="table table-bordered table-striped table-sm">
-              <thead>
-                <tr>
-                  <th>TAG</th>
-                  <th>Serial</th>
-                  <th>Modelo</th>
-                  <th>Nombre</th>                  
-                  <th>Opciones</th>
-                </tr>
-              </thead>
-              <tbody v-if="arrayTrenPpal.length">
-                <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
-                <tr v-for="(detalle, index) in arrayTrenPpal" :key="`detalle-${index}`">
-                  <td v-text="detalle.tag"></td>
-                  <td v-text="detalle.serial"></td>
-                  <td v-text="detalle.modelo"></td>
-                  <td v-text="detalle.nombre"></td>                  
 
-                  <td>
-                    <!-- <button
-                      @click="agregarDetalleMto(detalle)"
-                      type="button"
-                      class="btn btn-success btn-sm"
-                      data-tooltip
-                      title="Seleccionar Equipo"
-                    >
-                      <i class="icon-check"></i>
-                    </button> -->
-                     <template v-if="detalle.edo_mto">
-                        <button type="button" class="btn btn-info btn-sm" data-tooltip title="En Mantenimiento" @click="dessetTecnico(articulo.id)">
-                          <i class="fa fa-hourglass-start"></i>
-                        </button>
-                    </template>
-                    <template v-else>
-                 
-                        <button type="button" class="btn btn-success btn-sm" data-tooltip title="Disponible" @click="agregarDetalleMto(detalle)">
-                            <i class="icon-check"></i>
-                        </button>
-                    </template>
-                  </td>
-                </tr>
-              </tbody>
-              <tbody v-else>
-                <tr>
-                  <td colspan="5">NO hay Equipos relacionados a la etapa seleccionada.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!-- <md-button class="md-raised md-primary" @click="setError()">Atras</md-button> -->
-          <!-- </div> -->
-                <div class="modal-footer">
-                  <md-card-actions>
-                    <md-button type="submit" class="md-dense md-raised" @click="ocultarDetalle()">Cerrar</md-button>
-                    <md-button type="submit" class="md-dense md-raised"  @click="atras()">Atras</md-button>
-                  </md-card-actions>
-                   <md-card-actions>
-                      <md-button
-                        type="submit"
-                        v-if="tipoAccion==1"
-                        class="md-dense md-raised md-primary"
-                        :disabled="sending"
-                        @click="registrarEquiposEs()"
-                      >Guardarr</md-button>
-                      
-                      <md-button
-                        type="submit"
-                        v-if="tipoAccion==2"
-                        class="md-dense md-raised md-primary"
-                        :disabled="sending"
-                        @click="actualizarEstacion()"
-                      >Actualizar</md-button>
-                    </md-card-actions> 
-              </div>
-        </template>
-          <template v-else-if="bEtapa==0">
-          <!-- Template equipos By Pass -->
-
-          <div class="table-responsive col-md-12">
-            <tr v-for="(etapa, index)  in arrayNomEstacion" :key="`etapa-${index}`">                 
-              <h5><td  v-text="'Estación - '+ etapa.nombre"></td></h5>
-            </tr>
-          <h6> {{"Registro Equipos "+this.textoEtapa +"  ( By Pass )"}}
-
-          </h6>
-          <br>
-            <table class="table table-bordered table-striped table-sm">
-              <thead>
-                <tr>
-                  <th>TAG</th>
-                  <th>Serial</th>
-                  <th>Modelo</th>
-                  <th>Nombre</th>
-                  <th>Opciones</th>
-                </tr>
-              </thead>
-              <tbody v-if="arrayTrenByPass.length">
-                <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
-                <tr v-for="(detalle, index) in arrayTrenByPass" :key="`detalle-${index}`">
-                  <td v-text="detalle.tag"></td>
-                  <td v-text="detalle.serial"></td>
-                  <td v-text="detalle.modelo"></td>
-                  <td v-text="detalle.nombre"></td>
-
-                  <td>
-                    <template v-if="detalle.edo_mto">
-                      <button type="button" class="btn btn-info btn-sm" data-tooltip title="En Mantenimiento" @click="dessetTecnico(articulo.id)">
-                        <i class="fa fa-hourglass-start"></i>
-                      </button>
-                    </template>
-                    <template v-else>                 
-                      <button type="button" class="btn btn-success btn-sm" data-tooltip title="Disponible" @click="agregarDetalleMto(detalle)">
-                        <i class="icon-check"></i>
-                      </button>
-                    </template>
-                  </td>
-                </tr>
-              </tbody>
-              <tbody v-else>
-                <tr>
-                  <td colspan="5">NO hay Equipos relacionados a la etapa seleccionada.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!-- </div> -->
-
-                <div class="modal-footer">
-                  <md-card-actions>
-                    <md-button type="submit" class="md-dense md-raised" @click="ocultarDetalle()">Cerrar</md-button>
-                    <md-button type="submit" class="md-dense md-raised"  @click="atras()">Atras</md-button>
-                  </md-card-actions>
-                    <md-card-actions>
-                      <md-button
-                        type="submit"
-                        v-if="tipoAccion==1"
-                        class="md-dense md-raised md-primary"
-                        :disabled="sending"
-                        @click="registrarEquiposEs()"
-                      >Guardarr</md-button>
-                      
-                      <md-button
-                        type="submit"
-                        v-if="tipoAccion==2"
-                        class="md-dense md-raised md-primary"
-                        :disabled="sending"
-                        @click="actualizarEstacion()"
-                      >Actualizar</md-button>
-                    </md-card-actions>
-              </div>
-          </template>
-
-          <template v-if="bVerE">
-            <!-- Ver equipos en Mto etapa principal y Bypass -->
-
-            <div class="table-responsive col-md-12">
-              <tr v-for="(etapa, index)  in arrayNomEstacion" :key="`etapa-${index}`">                 
-                <h5><td  v-text="'Estación - '+ etapa.nombre"></td></h5>
-              </tr>
-              <h6> {{"Mantenimiento de Equipos "}}
-              
-              </h6>                  
-              <br>
-              <table class="table table-bordered table-striped table-sm">
-                <thead>
-                  <tr>
-                    <th>Etapa</th>
-                    <th>TAG</th>
-                    <th>Serial</th>
-                    <th>Modelo</th>
-                    <th>Nombre</th>                  
-                    <th>Tren</th>                  
-                    <th>Opciones</th>
-                  </tr>
-                </thead>
-                <tbody v-if="arrayMtoPpal.length">
-                  <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
-                  <tr v-for="(detalle, index) in arrayMtoPpal" :key="`detalle-${index}`">
-                    <td v-text="detalle.nomEtapa"></td>
-                    <td v-text="detalle.tag"></td>
-                    <td v-text="detalle.serial"></td>
-                    <td v-text="detalle.modelo"></td>
-                    <td v-text="detalle.nombre"></td>                  
-                    <td>
-                       <template v-if="detalle.tp_tren==0">
-                        <span class="badge badge-success">Principal</span>
-                      </template>
-                      <template v-if="detalle.tp_tren==1">
-                        <span class="badge badge-primary">By Pass</span>
-                      </template>
-                    </td>                  
-                    <td>
-                    <md-button class="md-icon-button " @click="abrirModal3(detalle)" title="Agregar Actividades">                         
-                        <i class="material-icons Color1">playlist_add_check</i>
-                    </md-button>
-                    <md-button class="md-icon-button md-primary " @click="verAct(detalle)" title="Ver Actividades">
-                        <i class="material-icons Color2">visibility</i>
-                      </md-button>
-                    <md-button class="md-icon-button" @click="abrirModal4(detalle)" title="Agregar Insumos">
-                        <i class="material-icons Color1">build</i>
-                      </md-button>
-                    <md-button class="md-icon-button md-primary" @click="verAct(detalle)" title="Ver Insumos">
-                        <i class="material-icons Color3">visibility</i>
-                      </md-button>
-                    </td>
-                  </tr>
-                </tbody>
-                <tbody v-else>
-                  <tr>
-                    <td colspan="7">NO hay Equipos relacionados a la etapa seleccionada.</td>
-                  </tr>
-                </tbody>
-              </table>
-                </div>
-            
-                <div class="modal-footer">
-                  <md-card-actions>
-                    <md-button type="submit" class="md-dense md-raised" @click="ocultarDetalle()">Cerrar</md-button>
-                    <md-button type="submit" class="md-dense md-raised"  @click="atras()">Atras</md-button>
-                    <md-button class="md-raised md-primary" @click="setDone4('third', 'fourth')">Continue</md-button>
-                  </md-card-actions>
-              </div>
-            </template>
                 <!-- <md-button class="md-raised md-primary" @click="setDone('third')">Done</md-button> -->
             
             <template v-if="bVerA">
@@ -1678,15 +1443,13 @@ export default {
           console.log(error);
         });
     },
-        listarDetalle(page, buscar, criterio) {
+        listarDetalle() {
       let me = this;
       var url =
         "/detoficinae?page=" +
-        page +
+        1 +
         "&buscar=" +
-        this.idOficina +
-        "&criterio=" +
-        criterio;
+        this.idOficina ;
       axios
         .get(url)
         .then(function(response) {
@@ -1999,7 +1762,7 @@ export default {
     listarMto(page, buscar, criterio) {
       let me = this;
       var url =
-        "/mto?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
+        "/mtoec?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
       axios
         .get(url)
         .then(function(response) {
@@ -2293,7 +2056,6 @@ export default {
 
     registrarEquiposEs() {
       let me = this;
-
             axios
           .post("/mtoec/registrar", {
           idOficina: this.idOficina,
@@ -2394,7 +2156,7 @@ export default {
     this.listarMto(1,this.buscar, this.criterio);
       this.getOficina();
     // this.getEtapa();
-    this.listarExEtapa(1, this.buscar, this.criterio);
+    // this.listarExEtapa(1, this.buscar, this.criterio);
   }
 };
 </script>
