@@ -253,7 +253,7 @@
                         </a>
                         <div class="sidebar-submenu">
                             <ul>                                    
-                            <li @click="menu=20" >
+                            <li @click="menu=75" >
                                     <a  href="#"><i class="fas fa-charging-station"></i>Estaciones</a>
                                 </li>
                                 <li @click="menu=54" >

@@ -1137,6 +1137,7 @@ export default {
       listado: 1,
       sending: false,
       idTicketServ: 0,
+      tpCausal: "",
       idCatServ: 0,
       idUsuario: 0,
       idTec: 0,
@@ -1171,9 +1172,9 @@ export default {
         { id: "MA", name: "Muy Alta" }
       ],
       arrayTpCausal: [
-        { id: "1", name: "FACTURACIÓN" },
-        { id: "2", name: "INSTALACIÓN" },
-        { id: "3", name: "PRESTACIÓN" }
+        { id: "F", name: "FACTURACIÓN" },
+        { id: "I", name: "INSTALACIÓN" },
+        { id: "P", name: "PRESTACIÓN" }
       ],
       // Tipo Documento
       arrayMedio: [
@@ -1199,15 +1200,15 @@ export default {
         { id: "07", name: "RECHAZA" }
       ],
       // array select
-      arrayO: { id: 0, nombre: "Seleccione" },
+      arrayO: { id: 40, nomobj: "Seleccione" },
       arrayC: { id: 0, nombre: "Seleccione" },
-      arrayCA: { id: 0, nombre: "Seleccione" },
+      arrayCA: { id: 1, name: "Seleccione" },
       arrayA: { id: 0, nombre: "Seleccione" },
       arrayM: { id: "T", name: "Seleccione" },
       arrayRta: { id: 0, name: "Seleccione un tipo" },
-      arrayP: { id: "N", nombre: "Seleccione" },
-      arrayTC: { id: "", nombre: "Seleccione" },
-      arrayTT: { id: 0, nombre: "Seleccione" },
+      arrayP: { id: "N", name: "Seleccione" },
+      arrayTC: { id: "", name: "Seleccione" },
+      arrayTT: { id: 0, name: "Seleccione" },
       arrayL: { id: 0 ,nombre: "Seleccione", nomCargo: "" },
       arrayLider: [],
       arrayArea: [],
@@ -1831,7 +1832,7 @@ export default {
       this.clearForm();
       let me = this;
       (this.tipoAccion = 1), (me.listado = 0);
-      this.arrayO=[];  
+      // this.arrayO=[];  
       this.arrayL= [];
       this.arrayM.id="T";  
       this.arrayM.name="Telefónico";  
@@ -1916,6 +1917,8 @@ export default {
           id_usuario: this.idUsuario,
           id_objpqrs: this.arrayO.id,
           id_lider: this.arrayL.id,
+          idCausal: this.arrayCA.id,
+          tpCausal: this.arrayTC.id,
           medio: this.arrayM.id,
           prioridad: this.arrayP.id,
           nombres: this.form.nombres,

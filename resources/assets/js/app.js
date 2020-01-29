@@ -46,6 +46,7 @@ Vue.component('oficina', require('./components/Oficina.vue'));
 
 // Programacion de Mantenimientos
 Vue.component('mtoes', require('./components/MtoEs.vue'));
+Vue.component('solmtoes', require('./components/SolMtoEs.vue'));
 Vue.component('mtoec', require('./components/MtoEC.vue'));
 Vue.component('mtoveh', require('./components/MtoVeh.vue'));
 Vue.component('mtored', require('./components/MtoRed.vue'));

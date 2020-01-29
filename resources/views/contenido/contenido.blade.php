@@ -198,6 +198,10 @@
                 <actividadveh></actividadveh>
             </template>
    
+            <template v-if="menu==75">
+                <solmtoes></solmtoes>
+            </template>
+   
 
             <!-- Programacion  de Mantenimientos -->
             <template v-if="menu==20">

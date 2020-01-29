@@ -278,6 +278,8 @@ class TicketServController extends Controller
             $ticket->id_objpqrs = $request->id_objpqrs;
             $ticket->id_lider = $request->id_lider;
             $ticket->medio = $request->medio;
+            $ticket->id_causal = $request->idCausal;
+            $ticket->tp_causal = $request->tpCausal;
             $ticket->prioridad = $request->prioridad;
             $ticket->desc = $request->desc;
             $ticket->fecha = $mytime->toDateTimeString();                       
@@ -359,7 +361,7 @@ class TicketServController extends Controller
                 $detalle->id_tecnico = $det['id'];        
                 $detalle->is_respo = $det['Rol'];        
                 $detalle->save();
-                Mail::to($det['email'])->queue(new MessageRecibido($datosEmail,$det));
+                Mail::to($det['email'])->send(new MessageRecibido($datosEmail,$det));
             }          
             foreach($detalles2 as $ep=>$det)
             {

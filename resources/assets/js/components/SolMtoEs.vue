@@ -5,7 +5,7 @@
       <!-- Ejemplo de tabla Listado -->
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i> Mantenimiento de Estaciones.
+          <i class="fa fa-align-justify"></i> Ejecución Mantenimiento de Estaciones.
           <button
             type="button"
             @click="mostrarDetalle()"
@@ -58,10 +58,10 @@
                     <td>
                        <md-button
                         class="md-icon-button"
-                        @click="mostrarActualizar(objeto)"
-                        title="Actualizar"
+                        @click="verEquipos(objeto)"
+                        title="Ejecutar"
                       >
-                        <i class="material-icons Color3">edit</i>
+                        <i class="material-icons Color3">assignment</i>
                       </md-button>
                       <md-button
                         class="md-icon-button md-primary"
@@ -117,80 +117,69 @@
                 md-description="Optional"
                 :md-done.sync="first"
               >
-                <div class="md-layout">
-                  <div class="md-layout-item">
-                    <md-datepicker
-                      v-model="fecR"
-                      value="fecR"
-                      @input="toString"
-                      md-immediately
-                      :md-model-type="String"
-                    >
-                      <label>Fecha de Realización</label>
-                    </md-datepicker>
-
-                  </div>&nbsp;&nbsp;&nbsp;
-                  <div class="md-layout-item">
-                    <md-datepicker
-                      v-model="fecF"
-                      value="fecF"
-                      @input="toString"
-                      md-immediately
-                      :md-model-type="String"
-                    >
-                      <label>Fecha de Finalización</label>
-                    </md-datepicker>
-                  </div>&nbsp;&nbsp;&nbsp;
-                  <div class="md-layout-item">
-                 <md-field md-clearable>
-                      <label>Tipo Mantenimiento</label>
-                      <md-select v-model="tpMto" md-dense>
-                        <md-option
-                          v-for="tipoM in arrayTpMto"
-                          :key="tipoM.id"
-                          :value="tipoM.id"
-                        >{{tipoM.name}}</md-option>
-                      </md-select>
-                    </md-field>
-                  </div>&nbsp;&nbsp;&nbsp;
-                  <div class="md-layout-item">
-                 <md-field md-clearable>
-                      <label>Frecuencia</label>
-                      <md-select v-model="frec" md-dense >
-                        <md-option
-                          v-for="frec in arrayFrec"
-                          :key="frec.id"
-                          :value="frec.id"
-                        >{{frec.name}}</md-option>
-                      </md-select>
-                    </md-field>
-                  </div>&nbsp;&nbsp;&nbsp;
-                  <div class="md-layout-item">
-                    <md-field md-clearable>
-                      <label>Tipo de Estación</label>
-                      <md-select v-model="idTpEstacion" md-dense @input="getEstacion">
-                        <md-option
-                          v-for="(tpestacion,index) in arrayTpEstacion"
-                          :key="`tpestacion-${index}`"
-                          :value="tpestacion.id"
-                        >{{tpestacion.nombre}}</md-option>
-                      </md-select>
-                    </md-field>
-                  </div>&nbsp;&nbsp;&nbsp;
-                  <div class="md-layout-item">
-                    <md-field md-clearable>
-                      <label>Estación</label>
-                      <md-select v-model="idEstacion" md-dense  @input="getNomEstacion">
-                        <md-option
-                          v-for="(estacion,index) in arrayEstacion"
-                          :key="`estacion-${index}`"
-                          :value="estacion.id"                        
-                        >{{estacion.nombre}}</md-option>
-                      </md-select>
-                    </md-field>
-                  </div>
+          <div class="md-layout">
+                 <div class="table-responsive col-md-12">
+              <tr v-for="(etapa, index)  in arrayNomEstacion" :key="`etapa-${index}`">                 
+                <h5><td  v-text="'Estación - '+ etapa.nombre"></td></h5>
+              </tr>
+              <h6> {{"Mantenimiento de Equipos "}}
+              
+              </h6>                  
+              <br>
+              <table class="table table-bordered table-striped table-sm">
+                <thead>
+                  <tr>
+                    <th>Etapa</th>
+                    <th>TAG</th>
+                    <th>Serial</th>
+                    <th>Modelo</th>
+                    <th>Nombre</th>                  
+                    <th>Tren</th>                  
+                    <th>Opciones</th>
+                  </tr>
+                </thead>
+                <tbody v-if="arrayMtoPpal.length">
+                  <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
+                  <tr v-for="(detalle, index) in arrayMtoPpal" :key="`detalle-${index}`">
+                    <td v-text="detalle.nomEtapa"></td>
+                    <td v-text="detalle.tag"></td>
+                    <td v-text="detalle.serial"></td>
+                    <td v-text="detalle.modelo"></td>
+                    <td v-text="detalle.nombre"></td>                  
+                    <td>
+                       <template v-if="detalle.tp_tren==0">
+                        <span class="badge badge-success">Principal</span>
+                      </template>
+                      <template v-if="detalle.tp_tren==1">
+                        <span class="badge badge-primary">By Pass</span>
+                      </template>
+                    </td>                  
+                    <td>
+                    <md-button class="md-icon-button " @click="abrirModal3(detalle)" title="Agregar Actividades">                         
+                        <i class="material-icons Color1">playlist_add_check</i>
+                    </md-button>
+                    <md-button class="md-icon-button md-primary " @click="verAct(detalle)" title="Ver Actividades">
+                        <i class="material-icons Color2">visibility</i>
+                      </md-button>
+                    <md-button class="md-icon-button" @click="abrirModal4(detalle)" title="Agregar Insumos">
+                        <i class="material-icons Color1">build</i>
+                      </md-button>
+                    <md-button class="md-icon-button md-primary" @click="verAct(detalle)" title="Ver Insumos">
+                        <i class="material-icons Color3">visibility</i>
+                      </md-button>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody v-else>
+                  <tr>
+                    <td colspan="7">NO hay Equipos relacionados a la etapa seleccionada.</td>
+                  </tr>
+                </tbody>
+              </table>
                 </div>
-                <div class="md-layout"></div>
+              
+          </div>
+
 
                 <md-button class="md-raised md-primary" @click="setDone('first', 'second')">Continue</md-button>
               </md-step>
@@ -372,7 +361,7 @@
                         class="md-dense md-raised md-primary"
                         :disabled="sending"
                         @click="registrarEquiposEs()"
-                      >Guardar</md-button>
+                      >Guardarr</md-button>
                       
                       <md-button
                         type="submit"
@@ -484,9 +473,9 @@
                     <th>Opciones</th>
                   </tr>
                 </thead>
-                <tbody v-if="arrayVerMto.length">
+                <tbody v-if="arrayMtoPpal.length">
                   <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
-                  <tr v-for="(detalle, index) in arrayVerMto" :key="`detalle-${index}`">
+                  <tr v-for="(detalle, index) in arrayMtoPpal" :key="`detalle-${index}`">
                     <td v-text="detalle.nomEtapa"></td>
                     <td v-text="detalle.tag"></td>
                     <td v-text="detalle.serial"></td>
@@ -1321,7 +1310,7 @@
 
 <script>
 import format from "date-fns/format";
-import Toasted from 'vue-toasted';
+
 import vSelect from "vue-select";
 
 import { validationMixin } from "vuelidate";
@@ -1335,9 +1324,7 @@ import {
   MdDatepicker,
   MdSteppers
 } from "vue-material/dist/components";
-Vue.use(Toasted,  {
-    iconPack : 'material' // set your iconPack, defaults to material. material|fontawesome|custom-class
-});
+
 Vue.use(MdButton);
 Vue.use(MdContent);
 Vue.use(MdField);
@@ -1406,7 +1393,6 @@ export default {
       arrayTpMto: [{id: 1, name:"PREVENTIVO"},{id: 2 ,name:"CORRECTIVO"}],      
       arrayFrec: [{id:0 ,name:"INMEDIATO"},{id:1 ,name:"1 MES"},{id:2 ,name:"2 MESES"},{id:3 ,name: "3 MESES"},{id:4 ,name:"4 MESES"},{id:6 ,name:"6 MESES"},{id:9 ,name:"9 MESES"},{id:12 ,name:"12 MESES"},{id:18 ,name:"18 MESES"},{id:24 ,name:"24 MESES"},{id:36 ,name:"36 MESES"}],
       arrayMtoPpal: [],
-      arrayVerMto: [],
       arrayMtoByPass: [],
       arrayAct: [],
       arrayIns: [],
@@ -1640,7 +1626,9 @@ export default {
       this.getExEtapa1();
     },
     verEquipos(data = []) {
+      this.listado = 0;
       this.bVerE=1;
+      this.idMto = data["idMto"];
       this.textoEtapa = data["nombre"];
       this.idEtapa =data["id"];
       this.bEtapa = null;
@@ -1806,7 +1794,6 @@ export default {
           nombre: data["nombreFull"],
           Rol: 0
         });
-          me.mensajeToast("Agregado","bubble","check","success");
       } 
     },
     agregarDetalleModal(data = []) {
@@ -1824,7 +1811,6 @@ export default {
           nombre: data["nombre"],
           desc: data["desc"]
         });
-        me.mensajeToast("Agregado","bubble","check","success");
       }
     },
     agregarDetAct(data = []) {
@@ -1843,7 +1829,7 @@ export default {
           nombre: data["nombre"],
           desc: data["desc"]
         });
-          me.mensajeToast("Agregado","bubble","check","success");
+          me.mensaje("Agregar", "Agrego ");
       }
     },
     agregarDetalleMto(data = []) {
@@ -1870,7 +1856,7 @@ export default {
           id_equipo: data["idequipo"],
           tp_tren: 0
         });
-          me.mensajeToast("Agregado","bubble","check","success");
+            me.mensaje("Agregar", "Agrego ");
           }
       }
       else {
@@ -1894,7 +1880,7 @@ export default {
           id_equipo: data["idequipo"],
           tp_tren: 1
         });
-          me.mensajeToast("Agregado","bubble","check","success");
+        me.mensaje("Agregar", "Agrego ");
         }        
         }
     },
@@ -2062,7 +2048,7 @@ export default {
         .get(url)
         .then(function(response) {
           var respuesta = response.data;
-          me.arrayVerMto= respuesta.equipo;
+          me.arrayMtoPpal= respuesta.equipo;
         })
         .catch(function(error) {
           console.log(error);
@@ -2236,7 +2222,7 @@ export default {
           var respuesta = response.data;
           me.idMto = respuesta.idMto;
             // me.listarMto(1, "", "nombre");
-
+          
             me.mensaje("Guardado", "Guardo ");
           })
           .catch(function(error) {
@@ -2258,7 +2244,6 @@ export default {
             // me.ocultarDetalle();
             // me.listarEstacion(1, "", "nombre");
             me.mensaje("Guardado", "Guardo ");
-
           })
           .catch(function(error) {
             console.log(error);
@@ -2325,20 +2310,11 @@ export default {
       let me = this;
       me.arrayEtapas.splice(index, 1);
     },
-    mensajeToast(msj,tema,icono,tp){
-                let toast = this.$toasted.show(msj, { 
-            theme: tema, 
-            type: tp, 
-            position: "top-right", 
-            icon: icono, 
-            duration : 2000
-          });
-    },
     mensaje(tipo, crud) {
       swal(tipo, "El registro se " + crud + " con éxito.", "success");
     }
   },
-    
+
   mounted() {
     this.getPerso(1,this.buscar, this.criterio);
     this.listarMto(1,this.buscar, this.criterio);
