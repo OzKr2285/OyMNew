@@ -9636,6 +9636,13 @@ body {
   /* Damos un color de fondo mientras la imagen está cargando  */
   background-color: #ffffff;
 }
+.btn-ttc,
+.btn-ttc:hover,
+.btn-ttc:active {
+  color: white;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #03546e;
+}
 
 *[dir="rtl"] {
   direction: rtl;

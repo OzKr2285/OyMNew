@@ -5,7 +5,7 @@
       <!-- Ejemplo de tabla Listado -->
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i> Gestión de Redes
+          <i class="fa fa-align-justify"></i> Gestion Redes
           <button
             type="button"
             @click="mostrarDetalle()"
@@ -20,14 +20,27 @@
               <table class="table table-bordered table-striped table-sm">
                 <thead>
                   <tr class="p-3 mb-2 bg-dark text-white">
+                    <th>Tipo de Red</th>
                     <th>Nombre</th>
+                    <th>Mercado</th>
                     <th>Opciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="red in arrayRed" :key="red.id">
+                    <td>
+                       <template v-if="red.tp_red==1">
+                        <span>Urbana</span>
+                      </template>
+                      <template else v-if="red.tp_red==2">
+                        <span>Rural</span>
+                      </template>
+                      <template else v-if="red.tp_red==3">
+                        <span>Troncal</span>
+                      </template>
+                    </td>
                     <td v-text="red.nombre"></td>
-
+                    <td v-text="red.nomMercado"></td>
                     <td>
                       <button
                         type="button"
@@ -45,7 +58,7 @@
                           class="btn btn-danger btn-sm"
                           data-tooltip
                           title="Eliminar"
-                          @click="eliminarRed(red)"
+                          @click="eliminarEstacion(red)"
                         >
                           <i class="icon-trash"></i>
                         </button>
@@ -93,22 +106,86 @@
             <form action method="post" enctype="multipart/form-data" class="form-horizontal">
               <md-card-content>
                 <div class="md-layout">
-                  <md-field md-clearable :class="getValidationClass('nombre')">
-                    <label for="first-name">Nombre</label>
-                    <md-input
-                      name="first-name"
-                      id="first-name"
-                      autocomplete="given-name"
-                      v-model="form.nombre"
-                      :disabled="sending"
-                    />
-                    <span
-                      class="md-error"
-                      v-if="!$v.form.nombre.required"
-                    >El nombre del tipo de Estación es requerido</span>
-                    <!-- <span class="md-error" v-else-if="!$v.form.firstName.minlength">Invalid first name</span> -->
+                  <span class="md-caption">Tipo de Red</span>
+                    <multiselect
+                      v-model="arrayTR"
+                      :options="arraytpRed"
+                      placeholder="Seleccione un Tipo de Red"
+                      :custom-label="nameWithNombre"
+                      label="nombre"
+                      track-by="nombre"
+                    ></multiselect>
+                  </div>
+                  <div class="md-layout">
+                    <md-field md-clearable>
+                      <label for="first-name">Ingrese el nombre de la Red</label>
+                      <br>
+                      <md-input
+                        name="first-name"
+                        id="first-name"
+                        autocomplete="given-name"
+                        v-model="nombre"
+                        :disabled="sending"
+                      />
+                    </md-field>
+                  </div>
+                  <div class="md-layout">
+                  <!-- <div class="md-layout-item">
+                    <span class="md-caption">Mercado</span>
+                    <multiselect
+                      v-model="arrayMer"
+                      :options="arrayMercado"
+                      placeholder="Seleccione un Mercado"
+                      :custom-label="nameWithNombre"
+                      @input="listarDetalle()"
+                      label="nombre"
+                      track-by="nombre"
+                    ></multiselect>
+                </div>&nbsp;&nbsp;&nbsp; -->
+                  <div class="md-layout-item">
+                  <md-field md-clearable>
+                    <label>Seleccione el Mercado</label>
+                    <md-select v-model="idMercado" md-dense @input="listarDetalle()">
+                      <md-option
+                        v-for="objeto in arrayMercado"
+                        :key="objeto.id"
+                        :value="objeto.id"
+                      >{{objeto.nombre}}</md-option>
+                    </md-select>
+                  </md-field>
+                </div>&nbsp;&nbsp;&nbsp;
+                  <div class="md-layout-item">
+                  <md-field md-clearable>
+                    <label>Seleccione un Municipio</label>
+                    <md-select v-model="idMp" md-dense>
+                      <md-option
+                        v-for="objeto in arrayDetM"
+                        :key="objeto.id"
+                        :value="objeto.id"
+                      >{{objeto.nombre}}</md-option>
+                    </md-select>
                   </md-field>
                 </div>
+                  <!-- <div class="md-layout-item">
+                    <span class="md-caption">Municipio</span>
+                    <multiselect
+                      v-model="arrayDet"
+                      :options="arrayDetM"
+                      placeholder="Seleccione un Municipio"
+                      :custom-label="nameWithNombre"
+                      label="nombre"
+                      track-by="nombre"
+                    ></multiselect>
+                </div> -->
+                </div>
+                <div class="md-layout">
+                <md-field>
+                  <label>Descripción</label>
+                  <md-textarea v-model="obs"></md-textarea>
+                  <md-icon>description</md-icon>
+                </md-field>
+              </div>
+
               </md-card-content>
             </form>
           </div>
@@ -140,6 +217,7 @@
       <!-- Fin ejemplo de tabla Listado -->
     </div>
     <!--Inicio del modal agregar/actualizar-->
+ 
 
     <!-- /.modal-dialog -->
 
@@ -149,14 +227,19 @@
 
 <script>
 import { validationMixin } from "vuelidate";
+import format from "date-fns/format";
 import {
   MdButton,
   MdContent,
   MdField,
   MdCard,
   MdMenu,
+  MdSwitch,
+  MdDivider,
   MdList
 } from "vue-material/dist/components";
+import Multiselect from "vue-multiselect";
+import Datepicker from 'vuejs-datepicker';
 // import VueMaterial from 'vue-material'
 // Vue.use(VueMaterial)
 Vue.use(MdButton);
@@ -164,26 +247,67 @@ Vue.use(MdContent);
 Vue.use(MdField);
 Vue.use(MdCard);
 Vue.use(MdMenu);
+Vue.use(MdSwitch);
+Vue.use(MdDivider);
 Vue.use(MdList);
 import { required, minLength } from "vuelidate/lib/validators";
 
 export default {
   mixins: [validationMixin],
-
+  components: {
+    Multiselect,
+    Datepicker
+  },
   data() {
+    let dateFormat = this.$material.locale.dateFormat || "yyyy-MM-dd";
+    let now = new Date();
+
     return {
-      form: {
-        nombre: "",
-        descripcion: ""
-      },
       demo: 0,
+      fecCrea: now,
+      tpRed: 0,
+      cantP: 0,
+      cbx: 1,
+
+      idDpto: 0,
+      idMp: 0,
+      idMp2: 0,
+      idRed: 0,
+      tpDiam: 0,
+      fecN: format(now, dateFormat),
+      fecN2: "",
+
+      planoG: "",
+      planoC: "",
+      planoA: "",
+      planoP: "",
+      nombre: "",
+      descripcion: "",
+      obs: "",
+      longitud: "",
+      idMercado: "",
+
       tipoAccion: 1,
       listado: 1,
       sending: false,
-      redId:0,
+      idTpEstacion: 0,
+      estacion_id: 0,
 
+      arrayDpto: [],
+      arrayDetRed: [],
+      arrayMpio: [],
+      arrayM: { id: 0, nombre: "", nomDpto: "" },
+      arrayTR: { id: 0, nombre: ""},
+      arraytpRed: [
+        { id: "1", nombre: "URBANA" },
+        { id: "2", nombre: "RURAL" },
+        { id: "3", nombre: "TRONCAL" }
+      ],
       arrayRed: [],
-      arrayRed: [],
+      arrayMercado: [],
+      arrayDetM: [],
+  
+
       modal: 0,
       tituloModal: "",
       tipoAccion: 0,
@@ -202,16 +326,7 @@ export default {
     };
   },
 
-  validations: {
-    form: {
-      nombre: {
-        required
-      },
-      descripcion: {
-        required
-      }
-    }
-  },
+  validations: {},
 
   computed: {
     isActived: function() {
@@ -239,9 +354,46 @@ export default {
         from++;
       }
       return pagesArray;
+    },
+    dateFormat() {
+      return this.$material.locale.dateFormat || "yyyy-MM-dd";
+      // return moment(date).format('LL')
+    },
+    mdType() {
+      switch (this.mdTypeValue) {
+        case "fecCrea":
+          return String;
+      }
     }
   },
   methods: {
+    setCbx() {
+      if (this.tpRed == "Rural") {
+        this.cbx = 0;
+      } else {
+        this.cbx = 1;
+      }
+    },
+    toDate() {
+      switch (this.type) {
+        case "null":
+          this.fecCompra = null;
+          break;
+
+        case "fecCrea":
+          this.fecCrea = parse(this.fecCrea, this.dateFormat, new Date());
+          break;
+      }
+    },
+
+    toString() {
+      this.toDate();
+      this.fecCrea = this.fecCrea && format(this.fecCrea, this.dateFormat);
+    },
+    toString2() {
+      this.fecN2 = this.fecN && format(this.fecN, this.dateFormat);
+      //  this.fecN = moment(this.fecN).format("YYYY-MM-DD");
+    },
     getValidationClass(fieldName) {
       const field = this.$v.form[fieldName];
       if (field) {
@@ -260,28 +412,152 @@ export default {
     },
     clearForm() {
       this.$v.$reset();
-      this.form.nombre = null;
-      this.form.descripcion = null;
+      this.tpRed = "";
+      this.tpDiam = "";
+      this.idRed = "";
+      this.id_mpio = "";
+      this.fecCrea = "";
+      this.cantP = "";
+      this.desc = "";
+
+    },
+    nameWithMpio({ nombre, nomDpto }) {
+      return `${nombre} — [${nomDpto}]`;
+    },
+    nameWithNombre({ nombre }) {
+      return `${nombre}`;
     },
 
-    mostrarActualizar(data = []) {
-      let me = this;
-      (this.tipoAccion = 2), (me.listado = 0);
-      this.form.nombre = data["nombre"];
-      (this.redId = data["id"]);
-    },
     mostrarDetalle() {
       this.clearForm();
       let me = this;
       (this.tipoAccion = 1), (me.listado = 0);
     },
+    getDpto() {
+      let me = this;
+
+      var url = "/dpto/selectDpto";
+      axios
+        .get(url)
+        .then(function(response) {
+          //console.log(response);
+          var respuesta = response.data;
+          me.arrayDpto = respuesta.dpto;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    listarDetalle() {
+      let me = this;
+      var url =
+        "/detmercado/detalle?buscar=" +
+        this.idMercado 
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayDetM = respuesta.refe;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    getMaterial() {
+      let me = this;
+
+      var url = "/tpmaterialred/selectTpMaterial";
+      axios
+        .get(url)
+        .then(function(response) {
+          //console.log(response);
+          var respuesta = response.data;
+          me.arrayMaterial = respuesta.tpmaterial;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+      getMercado() {
+      let me = this;
+
+      var url = "/mercado/selectMercado";
+      axios
+        .get(url)
+        .then(function(response) {
+          //console.log(response);
+          var respuesta = response.data;
+          me.arrayMercado = respuesta.mercado;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+
+    getMpio() {
+      let me = this;
+      var url = "/mpio/selectMpio";
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayMpio = respuesta.mpio;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+
+    mostrarActualizar(data = []) {
+      let me = this;
+      (this.tipoAccion = 2), (me.listado = 0);
+      this.id = data["id"];
+      this.tpRed = data["tp_red"];
+      this.tpDiam = data["id_diametro"];
+      this.idRed = data["id_red"];
+      this.idMp = data["id_mpio"];
+      this.idMp2 = data["id_mpiofin"];
+      this.fecCrea = data["fec_creacion"];
+      this.cantP = data["cant_poli"];
+      this.desc = data["desc"];
+      this.planoG = data["plano_g"];
+      this.planoA = data["plano_a"];
+      this.planoC = data["plano_c"];
+      this.planoP = data["plano_p"];
+    },
+
     ocultarDetalle() {
       this.listado = 1;
+    },
+    encuentra(id) {
+      var sw = 0;
+      for (var i = 0; i < this.arrayDetRed.length; i++) {
+        if (this.arrayDetRed[i].id == id) {
+          sw = true;
+        }
+      }
+      return sw;
+    },
+    agregarSecRed(data = []) {
+      let me = this;
+      if (me.encuentra(data["idticket"])) {
+        swal({
+          type: "error",
+          title: "Error...",
+          text: "La Disponibilidad seleccionada ya se encuentra agregado!"
+        });
+      } else {
+        me.arrayDetRed.push({
+          id: data["idticket"],
+          fecha: data["fecha"],
+          desc: data["desc"]
+        });
+      }
     },
     listarRed(page, buscar, criterio) {
       let me = this;
       var url =
-        "/red?page=" +
+        "/fichared?page=" +
         page +
         "&buscar=" +
         buscar +
@@ -291,7 +567,7 @@ export default {
         .get(url)
         .then(function(response) {
           var respuesta = response.data;
-          me.arrayRed = respuesta.red.data;
+          me.arrayRed = respuesta.fichared.data;
           me.pagination = respuesta.pagination;
         })
         .catch(function(error) {
@@ -309,9 +585,15 @@ export default {
       let me = this;
 
       axios
-        .post("/red/registrar", {
-          nombre: this.form.nombre.toUpperCase(),
-          descripcion: this.form.descripcion.toUpperCase()
+        .post("/fichared/registrar", {
+          tp_red: this.arrayTR.id,
+          id_mpio: this.idMp,
+          nombre: this.nombre.toUpperCase(),
+          desc: this.obs,
+          plano_g: this.planoG,
+          plano_a: this.planoA,
+          plano_c: this.planoC,
+          plano_p: this.planoP
         })
         .then(function(response) {
           me.ocultarDetalle();
@@ -322,13 +604,16 @@ export default {
           console.log(error);
         });
     },
+
     actualizarRed() {
       let me = this;
 
       axios
-        .put("/red/actualizar", {
+        .put("/estacion/actualizar", {
+          idTpEstacion: this.idTpEstacion,
           nombre: this.form.nombre,
-          id: this.redId
+          descripcion: this.form.descripcion,
+          id: this.estacion_id
         })
         .then(function(response) {
           me.ocultarDetalle();
@@ -339,7 +624,7 @@ export default {
           console.log(error);
         });
     },
-    eliminarRed(data = []) {
+    eliminarEstacion(data = []) {
       swal({
         title: "Esta seguro de Eliminar la Estación " + data["nombre"],
         type: "warning",
@@ -355,10 +640,10 @@ export default {
       }).then(result => {
         if (result.value) {
           let me = this;
-          this.redId = data["id"];
+          this.estacion_id = data["id"];
           axios
-            .post("/red/eliminar", {
-              id: this.redId
+            .post("/estacion/eliminar", {
+              id: this.estacion_id
             })
             .then(function(response) {
               me.ocultarDetalle();
@@ -382,6 +667,11 @@ export default {
   },
 
   mounted() {
+    this.getMpio();
+    this.getMercado();
+    // this.getDpto();
+    // this.getRed();
+    // this.getDiam();
     this.listarRed(1, this.buscar, this.criterio);
   }
 };

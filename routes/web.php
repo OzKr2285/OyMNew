@@ -57,7 +57,9 @@ Route::group(['middleware'=>['auth']],function(){
     Route::group(['middleware' => ['Vendedor']], function () {
         Route::get('/cliente', 'ClienteController@index');
         Route::post('/cliente/registrar', 'ClienteController@store');
+        Route::post('/cliente/registrar2', 'ClienteController@store2');
         Route::put('/cliente/actualizar', 'ClienteController@update');        
+        Route::put('/cliente/actualizar2', 'ClienteController@update2');        
         Route::get('/cliente/selectCliente', 'ClienteController@selectCliente');
 
         Route::get('/articulo/buscarArticuloVenta', 'ArticuloController@buscarArticuloVenta');
@@ -152,12 +154,16 @@ Route::group(['middleware'=>['auth']],function(){
         Route::get('/detinsumo/insumose', 'DetInsEquipoController@InsumosE');
         
         Route::get('/detmercado', 'DetMercadoController@index');
+        Route::get('/detmercado/detalle', 'DetMercadoController@detMercado');
         Route::post('/detmercado/registrar', 'DetMercadoController@store');
         Route::put('/detmercado/actualizar', 'DetMercadoController@update');
         Route::post('/detmercado/eliminar', 'DetMercadoController@destroy');
 
         Route::get('/detmtoes', 'DetMtoEsController@equiposMto');   
         // Route::get('/detmtoes/get', 'DetMtoEsController@equiposMto');
+
+        Route::post('/detred/registrar', 'DetRedController@store');
+        Route::get('/detred/detalle', 'DetRedController@detalle');
 
         Route::get('/diametro', 'DiametroController@index');
         Route::post('/diametro/registrar', 'DiametroController@store');
@@ -188,6 +194,8 @@ Route::group(['middleware'=>['auth']],function(){
         Route::get('/detoficinae', 'DetOficinaEController@index');
         Route::post('/detoficinae/registrar', 'DetOficinaEController@store');
         Route::post('/detoficinae/eliminar', 'DetOficinaEController@destroy');
+
+        Route::get('/detmtoec', 'DetMtoECController@index');
 
         Route::get('/detmtoveh', 'DetMtoVehController@index');
         Route::post('/detmtoveh/registrar', 'DetMtoVehController@store');
@@ -224,6 +232,7 @@ Route::group(['middleware'=>['auth']],function(){
         Route::post('/fichared/registrar', 'FichaRedController@store');
         Route::put('/fichared/actualizar', 'FichaRedController@update');
         Route::post('/fichared/eliminar', 'FichaRedController@destroy');
+        Route::get('/fichared/selectRed', 'FichaRedController@selectRed');
         
         Route::get('/fichaveh', 'FichaVehController@index');
         Route::post('/fichaveh/registrar', 'FichaVehController@store');
@@ -390,6 +399,8 @@ Route::group(['middleware'=>['auth']],function(){
         Route::put('/tpmaterial/actualizar', 'TpMaterialController@update');
         Route::post('/tpmaterial/eliminar', 'TpMaterialController@destroy');
         Route::get('/tpmaterial/selectTpMaterial', 'TpMaterialController@selectTpMaterial');
+        
+        Route::get('/tpmaterialred/selectTpMaterial', 'TpMaterialRedController@selectTpMaterial');
         
         Route::get('/tptramite', 'TpTramiteController@index');
         Route::post('/tptramite/registrar', 'TpTramiteController@store');

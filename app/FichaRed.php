@@ -10,13 +10,10 @@ class FichaRed extends Model
     protected $table = 'fichared';
     protected $fillable = [
         'tp_red', 
-        'id_diametro',
-        'id_red',
+        'nombre',
         'id_mpio',
-        'id_mpiofin',
-        'fec_creacion',
-        'cant_poli',
         'desc',
+        'total',
         'plano_g',
         'plano_a',
         'plano_c',

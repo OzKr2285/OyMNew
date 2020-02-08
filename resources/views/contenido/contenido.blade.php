@@ -56,7 +56,7 @@
             </template>
 
             <template v-if="menu==10">
-            <red></red>
+            <materialred></materialred>
             </template>
             
             <template v-if="menu==11">
@@ -200,6 +200,12 @@
    
             <template v-if="menu==75">
                 <solmtoes></solmtoes>
+            </template>
+            <template v-if="menu==76">
+                <red></red>
+            </template>
+            <template v-if="menu==77">
+                <solmtoec></solmtoec>
             </template>
    
 

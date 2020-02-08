@@ -150,7 +150,7 @@ class TicketServController extends Controller
             ->join('objpqrs','serv_pqrs.id_objpqrs','=','objpqrs.id')
             ->join('categorias','objpqrs.id_cat','=','categorias.id')
             ->select('serv_pqrs.id as idticket','serv_pqrs.fecha','personas.id','personas.nombreFull','personas.direccion','mpios.nombre as mpio','personas.telefono', 'categorias.nombre as nomCat','objpqrs.nombre','serv_pqrs.desc','serv_pqrs.prioridad','serv_pqrs.edo' )
-            ->where('serv_pqrs.id_objpqrs', 7)
+            ->where('serv_pqrs.id_objpqrs', 26)
             ->orderBy('serv_pqrs.fecha', 'personas.nombre')->paginate(15);
         }
         else{
@@ -159,7 +159,7 @@ class TicketServController extends Controller
             ->join('objpqrs','serv_pqrs.id_objpqrs','=','objpqrs.id')
             ->join('categorias','objpqrs.id_cat','=','categorias.id')
             ->select('serv_pqrs.id as idticket','serv_pqrs.fecha','personas.id','personas.nombreFull','personas.direccion','mpios.nombre as mpio','personas.telefono', 'categorias.nombre as nomCat','objpqrs.nombre','serv_pqrs.desc','serv_pqrs.prioridad','serv_pqrs.edo' )
-            ->where('serv_pqrs.id_objpqrs', 7)
+            ->where('serv_pqrs.id_objpqrs', 26)
             ->orderBy('serv_pqrs.fecha', 'personas.nombre')->paginate(15);
            
             

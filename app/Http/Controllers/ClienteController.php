@@ -9,7 +9,7 @@ class ClienteController extends Controller
 {
     public function index(Request $request)
     {
-        // if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;
@@ -45,7 +45,7 @@ class ClienteController extends Controller
     }
     public function index2(Request $request)
     {
-        // if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;
@@ -83,7 +83,7 @@ class ClienteController extends Controller
     
     public function store(Request $request)
     {
-        // if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
         $persona = new Persona();
         $persona->id = $request->nui;
         $persona->nombres = $request->nombres;
@@ -99,6 +99,22 @@ class ClienteController extends Controller
         $persona->telefono = $request->telefono;
         $persona->email = $request->email;
 
+        $persona->save();
+    }
+    public function store2(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+        $persona = new Persona();
+        $persona->id = $request->id;
+        $persona->num_doc = $request->id;
+        $persona->id_cargo = 42;
+        $persona->tp_doc= "CC";
+        $persona->id_mpio= "15299";
+        $persona->nombres = $request->nombres;
+        $persona->apellidos = $request->apellidos;
+        $persona->direccion = $request->direccion;
+        $persona->telefono = $request->telefono;
+        $persona->email = $request->email;
         $persona->save();
     }
     // store tecnico
@@ -139,6 +155,19 @@ class ClienteController extends Controller
         $persona->direccion = $request->direccion;
         $persona->fec_nac = $request->fec_nac;
         $persona->observacion = $request->observacion;
+        $persona->telefono = $request->telefono;
+        $persona->email = $request->email;
+        
+        $persona->save();
+    }
+    public function update2(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+        $persona = Persona::findOrFail($request->id);
+        $persona->id = $request->id;
+        $persona->nombres = $request->nombres;
+        $persona->apellidos = $request->apellidos;
+        $persona->direccion = $request->direccion;
         $persona->telefono = $request->telefono;
         $persona->email = $request->email;
         

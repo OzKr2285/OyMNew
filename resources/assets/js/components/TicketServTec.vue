@@ -153,6 +153,58 @@
                                     <md-textarea v-model="observacion" disabled></md-textarea>
                                 </md-field>
                             </div>
+                         <template v-if="idObjeto==26">   
+                        <div class="md-layout">
+                            <div class="md-layout-item ">
+                                <md-switch v-model="ER">Existe Red</md-switch>
+                            </div>
+                            <div class="md-layout-item ">
+                                <md-switch v-model="EA">Existe Acometida</md-switch>
+                            </div>
+                            <div class="md-layout-item ">
+                                <md-switch v-model="EI">Existe Inst. Interna</md-switch>
+                            </div>
+                            <div class="md-layout-item ">
+                                <md-switch v-model="A">Apta</md-switch>
+                            </div>
+                            <div class="md-layout-item ">
+                                <md-switch v-model="REE"
+                                >Requiere Elementos Especiales</md-switch
+                                >
+                            </div>
+                            <div class="md-layout-item ">
+                                <md-switch v-model="ROE"
+                                >Requiere Obras Especiales</md-switch
+                                >
+                            </div>
+
+                </div>
+                    <div class="md-layout">                    
+                    <div class="md-layout-item">                    
+                    <span class="md-body-1">Material Excavar</span>
+                    <md-checkbox v-model="demo" value="AT">AT</md-checkbox>
+                    <md-checkbox v-model="demo" value="AC">AC</md-checkbox>
+                    <md-checkbox v-model="demo" value="AE">AE</md-checkbox>
+                    <md-checkbox v-model="demo" value="VT">VT</md-checkbox>
+                    <md-checkbox v-model="demo" value="VC">VC</md-checkbox>
+                    <md-checkbox v-model="demo" value="VA">VA</md-checkbox>
+                  </div>
+                    <div class="md-layout-item md-size-15">
+                    <md-field>
+                      <label for="first-name">Dist. mts Red</label>
+                      <md-input
+                        class="md-body-2"
+                        name="first-name"
+                        id="first-name"
+                        autocomplete="given-name"
+                        v-model="distMts"
+                      />
+
+                      <!-- <span class="md-error" v-else-if="!$v.form.firstName.minlength">Invalid first name</span> -->
+                    </md-field>
+                  </div>
+                  </div>
+            </template>
                             <div class="md-layout">
                                 <md-field>
                                     <label>Solución realizada por el Técnico</label>
@@ -509,6 +561,7 @@ export default {
             observacion: "",
             solucion: "",
             rspData: "",
+            distMts: "",
             mostrarC: 1,
             modal5: 0,
             modal2: 0,
@@ -591,6 +644,14 @@ export default {
             arrayObjeto: [],
             arrayCatServ: [],
             arrayServicio: [],
+
+            ER: false,
+            EA: false,
+            EI: false,
+            A: false,
+            REE: false,
+            REE: false,
+            ROE: false,
 
             pagination: {
                 total: 0,

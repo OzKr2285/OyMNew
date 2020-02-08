@@ -37,6 +37,22 @@
           >
             <i class="fas fa-clipboard-check"></i>&nbsp;
           </button>
+          <button v-show="act==1"
+            title="Actualizar Datos"
+            type="button"
+            @click="actualizarPersona"
+            class="btn btn-ttc btn-sm"
+          >
+            <i class="fas fa-user-edit"></i>&nbsp;
+          </button>
+          <button v-show="addUser==1"
+            title="Nuevo Usuario"
+            type="button"
+            @click="registrarPersona"
+            class="btn btn-success btn-sm"
+          >
+            <i class="fas fa-user-plus"></i>&nbsp;
+          </button>
         </div>
         <template v-if="listado==1">
           <div class="card-body">
@@ -1134,6 +1150,7 @@ export default {
       },
       demo: false,
       tipoAccion: 1,
+      act: 0,
       listado: 1,
       sending: false,
       idTicketServ: 0,
@@ -1153,6 +1170,7 @@ export default {
       descCierre: "",
       nomTecnico: "",
       isPetPQR: 0,
+      addUser: 0,
       isPetR: 0,
       mostrarC: 1,
       modal5: 0,
@@ -1610,6 +1628,7 @@ export default {
           //console.log(response);
           var respuesta = response.data;
           me.arrayPerso = respuesta.perso;
+          
           if (me.arrayPerso.length > 0) {
             me.form.nombres = me.arrayPerso[0]["nombres"];
             me.form.apellidos = me.arrayPerso[0]["apellidos"];
@@ -1617,7 +1636,11 @@ export default {
             me.telefono = me.arrayPerso[0]["telefono"];
             me.form.email = me.arrayPerso[0]["email"];
             me.idUsuario = me.arrayPerso[0]["id"];
+            me.act=1;
+            me.addUser=0;
           } else {
+            me.act=0;
+            me.addUser=1;
             me.form.nombres = "Usuario no Existe";
             me.form.apellidos = "";
             me.direccion = "";
@@ -1833,6 +1856,8 @@ export default {
       let me = this;
       (this.tipoAccion = 1), (me.listado = 0);
       // this.arrayO=[];  
+      this.addUser=0;
+      this.act=0;
       this.arrayL= [];
       this.arrayM.id="T";  
       this.arrayM.name="Telefónico";  
@@ -1840,6 +1865,8 @@ export default {
       this.arrayP.name="Normal";  
     },
     ocultarDetalle() {
+      this.addUser=0;
+      this.act=0;
       this.listado = 1;
     },
     listarDatos(page, buscar, criterio) {
@@ -1909,6 +1936,24 @@ export default {
       //Envia la petición para visualizar la data de esa página
       me.listarDatos(page, buscar, criterio);
     },
+    registrarPersona(){
+        let me = this;
+
+        axios.post('/cliente/registrar2',{
+            nombres: this.form.nombres.toUpperCase(),
+            apellidos: this.form.apellidos.toUpperCase(),
+            id : this.form.cedula,
+            direccion : this.direccion.toUpperCase(),
+            telefono : this.telefono,
+            email : this.form.email.toUpperCase()
+        }).then(function (response) {
+          me.mensaje("Guardado", "Guardo ");
+            // me.cerrarModal();
+            // me.listarPersona(1,'','nombre');
+        }).catch(function (error) {
+            console.log(error);
+        });
+    },
     registrarTicket() {
       let me = this;
 
@@ -1962,23 +2007,21 @@ export default {
           console.log(error);
         });
     },
-    actualizarEstacion() {
+    actualizarPersona() {
       let me = this;
 
       axios
-        .put("/estacion/actualizar", {
-          idTicketServ: this.idTicketServ,
-          id_usuario: this.idUsuario,
-          id_objpqrs: this.arrayO.id,
-          id_lider: this.arrayL.id,
-          medio: this.arrayM.id,
-          prioridad: this.arrayP.id,
-          desc: this.observacion.toUpperCase(),
-          id: this.ticket_id
+        .put("/cliente/actualizar2", {
+          id: this.form.cedula,
+          nombres: this.form.nombres.toUpperCase(),
+          apellidos: this.form.apellidos.toUpperCase(),
+          direccion: this.direccion,
+          telefono: this.telefono,
+          email: this.form.email
         })
         .then(function(response) {
-          me.ocultarDetalle();
-          me.listarDatos(1, "", "nombre");
+          // me.ocultarDetalle();
+          // me.listarPersona(1, "", "nombre");
           me.mensaje("Actualizado", "Actualizó ");
         })
         .catch(function(error) {

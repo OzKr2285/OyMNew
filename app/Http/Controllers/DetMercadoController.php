@@ -12,7 +12,7 @@ class DetMercadoController extends Controller
     //
     public function index(Request $request)
     {
-        // if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;
@@ -40,6 +40,24 @@ class DetMercadoController extends Controller
                 'from'         => $refe->firstItem(),
                 'to'           => $refe->lastItem(),
             ],
+            'refe' => $refe
+        ];
+    }
+    public function detMercado(Request $request)
+    {
+        // if (!$request->ajax()) return redirect('/');
+
+        $buscar = $request->buscar;
+        
+            $refe = DetMercado::join('mercados','det_mercados.id_mercado','=','mercados.id')  
+            ->join('mpios','det_mercados.id_mpio','=','mpios.id')     
+            ->join('dptos','mpios.id_dpto','=','dptos.id')     
+            ->select('det_mercados.id','det_mercados.id_mercado','mercados.nombre as nomM','dptos.nombre as nomDpto','mpios.nombre')
+            ->where('det_mercados.id_mercado',$buscar)
+            ->orderBy('mercados.nombre','asc','ref_material.nombre')->get();
+               
+        return [
+
             'refe' => $refe
         ];
     }

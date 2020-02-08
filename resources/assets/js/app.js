@@ -32,6 +32,7 @@ Vue.component('tpequipo', require('./components/TpEquipo.vue'));
 Vue.component('accesorio', require('./components/Accesorio.vue'));
 Vue.component('fichaveh', require('./components/fichaveh.vue'));
 Vue.component('ficharedes', require('./components/fichaRedes.vue'));
+Vue.component('materialred', require('./components/MaterialRed.vue'));
 Vue.component('red', require('./components/Red.vue'));
 Vue.component('fichapasose', require('./components/FichaPasosE.vue'));
 Vue.component('etapa', require('./components/Etapa.vue'));
@@ -47,6 +48,7 @@ Vue.component('oficina', require('./components/Oficina.vue'));
 // Programacion de Mantenimientos
 Vue.component('mtoes', require('./components/MtoEs.vue'));
 Vue.component('solmtoes', require('./components/SolMtoEs.vue'));
+Vue.component('solmtoec', require('./components/SolMtoEC.vue'));
 Vue.component('mtoec', require('./components/MtoEC.vue'));
 Vue.component('mtoveh', require('./components/MtoVeh.vue'));
 Vue.component('mtored', require('./components/MtoRed.vue'));

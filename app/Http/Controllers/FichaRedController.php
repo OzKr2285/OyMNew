@@ -16,13 +16,9 @@ class FichaRedController extends Controller
         $criterio = $request->criterio;
         
         if ($buscar==''){
-            $fichared = FichaRed::join('diametros','fichared.id_diametro','=','diametros.id')
-            ->join('redes','fichared.id_red','=','redes.id')
-            ->join('mpios','fichared.id_mpio','=','mpios.id')         
-            ->join('mpios as mpiosfin','fichared.id_mpiofin','=','mpiosfin.id')         
-            ->select('fichared.tp_red','fichared.id_diametro','diametros.nombre as nomdiam','fichared.id_red','redes.nombre as nomred',
-            'fichared.id_mpio','mpios.nombre as mpioinicio','fichared.id_mpiofin','mpiosfin.nombre as mpiofin','fichared.fec_creacion','fichared.cant_poli','fichared.desc','fichared.plano_g','fichared.plano_a',
-            'fichared.plano_c','fichared.plano_p')
+            $fichared = FichaRed::join('det_mercados','fichared.id_mpio','=','det_mercados.id')  
+            ->join('mercados','det_mercados.id_mercado','=','mercados.id')               
+            ->select('fichared.tp_red','fichared.nombre','fichared.id_mpio','total','mercados.nombre as nomMercado')
             ->orderBy('fichared.tp_red', 'fichared.id_red')->paginate(15);
         }
         else{
@@ -48,12 +44,8 @@ class FichaRedController extends Controller
         if (!$request->ajax()) return redirect('/');
         $fichared = new FichaRed();
         $fichared->tp_red = $request->tp_red;
-        $fichared->id_diametro = $request->id_diametro;
-        $fichared->id_red = $request->id_red;
         $fichared->id_mpio = $request->id_mpio;
-        $fichared->id_mpiofin = $request->id_mpiofin;
-        $fichared->fec_creacion = $request->fec_creacion;
-        $fichared->cant_poli = $request->cant_poli;
+        $fichared->nombre = $request->nombre;
         $fichared->desc = $request->desc;
         $fichared->plano_g = $request->plano_g;
         $fichared->plano_a = $request->plano_a;
@@ -83,16 +75,11 @@ class FichaRedController extends Controller
         $fichared->delete();
     
     }
-    public function selectEstacion(Request $request){
-        if (!$request->ajax()) return redirect('/');
-        $buscar = $request->buscar;
+    public function selectRed(Request $request){
+        // if (!$request->ajax()) return redirect('/');
 
-        $fichared = Estacion::join('tp_estacions','tp_estacions.id','=','estaciones.idTpEstacion')
-        ->select('estaciones.id','estaciones.nombre')
-        ->where('estaciones.idTpEstacion',$buscar)
-        ->orderBy('estaciones.nombre', 'asc')->get();
-     
-
-      return ['estacion' => $fichared];
+        $fichared = FichaRed::select('id','nombre')
+        ->orderBy('nombre', 'asc')->get();
+      return ['fichared' => $fichared];
   }
 }

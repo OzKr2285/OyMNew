@@ -153,9 +153,13 @@
                             <li @click="menu=68" >
                                 <a  href="#"><i class="icon-bag"></i>Novedades</a>
                             </li>
-                            <li @click="menu=10" >
-                                <a  href="#"><i class="icon-bag"></i> Redes</a>
+                            <li @click="menu=76" >
+                                <a  href="#"><i class="icon-bag"></i>Redes</a>
                             </li>
+                            <li @click="menu=10" >
+                                <a  href="#"><i class="icon-bag"></i>Material Redes</a>
+                            </li>
+                       
                             </ul>                            
                         </div>                        
                     </li>
@@ -256,7 +260,7 @@
                             <li @click="menu=75" >
                                     <a  href="#"><i class="fas fa-charging-station"></i>Estaciones</a>
                                 </li>
-                                <li @click="menu=54" >
+                                <li @click="menu=77" >
                                     <a  href="#"><i class="fas fa-laptop"></i> E. de Cómputo</a>
                                 </li>
                                 <!-- <li @click="menu=41" >
