@@ -13,6 +13,9 @@
           >
             <i class="icon-plus"></i>&nbsp;Nuevo
           </button>
+          <button title="Agregar" type="button" @click="abrirModal()" class="btn btn-ttc btn-sm">
+            <i class="fas fa-map-marked"></i>&nbsp;
+          </button>
         </div>
         <template v-if="listado==1">
           <div class="card-body">
@@ -20,19 +23,18 @@
               <table class="table table-bordered table-striped table-sm">
                 <thead>
                   <tr class="p-3 mb-2 bg-dark text-white">
-                    <th>Tipo de Red</th>
                     <th>Nombre</th>
-                    <th>Municipio Inicio</th>
-                    <th>Municipio Fin</th>
+                    <th>Mercado</th>
+                    <th>Total</th>
                     <th>Opciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="red in arrayRed" :key="red.id">
-                    <td v-text="red.tp_red"></td>
-                    <td v-text="red.nomred"></td>
-                    <td v-text="red.mpioinicio"></td>
-                    <td v-text="red.mpiofin"></td>
+                  <tr v-for="red in arrayFRed" :key="red.id">
+                    <td v-text="red.nombre"></td>
+
+                    <td v-text="red.nomMercado"></td>
+                    <td v-text="red.total"></td>
                     <td>
                       <button
                         type="button"
@@ -60,7 +62,6 @@
                 </tbody>
               </table>
             </div>
-          </div>
           <nav>
             <ul class="pagination">
               <li class="page-item" v-if="pagination.current_page > 1">
@@ -92,118 +93,121 @@
               </li>
             </ul>
           </nav>
+          </div>
         </template>
         <template v-else-if="listado==0">
           <div class="card-body">
             <form action method="post" enctype="multipart/form-data" class="form-horizontal">
               <md-card-content>
                 <div class="md-layout">
-                  <div class="md-layout-item md-size-20">
-                    <md-field md-clearable>
-                      <label>Tipo de Red</label>
-                      <md-select v-model="tpRed" md-dense @input="setCbx">
-                        <md-option v-for="tpRed in arraytpRed" :key="tpRed" :value="tpRed">{{tpRed}}</md-option>
-                      </md-select>
-                    </md-field>
-                  </div>&nbsp;&nbsp;&nbsp;
-                  <div class="md-layout-item">
-                    <md-field md-clearable>
-                      <label>Nombre de la Red</label>
-                      <md-select v-model="idRed" md-dense>
-                        <md-option
-                          v-for="red in arrayRed"
-                          :key="red.id"
-                          :value="red.id"
-                        >{{red.nombre}}</md-option>
-                      </md-select>
-                    </md-field>
-                  </div>
+                <md-field md-clearable>
+                    <label>Seleccione Red</label>
+                      <md-select v-model="idRed" md-dense @input="listarDetalle()">
+                      <md-option
+                        v-for="objeto in arrayRed"
+                        :key="objeto.id"
+                        :value="objeto.id"
+                      >{{objeto.nombre}}</md-option>
+                    </md-select>
+                  </md-field>
                 </div>
-                <div class="md-layout">
-                  <div class="md-layout-item">
-                    <md-field md-clearable>
-                      <label>Departamento</label>
-                      <md-select v-model="idDpto" md-dense @input="getMpio">
-                        <md-option
-                          v-for="(dpto, index)  in arrayDpto"
-                          :key="`dpto-${index}`"
-                          :value="dpto.id"
-                        >{{dpto.nombre}}</md-option>
-                      </md-select>
-                    </md-field>
-                  </div>&nbsp;&nbsp;&nbsp;
-                  <div class="md-layout-item">
-                    <md-field md-clearable>
-                      <label>Municipio</label>
-                      <md-select v-model="idMp" md-dense>
-                        <md-option
-                          v-for="(mpio,index) in arrayMpio"
-                          :key="`mpio-${index}`"
-                          :value="mpio.id"
-                        >{{mpio.nombre}}</md-option>
-                      </md-select>
-                    </md-field>
-                  </div>&nbsp;&nbsp;&nbsp;
-                  <div class="md-layout-item">
-                    <md-datepicker
-                      v-model="fecCrea"
-                      value="fecCrea"
-                      @input="toString"
-                      md-immediately
-                      :md-model-type="String"
-                    >
-                      <label>Fecha Creación</label>
-                    </md-datepicker>
-                  </div>&nbsp;&nbsp;&nbsp;
-                </div>
+                
+                <div class="table-responsive col-md-12">
+                  <table class="table table-bordered table-striped table-sm">
+                    <thead>
+                      <tr>
+                        <th>Canalización</th>
+                        <th>Tubería</th>
+                        <th>Tipo Red</th>
+                        <th>Longitud</th>
+                        <th>Observación</th>
+                        <th>Opciones</th>
+                      </tr>
+                    </thead>
+                    <tbody v-if="arrayDetRed.length">
+                      <tr v-for="(objeto, index)  in arrayDetRed" :key="`objeto-${index}`">
+                        <td v-text="objeto.material"></td>
+                        <td v-text="objeto.tuberia"></td>
+                        <td>
+                        <template v-if="objeto.tp_red==1">
+                          <span>Urbana</span>
+                        </template>
+                        <template else v-if="objeto.tp_red==2">
+                          <span>Rural</span>
+                        </template>
+                        <template else v-if="objeto.tp_red==3">
+                          <span>Troncal</span>
+                        </template>
+                    </td>
+                        <td v-text="objeto.longitud"></td>
+                        <td v-text="objeto.obs">mts</td>
+                        <td>
+                          <md-button
+                            class="md-icon-button md-primary"
+                            @click="eliminarDetalle(index)"
+                            title="editar"
+                          >
+                            <i class="material-icons Color3">edit</i>
+                          </md-button>
+                          <md-button
+                            class="md-icon-button md-primary"
+                            @click="eliminarDetalle(index)"
+                            title="Eliminar"
+                          >
+                            <i class="material-icons Color4">delete</i>
+                          </md-button>
+                        </td>
+                      </tr>
+                    <tr style="background-color: #d0d2dd;">
+                        <!-- <td colspan="1"></td> -->
+                        <td colspan="3" align="right"><strong>Total:</strong></td>
+                        <td>{{total=calcularTotal.toFixed(4)}} mts</td>
+                        <td colspan="2"></td>
+                      </tr>
 
-                <div class="md-layout">
-                  <div class="md-layout-item">
-                    <md-field md-clearable>
-                      <label>Tipo paso Especial</label>
-                      <md-select v-model="idMp" md-dense>
-                        <md-option
-                          v-for="(mpio,index) in arrayMpio"
-                          :key="`mpio-${index}`"
-                          :value="mpio.id"
-                        >{{mpio.nombre}}</md-option>
-                      </md-select>
-                    </md-field>
-                  </div>&nbsp;&nbsp;&nbsp;    
-                  <div class="md-layout-item">
-                    <md-field md-clearable>
-                      <label>Tipo Estructura</label>
-                      <md-select v-model="modelo" md-dense>
-                        <md-option
-                          v-for="modelo in modelos"
-                          :key="modelo.id"
-                          :value="modelo"
-                        >{{modelo}}</md-option>
-                      </md-select>
-                    </md-field>
-                  </div>&nbsp;&nbsp;&nbsp;
-                  <div class="md-layout-item">
-                    <md-field md-clearable>
-                      <label>Longitud</label>
-                      <md-input type="number" v-model="cilindraje"></md-input>
-                    </md-field>
-                  </div>&nbsp;&nbsp;
+        
+                    </tbody>
+                    <tbody v-else>
+                      <tr>
+                        <td colspan="6">NO hay Detalles de la red</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
-
-                <div class="md-layout">
+                <!-- <div class="md-layout">
                   <md-field>
                     <label>Descripción</label>
                     <md-textarea v-model="descripcion"></md-textarea>
                   </md-field>
-                </div>
-                <div class="md-layout">
+                </div>-->
+                <!-- <div class="md-layout">
                   <div class="md-layout-item">
                     <md-field md-clearable>
                       <label>Plano Georeferenciado</label>
                       <md-file v-model="planoG" placeholder="Seleccione el plano Georeferenciado"/>
                     </md-field>
                   </div>&nbsp;&nbsp;&nbsp;
-                </div>
+                  <div class="md-layout-item">
+                    <md-field md-clearable>
+                      <label>ARCGIS</label>
+                      <md-file v-model="planoA" placeholder="Seleccione Excel ARCGIS"/>
+                    </md-field>
+                  </div>
+                </div>-->
+                <!-- <div class="md-layout">
+                  <div class="md-layout-item">
+                    <md-field md-clearable>
+                      <label>Manual de Construcción</label>
+                      <md-file v-model="planoC" placeholder="Seleccione el manual de Construcción"/>
+                    </md-field>
+                  </div>&nbsp;&nbsp;&nbsp;
+                  <div class="md-layout-item">
+                    <md-field md-clearable>
+                      <label>Plano Polivalvulas</label>
+                      <md-file v-model="planoP" placeholder="Seleccione el plano POLIVALVULAS"/>
+                    </md-field>
+                  </div>
+                </div>-->
               </md-card-content>
             </form>
           </div>
@@ -235,6 +239,96 @@
       <!-- Fin ejemplo de tabla Listado -->
     </div>
     <!--Inicio del modal agregar/actualizar-->
+    <div
+      class="modal fade"
+      tabindex="-1"
+      :class="{ mostrar: modal }"
+      role="dialog"
+      aria-labelledby="myModalLabel"
+      style="display: none;"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dark modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" v-text="tituloModal"></h4>
+            <button type="button" class="close" @click="cerrarModal()" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+        
+              <div class="md-layout">
+                <span class="md-body">Tubería</span>
+                <multiselect
+                  v-model="arrayT"
+                  :options="arrayTub"
+                  placeholder="Seleccione un tipo de Tubería"
+                  :custom-label="nameWithTub"
+                  label="nombre"
+                  track-by="nombre"
+                ></multiselect>
+              </div>
+              <div class="md-layout">
+                <span class="md-body">Canalización</span>
+                <multiselect
+                  v-model="arrayMat"
+                  :options="arrayMaterial"
+                  placeholder="Seleccione un Material"
+                  :custom-label="nameWithNombre"
+                  label="nombre"
+                  track-by="nombre"
+                ></multiselect>
+              </div>&nbsp;&nbsp;&nbsp;
+               <div class="md-layout">
+               <div class="md-layout-item">
+                  <span class="md-caption">Tipo de Red</span>
+                    <multiselect
+                      v-model="arrayTR"
+                      :options="arraytpRed"
+                      placeholder="Seleccione un Tipo de Red"
+                      :custom-label="nameWithNombre"
+                      label="nombre"
+                      track-by="nombre"
+                    ></multiselect>
+                  </div>&nbsp;&nbsp;&nbsp;
+                <div class="md-layout-item">
+                <md-field>
+                  <label>Longitud</label>
+                  <md-input v-model="longitud" type="number"></md-input>
+                </md-field>
+                </div> &nbsp;&nbsp;&nbsp;
+                <div class="md-layout-item">
+                <span class="md-body">Fecha Operación</span>
+                <datepicker
+                  @input="toString2"
+                  v-model="fecN"
+                  value="fecN"
+                  format="yyyy-MM-dd"
+                  placeholder="Seleccione Fecha"
+                ></datepicker>
+              </div> 
+              </div>
+              <div class="md-layout">
+                <md-field>
+                  <label>Observación</label>
+                  <md-textarea v-model="obs"></md-textarea>
+                  <md-icon>description</md-icon>
+                </md-field>
+              </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
+              <md-button
+                type="submit"                
+                class="md-dense md-raised md-primary"
+                :disabled="sending"
+                @click="registrarTramoRed()"
+              >Agregar</md-button>           
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- /.modal-dialog -->
 
@@ -244,6 +338,7 @@
 
 <script>
 import { validationMixin } from "vuelidate";
+import Toasted from 'vue-toasted';
 import format from "date-fns/format";
 import {
   MdButton,
@@ -255,6 +350,11 @@ import {
   MdDivider,
   MdList
 } from "vue-material/dist/components";
+Vue.use(Toasted,  {
+    iconPack : 'material' // set your iconPack, defaults to material. material|fontawesome|custom-class
+});
+import Multiselect from "vue-multiselect";
+import Datepicker from 'vuejs-datepicker';
 // import VueMaterial from 'vue-material'
 // Vue.use(VueMaterial)
 Vue.use(MdButton);
@@ -269,7 +369,10 @@ import { required, minLength } from "vuelidate/lib/validators";
 
 export default {
   mixins: [validationMixin],
-
+  components: {
+    Multiselect,
+    Datepicker
+  },
   data() {
     let dateFormat = this.$material.locale.dateFormat || "yyyy-MM-dd";
     let now = new Date();
@@ -286,12 +389,17 @@ export default {
       idMp2: 0,
       idRed: 0,
       tpDiam: 0,
+      fecN: format(now, dateFormat),
+      fecN2: "",
 
       planoG: "",
       planoC: "",
       planoA: "",
       planoP: "",
+      nombre: "",
       descripcion: "",
+      obs: "",
+      longitud: "",
 
       tipoAccion: 1,
       listado: 1,
@@ -300,10 +408,22 @@ export default {
       estacion_id: 0,
 
       arrayDpto: [],
+      arrayDetRed: [],
       arrayMpio: [],
-      arraytpRed: ["Urbana", "Rural"],
+      arrayM: { id: 0, nombre: "", nomDpto: "" },
+      arrayMat: { id: 0, nombre: ""},
+      arrayT: { id: 0, nombre: ""},
+      arrayTR: { id: 0, nombre: ""},
+      arraytpRed: [
+        { id: "1", nombre: "URBANA" },
+        { id: "2", nombre: "RURAL" },
+        { id: "3", nombre: "TRONCAL" }
+      ],
       arrayRed: [],
+      arrayFRed: [],
       arrayDiam: [],
+      arrayMaterial: [],
+      arrayTub: [],
 
       modal: 0,
       tituloModal: "",
@@ -326,6 +446,13 @@ export default {
   validations: {},
 
   computed: {
+    calcularTotal: function(){
+        var resultado=0.0;
+        for(var i=0;i<this.arrayDetRed.length;i++){
+            resultado=resultado+(this.arrayDetRed[i].longitud)
+        }
+        return resultado;
+    },
     isActived: function() {
       return this.pagination.current_page;
     },
@@ -382,11 +509,15 @@ export default {
           break;
       }
     },
+
     toString() {
       this.toDate();
       this.fecCrea = this.fecCrea && format(this.fecCrea, this.dateFormat);
     },
-
+    toString2() {
+      this.fecN2 = this.fecN && format(this.fecN, this.dateFormat);
+      //  this.fecN = moment(this.fecN).format("YYYY-MM-DD");
+    },
     getValidationClass(fieldName) {
       const field = this.$v.form[fieldName];
       if (field) {
@@ -417,6 +548,28 @@ export default {
       this.plano_c = "";
       this.plano_p = "";
     },
+    nameWithMpio({ nombre, nomDpto }) {
+      return `${nombre} — [${nomDpto}]`;
+    },
+    nameWithNombre({ nombre }) {
+      return `${nombre}`;
+    },
+    nameWithTub({ nombre }) {
+      return `${nombre}`;
+    },
+    abrirModal(data = []) {
+      // this.idRefE=data["idref"];
+      // this.ticket_id = data["idticket"];
+      this.getDiametro();
+      this.getMaterial();
+      this.modal = 1;
+      this.tituloModal = "Agregar sección de Red ";
+
+    },
+    cerrarModal() {
+      this.modal = 0;
+      this.tituloModal = "";
+    },
     mostrarDetalle() {
       this.clearForm();
       let me = this;
@@ -437,9 +590,55 @@ export default {
           console.log(error);
         });
     },
+
+    getMaterial() {
+      let me = this;
+
+      var url = "/tpmaterialred/selectTpMaterial";
+      axios
+        .get(url)
+        .then(function(response) {
+          //console.log(response);
+          var respuesta = response.data;
+          me.arrayMaterial = respuesta.tpmaterial;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    getDiametro() {
+      let me = this;
+
+      var url = "/diametro/selectDiametro";
+      axios
+        .get(url)
+        .then(function(response) {
+          //console.log(response);
+          var respuesta = response.data;
+          me.arrayTub = respuesta.diametro;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    getFRed() {
+      let me = this;
+
+      var url = "/fichared/selectRed";
+      axios
+        .get(url)
+        .then(function(response) {
+          //console.log(response);
+          var respuesta = response.data;
+          me.arrayRed = respuesta.fichared;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
     getMpio() {
       let me = this;
-      var url = "/mpio/selectMpio/?buscar=" + this.idDpto;
+      var url = "/mpio/selectMpio";
       axios
         .get(url)
         .then(function(response) {
@@ -450,21 +649,21 @@ export default {
           console.log(error);
         });
     },
-    getRed() {
-      let me = this;
+    // getRed() {
+    //   let me = this;
 
-      var url = "/red/selectRed";
-      axios
-        .get(url)
-        .then(function(response) {
-          //console.log(response);
-          var respuesta = response.data;
-          me.arrayRed = respuesta.red;
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-    },
+    //   var url = "/red/selectRed";
+    //   axios
+    //     .get(url)
+    //     .then(function(response) {
+    //       //console.log(response);
+    //       var respuesta = response.data;
+    //       me.arrayRed = respuesta.red;
+    //     })
+    //     .catch(function(error) {
+    //       console.log(error);
+    //     });
+    // },
     getDiam() {
       let me = this;
 
@@ -501,7 +700,32 @@ export default {
     ocultarDetalle() {
       this.listado = 1;
     },
-    listarRed(page, buscar, criterio) {
+    encuentra(id) {
+      var sw = 0;
+      for (var i = 0; i < this.arrayDetRed.length; i++) {
+        if (this.arrayDetRed[i].id == id) {
+          sw = true;
+        }
+      }
+      return sw;
+    },
+    agregarSecRed(data = []) {
+      let me = this;
+      if (me.encuentra(data["idticket"])) {
+        swal({
+          type: "error",
+          title: "Error...",
+          text: "La Disponibilidad seleccionada ya se encuentra agregado!"
+        });
+      } else {
+        me.arrayDetRed.push({
+          id: data["idticket"],
+          fecha: data["fecha"],
+          desc: data["desc"]
+        });
+      }
+    },
+    listarDatos(page, buscar, criterio) {
       let me = this;
       var url =
         "/fichared?page=" +
@@ -514,8 +738,27 @@ export default {
         .get(url)
         .then(function(response) {
           var respuesta = response.data;
-          me.arrayRed = respuesta.fichared.data;
+          me.arrayFRed = respuesta.fichared.data;
           me.pagination = respuesta.pagination;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+      listarDetalle(page, buscar, criterio) {
+      let me = this;
+      var url =
+        "/detred/detalle?page=" +
+        page +
+        "&buscar=" +
+        this.idRed +
+        "&criterio=" +
+        criterio;
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayDetRed = respuesta.detred;
         })
         .catch(function(error) {
           console.log(error);
@@ -533,14 +776,9 @@ export default {
 
       axios
         .post("/fichared/registrar", {
-          tp_red: this.tpRed,
-          id_diametro: this.tpDiam,
-          id_red: this.idRed,
-          id_mpio: this.idMp,
-          id_mpiofin: this.idMp2,
-          fec_creacion: this.fecCrea,
-          cant_poli: this.cantP,
-          desc: this.descripcion,
+         
+          id_mpio: this.arrayM.id,
+          nombre: this.nombre,
           plano_g: this.planoG,
           plano_a: this.planoA,
           plano_c: this.planoC,
@@ -550,6 +788,27 @@ export default {
           me.ocultarDetalle();
           me.listarRed(1, "", "nombre");
           me.mensaje("Guardado", "Guardo ");
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    registrarTramoRed() {
+      let me = this;
+      axios
+        .post("/detred/registrar", {
+          id_red: this.idRed,
+           tp_red: this.arrayTR.id,
+          id_material: this.arrayMat.id,
+          id_diametro: this.arrayT.id,
+          fec_opera: this.fecN,
+          obs: this.obs,
+          longitud: this.longitud
+        })
+        .then(function(response) {
+          me.cerrarModal();
+          me.listarDetalle();
+           me.mensajeToast("Agregado","bubble","check","success");
         })
         .catch(function(error) {
           console.log(error);
@@ -610,17 +869,28 @@ export default {
         }
       });
     },
-
+    mensajeToast(msj,tema,icono,tp){
+                let toast = this.$toasted.show(msj, { 
+            theme: tema, 
+            type: tp, 
+            position: "top-right", 
+            icon: icono, 
+            duration : 2000
+          });
+    },
     mensaje(tipo, crud) {
       swal(tipo, "El registro se " + crud + " con éxito.", "success");
     }
   },
 
   mounted() {
-    this.getDpto();
-    this.getRed();
-    this.getDiam();
-    this.listarRed(1, this.buscar, this.criterio);
+
+    this.getMpio();
+    this.getFRed();
+    this.listarDatos(1, this.buscar, this.criterio);
+    // this.getDpto();
+    // this.getRed();
+    // this.getDiam();
   }
 };
 </script>
@@ -642,5 +912,17 @@ export default {
 .text-error {
   color: red !important;
   font-weight: bold;
+}
+.material-icons.Color1 {
+  color: rgb(31, 33, 34);
+}
+.material-icons.Color2 {
+  color: rgba(255, 162, 23, 0.849);
+}
+.material-icons.Color3 {
+  color: rgb(12, 170, 91);
+}
+.material-icons.Color4 {
+  color: rgba(228, 54, 54, 0.863);
 }
 </style>

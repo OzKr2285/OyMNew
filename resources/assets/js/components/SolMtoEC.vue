@@ -13,14 +13,14 @@
             >
               <i class="material-icons Color2">add</i>
             Nuevo</md-button> -->
-     
+<!--      
           <button
             type="button"
             @click="mostrarDetalle()"
             class="btn btn-success btn-sm"
           >
             <i class="icon-plus"></i>&nbsp;Nuevo
-          </button>
+          </button> -->
             <!-- <md-button
               class="md-icon-button md-primary"
               @click="eliminarDetalle(index)"
@@ -134,7 +134,7 @@
         <template v-else-if="listado==0">
         <md-tabs>
           <md-tab id="tab-home" md-label="Detalle" md-icon="assignment">
-            <h5>Oficina {{this.nomOficina}}</h5>
+            <h5>Mantenimiento Oficina {{this.nomOficina}}</h5>
                    <div class="md-layout">
                   <div class="table-responsive col-md-12">
                     <table class="table table-bordered table-striped table-sm">
@@ -157,8 +157,8 @@
                         <td v-text="objeto.desc"></td>
                         <td v-text="objeto.respo"></td>
                         <td>
-                          <md-button class="md-icon-button md-primary " @click="eliminarDetalle(index,objeto)" title="Eliminar">
-                            <i class="material-icons Color4">delete</i>
+                          <md-button class="md-icon-button md-primary " @click="mostrarDetalle(objeto)" title="Ejecutar Mantenimiento">
+                            <i class="material-icons Color3">assignment_turned_in</i>
                           </md-button>
                         </td>
                       </tr>
@@ -179,6 +179,93 @@
 
         </md-tabs>          
         </template>
+
+         <template v-if="listado==2">
+
+              <div class="card-body">
+            <form action method="post" enctype="multipart/form-data" class="form-horizontal">
+              <md-card-content>
+             <h6>
+                Categoría 
+                <small class="text-muted">{{tpEquipo}}</small>
+              </h6>
+             <h6>
+                Modelo 
+                <small class="text-muted">{{nomModelo}}</small>
+              </h6>
+             <h6>
+                Detalle 
+                <small class="text-muted">{{nomEquipo}}</small>
+              </h6>
+                <div class="table-responsive col-md-12">
+                  <table class="table table-bordered table-striped table-sm">
+                    <thead>
+                      <tr>
+                        <th>Actividad</th>                        
+                        <th>Descripción</th>                        
+                        <th>Opciones</th>
+                      </tr>
+                      <!-- <md-button class="md-icon-button md-primary" @click="abrirModal5">
+                        <md-icon>post_add</md-icon>
+                      </md-button> -->
+                    </thead>
+                    <tbody v-if="arrayDetAct.length">
+                      <tr
+                        v-for="(objeto, index) in arrayDetAct"
+                        :key="`objeto-${index}`"
+                      >                        
+                        <td v-text="objeto.nomAct"></td>
+                        <td v-text="objeto.observacion"></td>
+                        <td>
+                          <md-button class="md-icon-button md-primary " @click="eliminarMpio(objeto)" title="Eliminar">
+                            <i class="material-icons Color4">delete</i>
+                          </md-button>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody v-else>
+                      <tr>
+                        <td colspan="5">
+                          NO hay Actividades asociados al Equipo
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                         <div class="md-layout">
+                <md-field>
+                  <label>Observación</label>
+                  <md-textarea v-model="obs"></md-textarea>
+                  <md-icon>description</md-icon>
+                </md-field>
+              </div>
+              </md-card-content>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <md-card-actions>
+              <md-button type="button" class="md-raised" @click="ocultarDetalle()">Cerrar</md-button>
+            </md-card-actions>
+
+            <md-card-actions>
+              <md-button
+                type="submit"
+                v-if="tipoAccion==1"
+                class="md-dense md-raised md-primary"
+                :disabled="sending"
+                @click="validarDatos()"
+              >Guardar</md-button>
+              <md-button
+                type="submit"
+                v-if="tipoAccion==2"
+                class="md-dense md-raised md-primary"
+                :disabled="sending"
+                @click="actualizarM()"
+              >Actualizar</md-button>
+            </md-card-actions>
+
+          </div>
+         </template>  
       </div>
 
       <!-- Fin ejemplo de tabla Listado -->
@@ -880,6 +967,9 @@ export default {
       tpTren:0,
       nomOficina: "",
       nomEquipo: "",
+      tpEquipo: "",
+      nomModelo: "",
+      obs: "",
       serial: "",
       modelo: "",
 
@@ -899,6 +989,7 @@ export default {
 
 
       arrayDel: [],
+      arrayDetAct: [],
       arrayIns: [],
       arrayAct: [],
       arrayOficina: [],
@@ -1027,57 +1118,7 @@ export default {
           break;
       }
     },
-    setDone(id, index) {
-      this[id] = true;
-      this.secondStepError = null;
-        if (index) {      
-          this.active = index;
-        }
-      
-    },
-   
-    setDone2(id, index) {
-      this[id] = true;
-      
-      if (!this.arrayEtapas.length){
-           this.secondStepError = "Seleccione una Etapa";
-      }
-      else{
-      this.secondStepError = null;
 
-      if (index) {
-            this.bDetEtapa=1;
-        this.active = index;
-      }
-      }
-    },
-    setDone3(id, index) {
-      this[id] = true;
-      
-      if (!this.arrayMtoPpal.length){
-           this.fourtStepError = "Seleccione un Equipo";
-      }
-      else{
-      this.fourtStepError = null;
-
-      if (index) {
-            // this.bDetEtapa=1;
-        this.active = index;
-      }
-      }
-    },
-     setDone4(id, index) {
-      this.abrirModal();
-      this[id] = true;
-      this.secondStepError = null;
-        if (index) {      
-          this.active = index;
-        }
-      
-    },
-    setError() {
-      this.secondStepError = "This is an error!";
-    },
     abrirModal() {
       this.modal = 1;
       this.tituloModal = "Seleccione una o varios Técnicos";
@@ -1136,7 +1177,7 @@ export default {
           console.log(error);
         });
     },
-        listarDetalle() {
+    listarDetalle() {
       let me = this;
       var url =
         "/detmtoec?page=" +
@@ -1148,6 +1189,24 @@ export default {
         .then(function(response) {
           var respuesta = response.data;
           me.arrayDetM = respuesta.refe.data;
+          me.pagination = respuesta.pagination;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    listarDetAct() {
+      let me = this;
+      var url =
+        "/detactequipo/actE?page=" +
+        1 +
+        "&buscar=" +
+        this.idEquipo ;
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayDetAct = respuesta.actividad.data;
           me.pagination = respuesta.pagination;
         })
         .catch(function(error) {
@@ -1696,10 +1755,14 @@ export default {
 
 
     },
-    mostrarDetalle() {
-      this.clearForm();
+    mostrarDetalle(data = []) {
       let me = this;
-      (this.tipoAccion = 1), (me.listado = 0);
+      (this.tipoAccion = 1), (me.listado = 2);
+       (this.nomEquipo = data["desc"]);   
+       (this.tpEquipo = data["tpEquipo"]);   
+       (this.nomModelo = data["modelo"]);   
+       (this.idEquipo = data["idRef"]);   
+        this.listarDetAct();
     },
     ocultarDetalle() {
       this.listado = 1;
@@ -1874,7 +1937,6 @@ export default {
 }
 .material-icons.Color1 { color: rgb(31, 33, 34); }
 .material-icons.Color2 { color: rgba(52, 139, 64, 0.849); }
-.md-raised.Verde { color: rgba(52, 139, 64, 0.849); }
 .material-icons.Color3 { color: rgb(31, 114, 134); }
 .material-icons.Color4 { color: rgb(248, 53, 46); }
 

@@ -24,7 +24,6 @@
                 <thead>
                   <tr class="p-3 mb-2 bg-dark text-white">
                     <th>Nombre</th>
-                    <th>Tipo de Red</th>
                     <th>Mercado</th>
                     <th>Total</th>
                     <th>Opciones</th>
@@ -33,41 +32,31 @@
                 <tbody>
                   <tr v-for="red in arrayFRed" :key="red.id">
                     <td v-text="red.nombre"></td>
-                    <td>
-                       <template v-if="red.tp_red==1">
-                        <span>Urbana</span>
-                      </template>
-                      <template else v-if="red.tp_red==2">
-                        <span>Rural</span>
-                      </template>
-                      <template else v-if="red.tp_red==3">
-                        <span>Troncal</span>
-                      </template>
-                    </td>
+
                     <td v-text="red.nomMercado"></td>
                     <td v-text="red.total"></td>
                     <td>
                       <button
                         type="button"
                         @click="mostrarActualizar(red)"
-                        class="btn btn-warning btn-sm"
+                        class="btn btn-success btn-sm"
                         data-tooltip
                         title="Actualizar"
                       >
                         <i class="icon-pencil"></i>
                       </button>
                       &nbsp;
-                      <template>
+                      <!-- <template>
                         <button
                           type="button"
                           class="btn btn-danger btn-sm"
                           data-tooltip
                           title="Eliminar"
-                          @click="eliminarEstacion(red)"
+                          @click="eliminarDetRed(red)"
                         >
                           <i class="icon-trash"></i>
                         </button>
-                      </template>
+                      </template> -->
                     </td>
                   </tr>
                 </tbody>
@@ -127,8 +116,9 @@
                   <table class="table table-bordered table-striped table-sm">
                     <thead>
                       <tr>
-                        <th>Material</th>
+                        <th>Canalización</th>
                         <th>Tubería</th>
+                        <th>Tipo Red</th>
                         <th>Longitud</th>
                         <th>Observación</th>
                         <th>Opciones</th>
@@ -138,12 +128,30 @@
                       <tr v-for="(objeto, index)  in arrayDetRed" :key="`objeto-${index}`">
                         <td v-text="objeto.material"></td>
                         <td v-text="objeto.tuberia"></td>
+                        <td>
+                        <template v-if="objeto.tp_red==1">
+                          <span>Urbana</span>
+                        </template>
+                        <template else v-if="objeto.tp_red==2">
+                          <span>Rural</span>
+                        </template>
+                        <template else v-if="objeto.tp_red==3">
+                          <span>Troncal</span>
+                        </template>
+                    </td>
                         <td v-text="objeto.longitud"></td>
                         <td v-text="objeto.obs">mts</td>
                         <td>
                           <md-button
                             class="md-icon-button md-primary"
-                            @click="eliminarDetalle(index)"
+                            @click="mostrarActualizarModal(objeto)"
+                            title="editar"
+                          >
+                            <i class="material-icons Color3">edit</i>
+                          </md-button>
+                          <md-button
+                            class="md-icon-button md-primary"
+                            @click="eliminarDetRed(objeto)"
                             title="Eliminar"
                           >
                             <i class="material-icons Color4">delete</i>
@@ -151,17 +159,17 @@
                         </td>
                       </tr>
                     <tr style="background-color: #d0d2dd;">
-                        <td colspan="2" align="right"><strong>Total:</strong></td>
+                        <!-- <td colspan="1"></td> -->
+                        <td colspan="3" align="right"><strong>Total:</strong></td>
                         <td>{{total=calcularTotal.toFixed(4)}} mts</td>
-                        <td></td>
-                        <td></td>
+                        <td colspan="2"></td>
                       </tr>
 
         
                     </tbody>
                     <tbody v-else>
                       <tr>
-                        <td colspan="5">NO hay Detalles de la red</td>
+                        <td colspan="6">NO hay Detalles de la red</td>
                       </tr>
                     </tbody>
                   </table>
@@ -221,7 +229,7 @@
                 v-if="tipoAccion==2"
                 class="md-dense md-raised md-primary"
                 :disabled="sending"
-                @click="actualizarRed()"
+                @click="actualizarTramoRed()"
               >Actualizar</md-button>
             </md-card-actions>
           </div>
@@ -249,9 +257,20 @@
             </button>
           </div>
           <div class="modal-body">
-            <div class="md-layout">
-              <div class="md-layout-item">
-                <span class="md-body">Material</span>
+        
+              <div class="md-layout">
+                <span class="md-body">Tubería</span>
+                <multiselect
+                  v-model="arrayT"
+                  :options="arrayTub"
+                  placeholder="Seleccione un tipo de Tubería"
+                  :custom-label="nameWithTub"
+                  label="nombre"
+                  track-by="nombre"
+                ></multiselect>
+              </div>
+              <div class="md-layout">
+                <span class="md-body">Canalización</span>
                 <multiselect
                   v-model="arrayMat"
                   :options="arrayMaterial"
@@ -261,20 +280,18 @@
                   track-by="nombre"
                 ></multiselect>
               </div>&nbsp;&nbsp;&nbsp;
-              <div class="md-layout-item">
-                <span class="md-body">Tubería</span>
-                <multiselect
-                  v-model="arrayT"
-                  :options="arrayTub"
-                  placeholder="Seleccione un tipo de Tubería"
-                  :custom-label="nameWithNombre"
-                  label="nombre"
-                  track-by="nombre"
-                ></multiselect>
-              </div>&nbsp;&nbsp;&nbsp;
-
-            </div>
-              <div class="md-layout">
+               <div class="md-layout">
+               <div class="md-layout-item">
+                  <span class="md-caption">Tipo de Red</span>
+                    <multiselect
+                      v-model="arrayTR"
+                      :options="arraytpRed"
+                      placeholder="Seleccione un Tipo de Red"
+                      :custom-label="nameWithNombre"
+                      label="nombre"
+                      track-by="nombre"
+                    ></multiselect>
+                  </div>&nbsp;&nbsp;&nbsp;
                 <div class="md-layout-item">
                 <md-field>
                   <label>Longitud</label>
@@ -303,11 +320,19 @@
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
               <md-button
+              v-if="tipoAccion==1"
                 type="submit"                
                 class="md-dense md-raised md-primary"
                 :disabled="sending"
                 @click="registrarTramoRed()"
               >Agregar</md-button>           
+              <md-button
+                v-if="tipoAccion==2"
+                type="submit"                
+                class="md-dense md-raised md-primary"
+                :disabled="sending"
+                @click="actualizarTramoRed()"
+              >Actualizar</md-button>           
           </div>
         </div>
       </div>
@@ -388,7 +413,7 @@ export default {
       listado: 1,
       sending: false,
       idTpEstacion: 0,
-      estacion_id: 0,
+      idDetRed: 0,
 
       arrayDpto: [],
       arrayDetRed: [],
@@ -537,6 +562,9 @@ export default {
     nameWithNombre({ nombre }) {
       return `${nombre}`;
     },
+    nameWithTub({ nombre }) {
+      return `${nombre}`;
+    },
     abrirModal(data = []) {
       // this.idRefE=data["idref"];
       // this.ticket_id = data["idticket"];
@@ -663,18 +691,33 @@ export default {
       let me = this;
       (this.tipoAccion = 2), (me.listado = 0);
       this.id = data["id"];
-      this.tpRed = data["tp_red"];
-      this.tpDiam = data["id_diametro"];
-      this.idRed = data["id_red"];
-      this.idMp = data["id_mpio"];
-      this.idMp2 = data["id_mpiofin"];
-      this.fecCrea = data["fec_creacion"];
-      this.cantP = data["cant_poli"];
-      this.desc = data["desc"];
-      this.planoG = data["plano_g"];
-      this.planoA = data["plano_a"];
-      this.planoC = data["plano_c"];
-      this.planoP = data["plano_p"];
+      this.idRed = data["id"];
+      this.listarDetalle();
+
+    },
+    mostrarActualizarModal(data = []) {
+      let me = this;
+      (this.tipoAccion = 2);
+      this.idDetRed = data["idDet"];
+      this.longitud = data["longitud"];
+      this.obs = data["obs"];
+      this.arrayT.id = data["idTub"];
+      this.arrayT.nombre = data["tuberia"];
+      this.arrayMat.id = data["idMat"];
+      this.arrayMat.nombre = data["material"];
+      this.fecN = data["fec_opera"];
+      if(data["tp_red"]==1){
+        this.arrayTR.id ="1";
+        this.arrayTR.nombre ="URBANA";
+      }else if(data["tp_red"]==2){
+        this.arrayTR.id ="2";
+        this.arrayTR.nombre ="RURAL";
+      }else{
+        this.arrayTR.id ="3";
+        this.arrayTR.nombre ="TRONCAL";
+      }
+      this.abrirModal();
+
     },
 
     ocultarDetalle() {
@@ -756,7 +799,7 @@ export default {
 
       axios
         .post("/fichared/registrar", {
-          tp_red: this.arrayTR.id,
+         
           id_mpio: this.arrayM.id,
           nombre: this.nombre,
           plano_g: this.planoG,
@@ -778,6 +821,7 @@ export default {
       axios
         .post("/detred/registrar", {
           id_red: this.idRed,
+           tp_red: this.arrayTR.id,
           id_material: this.arrayMat.id,
           id_diametro: this.arrayT.id,
           fec_opera: this.fecN,
@@ -793,28 +837,31 @@ export default {
           console.log(error);
         });
     },
-    actualizarRed() {
+    actualizarTramoRed() {
       let me = this;
-
       axios
-        .put("/estacion/actualizar", {
-          idTpEstacion: this.idTpEstacion,
-          nombre: this.form.nombre,
-          descripcion: this.form.descripcion,
-          id: this.estacion_id
+        .put("/detred/actualizar", {
+          id: this.idDetRed,
+          id_red: this.idRed,
+          tp_red: this.arrayTR.id,
+          id_material: this.arrayMat.id,
+          id_diametro: this.arrayT.id,
+          fec_opera: this.fecN,
+          obs: this.obs,
+          longitud: this.longitud
         })
         .then(function(response) {
-          me.ocultarDetalle();
-          me.listarRed(1, "", "nombre");
-          me.mensaje("Actualizado", "Actualizó ");
+          me.cerrarModal();
+          me.listarDetalle();
+           me.mensajeToast("Actualizado","bubble","check","success");
         })
         .catch(function(error) {
           console.log(error);
         });
     },
-    eliminarEstacion(data = []) {
+    eliminarDetRed(data = []) {
       swal({
-        title: "Esta seguro de Eliminar la Estación " + data["nombre"],
+        title: "Esta seguro de Eliminar el tramo de Red " + data["obs"],
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -826,16 +873,16 @@ export default {
         buttonsStyling: false,
         reverseButtons: true
       }).then(result => {
+        let me = this;
+        this.idDetRed = data["idDet"];
         if (result.value) {
-          let me = this;
-          this.estacion_id = data["id"];
           axios
-            .post("/estacion/eliminar", {
-              id: this.estacion_id
+            .post("/detred/eliminar", {
+              id: this.idDetRed
             })
             .then(function(response) {
-              me.ocultarDetalle();
-              me.listarRed(1, "", "nombre");
+              me.listarDetalle();
+              // me.listarRed(1, "", "nombre");
               me.mensaje("Eliminado", "Eliminó ");
             })
             .catch(function(error) {
@@ -891,5 +938,17 @@ export default {
 .text-error {
   color: red !important;
   font-weight: bold;
+}
+.material-icons.Color1 {
+  color: rgb(31, 33, 34);
+}
+.material-icons.Color2 {
+  color: rgba(255, 162, 23, 0.849);
+}
+.material-icons.Color3 {
+  color: rgb(12, 170, 91);
+}
+.material-icons.Color4 {
+  color: rgba(228, 54, 54, 0.863);
 }
 </style>

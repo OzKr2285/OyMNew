@@ -67,7 +67,7 @@ class DetActEquipoController extends Controller
             $actividad = DetActEquipo::join('actividades','det_act_equipo.id_act','=','actividades.id')   
             ->join('ref_equipos','det_act_equipo.id_Equipo','=','ref_equipos.id')        
             ->join('tp_equipos','ref_equipos.id_tpequipo','=','tp_equipos.id')        
-            ->select('tp_equipos.id as idTpE','actividades.id','actividades.nombre','actividades.desc','ref_equipos.nombre','det_act_equipo.id_Equipo')                                 
+            ->select('tp_equipos.id as idTpE','actividades.id','actividades.nombre as nomAct','actividades.desc','ref_equipos.nombre','det_act_equipo.id_Equipo','det_act_equipo.observacion')                                 
             ->distinct()
             ->where('det_act_equipo.id_equipo',$buscar)            
             ->orderBy('actividades.nombre', 'asc')->paginate(15);
@@ -89,7 +89,7 @@ class DetActEquipoController extends Controller
 
     public function detAct(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        // if (!$request->ajax()) return redirect('/');
 
         $buscar = $request->buscar;
         
@@ -154,27 +154,22 @@ class DetActEquipoController extends Controller
         try{
             DB::beginTransaction();
             
-            $actividad = new ActividadE();
-            $actividad = ActividadE::findOrFail($request->id);  
-            
-            $actividad->desc = $request->descripcion;         
+            // $actividad->desc = $request->desc;         
             // $equipo->tp_tren = $request->tp_tren;
             // $equipo->id_mpio = $request->id_mpio;
-            $actividad->save();
+            // $actividad->save();
             $detalles = $request->data;//Array de detalles
             //Recorro todos los elementos
 
             foreach($detalles as $ep=>$det)
             {
                 $detalle = new DetActEquipo();
-                $detalle = DetActEquipo::findOrFail($request->idDet);  
-                $detalle->id_actE = $actividad->id;
+                $detalle->id_actE = $request->id;
                 $detalle->observacion = $det['observacion'];                        
-                $detalle->id_equipo = $request->idEquipo;
+                $detalle->id_equipo = $request->id_refequipo;
                 $detalle->id_act =$det['id'];                                     
                 $detalle->save();
-            }          
-
+            }    
             DB::commit();
         } catch (Exception $e){
             DB::rollBack();

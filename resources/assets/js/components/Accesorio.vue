@@ -5,7 +5,7 @@
       <!-- Ejemplo de tabla Listado -->
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i> Accesorios..
+          <i class="fa fa-align-justify"></i> Accesorios
           <button
             type="button"
             @click="abrirModal('accesorio','registrar')"
@@ -241,7 +241,7 @@ export default {
       userSaved: false,
       sending: false,
 
-      sending: false,
+  
       id_accesorio: 0,
       modelo: "No Aplica",
       modal: 0,

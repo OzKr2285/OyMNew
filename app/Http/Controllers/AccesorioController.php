@@ -85,7 +85,6 @@ class AccesorioController extends Controller
     {
         $accesorio = Accesorio::findOrFail($request->id);
         $accesorio->delete();
-    
     }
 
 }

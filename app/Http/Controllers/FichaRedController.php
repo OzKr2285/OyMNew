@@ -18,7 +18,7 @@ class FichaRedController extends Controller
         if ($buscar==''){
             $fichared = FichaRed::join('det_mercados','fichared.id_mpio','=','det_mercados.id')  
             ->join('mercados','det_mercados.id_mercado','=','mercados.id')               
-            ->select('fichared.tp_red','fichared.nombre','fichared.id_mpio','total','mercados.nombre as nomMercado')
+            ->select('fichared.tp_red','fichared.id','fichared.nombre','fichared.id_mpio','total','mercados.nombre as nomMercado')
             ->orderBy('fichared.tp_red', 'fichared.id_red')->paginate(15);
         }
         else{
@@ -43,7 +43,6 @@ class FichaRedController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $fichared = new FichaRed();
-        $fichared->tp_red = $request->tp_red;
         $fichared->id_mpio = $request->id_mpio;
         $fichared->nombre = $request->nombre;
         $fichared->desc = $request->desc;

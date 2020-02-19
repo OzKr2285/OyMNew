@@ -20,7 +20,6 @@
               <table class="table table-bordered table-striped table-sm">
                 <thead>
                   <tr class="p-3 mb-2 bg-dark text-white">
-                    <th>Tipo de Red</th>
                     <th>Nombre</th>
                     <th>Mercado</th>
                     <th>Opciones</th>
@@ -28,17 +27,7 @@
                 </thead>
                 <tbody>
                   <tr v-for="red in arrayRed" :key="red.id">
-                    <td>
-                       <template v-if="red.tp_red==1">
-                        <span>Urbana</span>
-                      </template>
-                      <template else v-if="red.tp_red==2">
-                        <span>Rural</span>
-                      </template>
-                      <template else v-if="red.tp_red==3">
-                        <span>Troncal</span>
-                      </template>
-                    </td>
+
                     <td v-text="red.nombre"></td>
                     <td v-text="red.nomMercado"></td>
                     <td>
@@ -105,17 +94,7 @@
           <div class="card-body">
             <form action method="post" enctype="multipart/form-data" class="form-horizontal">
               <md-card-content>
-                <div class="md-layout">
-                  <span class="md-caption">Tipo de Red</span>
-                    <multiselect
-                      v-model="arrayTR"
-                      :options="arraytpRed"
-                      placeholder="Seleccione un Tipo de Red"
-                      :custom-label="nameWithNombre"
-                      label="nombre"
-                      track-by="nombre"
-                    ></multiselect>
-                  </div>
+ 
                   <div class="md-layout">
                     <md-field md-clearable>
                       <label for="first-name">Ingrese el nombre de la Red</label>
@@ -185,6 +164,12 @@
                   <md-icon>description</md-icon>
                 </md-field>
               </div>
+                <div class="md-layout-item">
+                  <md-field md-clearable>
+                    <label>Manual de la Red</label>
+                    <md-file v-model="planoC" placeholder="Seleccione el manual de la Red"/>
+                  </md-field>
+                </div>
 
               </md-card-content>
             </form>
@@ -297,12 +282,7 @@ export default {
       arrayDetRed: [],
       arrayMpio: [],
       arrayM: { id: 0, nombre: "", nomDpto: "" },
-      arrayTR: { id: 0, nombre: ""},
-      arraytpRed: [
-        { id: "1", nombre: "URBANA" },
-        { id: "2", nombre: "RURAL" },
-        { id: "3", nombre: "TRONCAL" }
-      ],
+
       arrayRed: [],
       arrayMercado: [],
       arrayDetM: [],
@@ -586,7 +566,6 @@ export default {
 
       axios
         .post("/fichared/registrar", {
-          tp_red: this.arrayTR.id,
           id_mpio: this.idMp,
           nombre: this.nombre.toUpperCase(),
           desc: this.obs,

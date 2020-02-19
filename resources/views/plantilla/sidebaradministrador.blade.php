@@ -159,6 +159,9 @@
                             <li @click="menu=10" >
                                 <a  href="#"><i class="icon-bag"></i>Material Redes</a>
                             </li>
+                            <li @click="menu=78" >
+                                <a  href="#"><i class="icon-bag"></i>Pasos Especiales</a>
+                            </li>
                        
                             </ul>                            
                         </div>                        

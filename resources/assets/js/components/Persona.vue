@@ -47,7 +47,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="objeto in arrayPersona" :key="objeto.id">
+                  <tr v-for="(objeto,index) in arrayPersona" :key="`objeto-${index}`">
                     <td v-text="objeto.nombreFull"></td>
                     <td v-text="objeto.id"></td>
                     <td v-text="objeto.direccion"></td>
@@ -756,7 +756,7 @@ export default {
       //Actualiza la página actual
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
-      me.listarPersona(page, buscar, criterio);
+      me.listarPersona(page, buscar);
     },
     mostrarActualizar(data = []) {
       let me = this;

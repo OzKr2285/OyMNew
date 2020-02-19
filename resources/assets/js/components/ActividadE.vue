@@ -85,7 +85,7 @@
             <form action method="post" enctype="multipart/form-data" class="form-horizontal">
               <md-card-content>
                 <div class="md-layout">
-                  <div class="md-layout-item" v-show="mostrarC==1">
+                  <!-- <div class="md-layout-item" v-show="mostrarC==1">
                     <md-autocomplete
                       md-dense
                       v-model="idTpEquipo"
@@ -101,8 +101,8 @@
                       <label>Tipo de Equipo</label>
                       <template slot="md-autocomplete-item" slot-scope="{ item }">{{ item.nombre }}</template>
                     </md-autocomplete>
-                  </div>&nbsp;&nbsp;&nbsp;
-                  <div class="md-layout-item" v-show="mostrarC==2">
+                  </div>&nbsp;&nbsp;&nbsp; -->
+                  <div class="md-layout-item">
                     <md-field md-clearable>
                       <label>Tipo de Equipo</label>
                       <md-select v-model="idTpEquipo2" md-dense @input="getRefE2">
@@ -114,27 +114,8 @@
                       </md-select>
                     </md-field>
                   </div>&nbsp;&nbsp;&nbsp;
-                  <div class="md-layout-item" v-show="mostrarC==1">
-                    <!-- <md-field md-clearable> -->
-                    <md-autocomplete
-                      md-dense
-                      v-model="idRefEquipo"
-                      :md-options="arrayRefEquipo.map(x=>({
-                      'id':x.id,
-                      'nombre':x.nombre,
-                      'toLowerCase':()=>x.nombre.toLowerCase(),
-                      'toString':()=>x.nombre
-                    }))"
-                      @md-changed="getRefE"
-                      @md-opened="getRefE"
-                    >
-                      <label>Nombre del Equipo</label>
-                      <template slot="md-autocomplete-item" slot-scope="{ item }">{{ item.nombre }}</template>
-                    </md-autocomplete>
-
-                    <!-- </md-field> -->
-                  </div>
-                  <div class="md-layout-item" v-show="mostrarC==2">
+            
+                  <div class="md-layout-item" >
                     <md-field md-clearable>
                       <label>Referencia del Equipo</label>
                       <md-select v-model="idRefEquipo2" md-dense>
@@ -413,7 +394,7 @@ export default {
       listado: 1,
       sending: false,
       idDet: 0,
-      idInsumoe: 0,
+      idActE: 0,
       idTpEquipo: "",
       idTpEquipo2: "",
       idRefEquipo: "",
@@ -425,6 +406,7 @@ export default {
       arrayActividades: [],
       arrayCriterio: ["Nombre", "Desc"],
       arrayDetAct: [],
+      arrayDetActua: [],
       arrayMain: [],
       arrayTpEquipo: [],
       arrayRefEquipo: [],
@@ -595,6 +577,12 @@ export default {
           desc: data["desc"],
           observacion: me.observacion
         });
+          me.arrayDetActua.push({
+          id: data["id"],
+          nombre: data["nombre"],
+          desc: data["desc"],
+          observacion: me.observacion
+        });
       }
     },
 
@@ -616,9 +604,9 @@ export default {
       let me = this;
       this.mostrarC = 2;
       (this.tipoAccion = 2), (me.listado = 0);
-      this.idInsumoe = data["id"];
+      this.idActE = data["id"];
       this.idDet = data["idDet"];
-      this.listarDetAct(1, this.idInsumoe, "");
+      this.listarDetAct(1, this.idActE, "");
       this.idTpEquipo2 = data["idTpE"];
       this.idRefEquipo2 = data["id_Equipo"];
       this.descripcion = data["desc"];
@@ -688,7 +676,7 @@ export default {
 
       axios
         .post("/detactequipo/registrar", {
-          id_refequipo: this.idRefEquipo.id,
+          id_refequipo: this.idRefEquipo2,
           desc: this.descripcion.toUpperCase(),
           data: this.arrayDetAct
         })
@@ -706,11 +694,10 @@ export default {
 
       axios
         .put("/detactequipo/actualizar", {
-          id: this.idInsumoe,
-          idDet: this.idDet,
-          idEquipo: this.idRefEquipo2,
-          descripcion: this.descripcion.toUpperCase(),
-          data: this.arrayDetAct
+           id_refequipo: this.idRefEquipo2,
+          id: this.idActE,
+          desc: this.descripcion.toUpperCase(),
+          data: this.arrayDetActua
         })
         .then(function(response) {
           me.ocultarDetalle();
@@ -737,10 +724,10 @@ export default {
       }).then(result => {
         if (result.value) {
           let me = this;
-          this.idInsumoe = data["id"];
+          this.idActE = data["id"];
           axios
             .post("/detactequipo/eliminar", {
-              id: this.idInsumoe
+              id: this.idActE
             })
             .then(function(response) {
               me.ocultarDetalle();

@@ -208,6 +208,10 @@
                 <solmtoec></solmtoec>
             </template>
    
+            <template v-if="menu==78">
+                <pasoe></pasoe>
+            </template>
+   
 
             <!-- Programacion  de Mantenimientos -->
             <template v-if="menu==20">

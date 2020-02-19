@@ -24,7 +24,11 @@ class ClienteController extends Controller
             ->orderBy('personas.id', 'desc')->paginate(15);
         }
         else{
-            $personas = Persona::join('mpios','personas.id_mpio','=','mpios.id')   
+            $personas = Persona::join('mpios','personas.id_mpio','=','mpios.id') 
+            -> join('cargos','personas.id_cargo','=','cargos.id') 
+            -> join('areas','cargos.id_area','=','areas.id') 
+            ->select('personas.id','nombres','apellidos','tp_doc','num_doc','areas.id as idArea','cargos.id as idcargo','cargos.nombre as nomcargo','genero','fec_nac','id_mpio','direccion','observacion',
+            'telefono','email','is_empleado','nombreFull') 
             ->where('nombreFull', 'like', '%'. $buscar . '%')
             ->orWhere('num_doc', 'like', '%'. $buscar . '%')
             ->orderBy('nombreFull', 'asc')->paginate(15);
