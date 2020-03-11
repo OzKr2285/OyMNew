@@ -47,7 +47,7 @@
                           class="btn btn-danger btn-sm"
                           data-tooltip
                           title="Eliminar"
-                          @click="eliminarEstacion(red)"
+                          @click="eliminarRed(red)"
                         >
                           <i class="icon-trash"></i>
                         </button>
@@ -57,7 +57,6 @@
                 </tbody>
               </table>
             </div>
-          </div>
           <nav>
             <ul class="pagination">
               <li class="page-item" v-if="pagination.current_page > 1">
@@ -89,6 +88,7 @@
               </li>
             </ul>
           </nav>
+          </div>
         </template>
         <template v-else-if="listado==0">
           <div class="card-body">
@@ -276,7 +276,7 @@ export default {
       listado: 1,
       sending: false,
       idTpEstacion: 0,
-      estacion_id: 0,
+      idRed: 0,
 
       arrayDpto: [],
       arrayDetRed: [],
@@ -491,19 +491,14 @@ export default {
     mostrarActualizar(data = []) {
       let me = this;
       (this.tipoAccion = 2), (me.listado = 0);
-      this.id = data["id"];
-      this.tpRed = data["tp_red"];
-      this.tpDiam = data["id_diametro"];
-      this.idRed = data["id_red"];
+      this.nombre = data["nombre"];
+      this.obs = data["desc"];
+      this.idRed = data["id"];
+      this.idMercado = data["idMer"];
       this.idMp = data["id_mpio"];
+      this.listarDetalle();
       this.idMp2 = data["id_mpiofin"];
-      this.fecCrea = data["fec_creacion"];
-      this.cantP = data["cant_poli"];
-      this.desc = data["desc"];
-      this.planoG = data["plano_g"];
-      this.planoA = data["plano_a"];
-      this.planoC = data["plano_c"];
-      this.planoP = data["plano_p"];
+
     },
 
     ocultarDetalle() {
@@ -588,11 +583,11 @@ export default {
       let me = this;
 
       axios
-        .put("/estacion/actualizar", {
-          idTpEstacion: this.idTpEstacion,
-          nombre: this.form.nombre,
-          descripcion: this.form.descripcion,
-          id: this.estacion_id
+        .put("/fichared/actualizar", {
+          id_mpio: this.idMp,
+          nombre: this.nombre.toUpperCase(),
+          desc: this.obs,
+          id: this.idRed
         })
         .then(function(response) {
           me.ocultarDetalle();
@@ -603,9 +598,9 @@ export default {
           console.log(error);
         });
     },
-    eliminarEstacion(data = []) {
+    eliminarRed(data = []) {
       swal({
-        title: "Esta seguro de Eliminar la Estación " + data["nombre"],
+        title: "Esta seguro de Eliminar la Red " + data["nombre"],
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -619,10 +614,10 @@ export default {
       }).then(result => {
         if (result.value) {
           let me = this;
-          this.estacion_id = data["id"];
+          this.idRed = data["id"];
           axios
             .post("/estacion/eliminar", {
-              id: this.estacion_id
+              id: this.idRed
             })
             .then(function(response) {
               me.ocultarDetalle();

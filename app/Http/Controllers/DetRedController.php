@@ -11,7 +11,7 @@ class DetRedController extends Controller
 
     public function detalle(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        // if (!$request->ajax()) return redirect('/');
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;

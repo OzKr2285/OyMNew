@@ -212,6 +212,10 @@
                 <pasoe></pasoe>
             </template>
    
+            <template v-if="menu==79">
+                <tppasoe></tppasoe>
+            </template>
+   
 
             <!-- Programacion  de Mantenimientos -->
             <template v-if="menu==20">
@@ -243,35 +247,17 @@
                 <ticketservtec></ticketservtec>
             </template>
             @elseif (Auth::user()->idrol == 3)
-
-            <template v-if="menu==1">
-                <categoria></categoria>
+            <template v-if="menu==9">
+                <ficharedes></ficharedes>
             </template>
-
-            <template v-if="menu==2">
-                <articulo></articulo>
+            <template v-if="menu==10">
+                <materialred></materialred>
             </template>
-
-            <template v-if="menu==3">
-                <equipo></equipo>
+            <template v-if="menu==58">
+                <diametro></diametro>
             </template>
-            <template v-if="menu==36">
-                <proveedor></proveedor>
-            </template>
-          
-            <!-- <template v-if="menu==9">
-                <tabdemo></tabdemo>
-            </template> -->
-            <template v-if="menu==11">
-                <h1>Ayuda</h1>
-            </template>
-
-            <template v-if="menu==12">
-                <h1>Acerca de</h1>
-            </template>
-
-            <template v-if="menu==72">
-                <ticketservtec></ticketservtec>
+            <template v-if="menu==76">
+                <red></red>
             </template>
    
             @else

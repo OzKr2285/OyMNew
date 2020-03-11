@@ -35,6 +35,7 @@ Vue.component('ficharedes', require('./components/fichaRedes.vue'));
 Vue.component('materialred', require('./components/MaterialRed.vue'));
 Vue.component('red', require('./components/Red.vue'));
 Vue.component('pasoe', require('./components/PasosE.vue'));
+Vue.component('tppasoe', require('./components/TpPasoE.vue'));
 Vue.component('fichapasose', require('./components/FichaPasosE.vue'));
 Vue.component('etapa', require('./components/Etapa.vue'));
 Vue.component('demo', require('./components/demo.vue'));

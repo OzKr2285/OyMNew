@@ -375,6 +375,7 @@ Route::group(['middleware'=>['auth']],function(){
         Route::get('/servicio/getservicio', 'ServicioController@getServicio');
         
         Route::put('/SolServPqrs/registrar', 'SolServPqrsController@store');
+        Route::get('/SolServPqrs/getsol', 'SolServPqrsController@getSol');
 
         Route::get('/tecserv', 'TecServPqrsController@index');
         Route::get('/tecserv/detTecnicos', 'TecServPqrsController@detTecnicos');
@@ -406,6 +407,12 @@ Route::group(['middleware'=>['auth']],function(){
         Route::put('/tpmaterial/actualizar', 'TpMaterialController@update');
         Route::post('/tpmaterial/eliminar', 'TpMaterialController@destroy');
         Route::get('/tpmaterial/selectTpMaterial', 'TpMaterialController@selectTpMaterial');
+
+        Route::get('/tppasoe', 'TpPasoEController@index');
+        Route::post('/tppasoe/registrar', 'TpPasoEController@store');
+        Route::put('/tppasoe/actualizar', 'TpPasoEController@update');
+        Route::post('/tppasoe/eliminar', 'TpPasoEController@destroy');
+        Route::get('/tppasoe/selectTpMaterial', 'TpPasoEController@selectTpMaterial');
         
         Route::get('/tpmaterialred/selectTpMaterial', 'TpMaterialRedController@selectTpMaterial');
         

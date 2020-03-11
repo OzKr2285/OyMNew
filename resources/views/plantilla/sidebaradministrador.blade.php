@@ -157,10 +157,14 @@
                                 <a  href="#"><i class="icon-bag"></i>Redes</a>
                             </li>
                             <li @click="menu=10" >
-                                <a  href="#"><i class="icon-bag"></i>Material Redes</a>
+                                <a  href="#"><i class="icon-bag"></i>Material Red</a>
                             </li>
                             <li @click="menu=78" >
                                 <a  href="#"><i class="icon-bag"></i>Pasos Especiales</a>
+                            </li>
+                       
+                            <li @click="menu=79" >
+                                <a  href="#"><i class="icon-bag"></i>Tp. Paso Especial</a>
                             </li>
                        
                             </ul>                            

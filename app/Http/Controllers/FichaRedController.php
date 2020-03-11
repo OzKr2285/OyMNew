@@ -18,7 +18,7 @@ class FichaRedController extends Controller
         if ($buscar==''){
             $fichared = FichaRed::join('det_mercados','fichared.id_mpio','=','det_mercados.id')  
             ->join('mercados','det_mercados.id_mercado','=','mercados.id')               
-            ->select('fichared.tp_red','fichared.id','fichared.nombre','fichared.id_mpio','total','mercados.nombre as nomMercado')
+            ->select('fichared.tp_red','fichared.id','fichared.nombre','fichared.desc','fichared.id_mpio','total','mercados.id as idMer','mercados.nombre as nomMercado')
             ->orderBy('fichared.tp_red', 'fichared.id_red')->paginate(15);
         }
         else{
@@ -56,16 +56,10 @@ class FichaRedController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $fichared = FichaRed::findOrFail($request->id);
-        $fichared->id_diametro = $request->id_diametro;
-        $fichared->id_red = $request->id_red;
+        // $fichared->id_red = $request->id_red;
         $fichared->id_mpio = $request->id_mpio;
-        $fichared->fec_creacion = $request->fec_creacion;
-        $fichared->cant_poli = $request->cant_poli;
+        $fichared->nombre = $request->nombre;
         $fichared->desc = $request->desc;
-        $fichared->plano_g = $request->plano_g;
-        $fichared->plano_a = $request->plano_a;
-        $fichared->plano_c = $request->plano_c;
-        $fichared->plano_p = $request->plano_p;
         $fichared->save();
     }
     public function destroy(Request $request)

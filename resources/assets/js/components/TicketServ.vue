@@ -1174,7 +1174,7 @@
                       <td>
                         <button
                           type="button"
-                          @click="setPerso()"
+                          @click="setPerso(index)"
                           class="btn btn-success btn-sm"
                         >
                           <i class="icon-check"></i>
@@ -1797,14 +1797,17 @@ export default {
           console.log(error);
         });
     },
-    setPerso(){
+    setPerso(index){
        let me = this;
-        me.form.nombres = me.arrayPersona[0]["nombres"];
-        me.form.apellidos = me.arrayPersona[0]["apellidos"];
-        me.direccion = me.arrayPersona[0]["direccion"];
-        me.telefono = me.arrayPersona[0]["telefono"];
-        me.form.email = me.arrayPersona[0]["email"];
-        me.form.cedula = me.arrayPersona[0]["id"];
+        me.act = 1;
+        me.addUser = 0;
+        me.form.nombres = me.arrayPersona[index]["nombres"];
+        me.form.apellidos = me.arrayPersona[index]["apellidos"];
+        me.direccion = me.arrayPersona[index]["direccion"];
+        me.telefono = me.arrayPersona[index]["telefono"];
+        me.form.email = me.arrayPersona[index]["email"];
+        me.form.cedula = me.arrayPersona[index]["id"];
+        me.idUsuario = me.arrayPersona[index]["id"];
         this.cerrarModal6();
     },
     agregarTecnico(data = []) {

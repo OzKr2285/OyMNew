@@ -101,8 +101,8 @@
               <md-card-content>
                 <div class="md-layout">
                 <md-field md-clearable>
-                    <label>Seleccione Red</label>
-                      <md-select v-model="idRed" md-dense @input="listarDetalle()">
+                    <label>Seleccione Paso Especial</label>
+                      <md-select v-model="idPaso" md-dense @input="listarDetalle()">
                       <md-option
                         v-for="objeto in arrayRed"
                         :key="objeto.id"
@@ -387,7 +387,7 @@ export default {
       idDpto: 0,
       idMp: 0,
       idMp2: 0,
-      idRed: 0,
+      idPaso: 0,
       tpDiam: 0,
       fecN: format(now, dateFormat),
       fecN2: "",
@@ -538,7 +538,7 @@ export default {
       this.$v.$reset();
       this.tpRed = "";
       this.tpDiam = "";
-      this.idRed = "";
+      this.idPaso = "";
       this.id_mpio = "";
       this.fecCrea = "";
       this.cantP = "";
@@ -685,7 +685,7 @@ export default {
       this.id = data["id"];
       this.tpRed = data["tp_red"];
       this.tpDiam = data["id_diametro"];
-      this.idRed = data["id_red"];
+      this.idPaso = data["id_red"];
       this.idMp = data["id_mpio"];
       this.idMp2 = data["id_mpiofin"];
       this.fecCrea = data["fec_creacion"];
@@ -751,7 +751,7 @@ export default {
         "/detred/detalle?page=" +
         page +
         "&buscar=" +
-        this.idRed +
+        this.idPaso +
         "&criterio=" +
         criterio;
       axios
@@ -797,7 +797,7 @@ export default {
       let me = this;
       axios
         .post("/detred/registrar", {
-          id_red: this.idRed,
+          id_red: this.idPaso,
            tp_red: this.arrayTR.id,
           id_material: this.arrayMat.id,
           id_diametro: this.arrayT.id,

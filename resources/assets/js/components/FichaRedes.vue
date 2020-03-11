@@ -161,7 +161,8 @@
                     <tr style="background-color: #d0d2dd;">
                         <!-- <td colspan="1"></td> -->
                         <td colspan="3" align="right"><strong>Total:</strong></td>
-                        <td>{{total=calcularTotal.toFixed(4)}} mts</td>
+                        <td>{{parseFloat(calcularTotal)}} mts</td>
+                        <!-- <td>{{total=calcularTotal}} mts</td> -->
                         <td colspan="2"></td>
                       </tr>
 
@@ -320,14 +321,14 @@
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
               <md-button
-              v-if="tipoAccion==1"
+              v-if="tipoAccion2==1"
                 type="submit"                
                 class="md-dense md-raised md-primary"
                 :disabled="sending"
                 @click="registrarTramoRed()"
               >Agregar</md-button>           
               <md-button
-                v-if="tipoAccion==2"
+                v-if="tipoAccion==1"
                 type="submit"                
                 class="md-dense md-raised md-primary"
                 :disabled="sending"
@@ -436,6 +437,7 @@ export default {
       modal: 0,
       tituloModal: "",
       tipoAccion: 0,
+      tipoAccion2: 0,
 
       pagination: {
         total: 0,
@@ -455,9 +457,9 @@ export default {
 
   computed: {
     calcularTotal: function(){
-        var resultado=0.0;
+        var resultado=0;
         for(var i=0;i<this.arrayDetRed.length;i++){
-            resultado=resultado+(this.arrayDetRed[i].longitud)
+            resultado=resultado+(parseInt(this.arrayDetRed[i].longitud))
         }
         return resultado;
     },
@@ -568,6 +570,8 @@ export default {
     abrirModal(data = []) {
       // this.idRefE=data["idref"];
       // this.ticket_id = data["idticket"];
+      this.tipoAccion2 = 1;
+      this.tipoAccion = 0;
       this.getDiametro();
       this.getMaterial();
       this.modal = 1;
@@ -698,6 +702,7 @@ export default {
     mostrarActualizarModal(data = []) {
       let me = this;
       (this.tipoAccion = 2);
+      (this.tipoAccion2 = 0);
       this.idDetRed = data["idDet"];
       this.longitud = data["longitud"];
       this.obs = data["obs"];
@@ -792,7 +797,7 @@ export default {
       //Actualiza la página actual
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
-      me.listarRed(page, buscar, criterio);
+      me.listarDatos(page, buscar, criterio);
     },
     registrarRed() {
       let me = this;
@@ -824,7 +829,7 @@ export default {
            tp_red: this.arrayTR.id,
           id_material: this.arrayMat.id,
           id_diametro: this.arrayT.id,
-          fec_opera: this.fecN,
+          fec_opera: this.fecN2,
           obs: this.obs,
           longitud: this.longitud
         })

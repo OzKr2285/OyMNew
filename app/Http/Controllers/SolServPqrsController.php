@@ -37,7 +37,18 @@ class SolServPqrsController extends Controller
         } catch (Exception $e){
             DB::rollBack();
         }
+    }
 
+    public function getSol(Request $request)
+    {
+        // if (!$request->ajax()) return redirect('/');
 
+        $buscar = $request->buscar;
+
+        $solserv = SolServPqrs::join('personas','sol_serv_pqrs.id_tecnico','=','personas.id')
+        ->select('personas.nombreFull as nombre','sol_serv_pqrs.id_serv_pqrs','sol_serv_pqrs.solucion','sol_serv_pqrs.fecha')
+        ->where('sol_serv_pqrs.id_serv_pqrs',$buscar)
+        ->orderBy('sol_serv_pqrs.fecha', 'asc')->get();
+        return ['solServ' =>$solserv];
     }
 }

@@ -5,7 +5,7 @@
       <!-- Ejemplo de tabla Listado -->
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i> GestiÛn de Di·metros 
+          <i class="fa fa-align-justify"></i> Gesti√≥n de Di√°metros 
           <button
             type="button"
             @click="abrirModal('Mercado','registrar')"
@@ -227,7 +227,7 @@ export default {
     isActived: function() {
       return this.pagination.current_page;
     },
-    //Calcula los elementos de la paginaciÛn
+    //Calcula los elementos de la paginaciÔøΩn
     pagesNumber: function() {
       if (!this.pagination.to) {
         return [];
@@ -297,9 +297,9 @@ export default {
     },
     cambiarPagina(page, buscar, criterio) {
       let me = this;
-      //Actualiza la p·gina actual
+      //Actualiza la pÔøΩgina actual
       me.pagination.current_page = page;
-      //Envia la peticiÛn para visualizar la data de esa p·gina
+      //Envia la peticiÔøΩn para visualizar la data de esa pÔøΩgina
       me.listarDiametro(page, buscar, criterio);
     },
     registrarDiametro() {
@@ -331,7 +331,7 @@ export default {
         .then(function(response) {
           me.cerrarModal();
           me.listarDiametro(1, "", "nombre");
-          me.mensaje("Actualizado", "ActualizÛ ");
+          me.mensaje("Actualizado", "ActualizÔøΩ ");
         })
         .catch(function(error) {
           console.log(error);
@@ -339,7 +339,7 @@ export default {
     },
     eliminarDiametro(data = []) {
       swal({
-        title: "Esta seguro de Eliminar el Di·metro " + data["nombre"],
+        title: "Esta seguro de Eliminar el DiÔøΩmetro " + data["nombre"],
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -361,7 +361,7 @@ export default {
             .then(function(response) {
               me.cerrarModal();
               me.listarDiametro(1, "", "nombre");
-              me.mensaje("Eliminado", "EliminÛ ");
+              me.mensaje("Eliminado", "EliminÔøΩ ");
             })
             .catch(function(error) {
               console.log(error);
@@ -375,7 +375,7 @@ export default {
     },
 
     mensaje(tipo, crud) {
-      swal(tipo, "El registro se " + crud + " con Èxito.", "success");
+      swal(tipo, "El registro se " + crud + " con ÔøΩxito.", "success");
     },
 
     cerrarModal() {

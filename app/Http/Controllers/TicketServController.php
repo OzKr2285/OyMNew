@@ -84,7 +84,7 @@ class TicketServController extends Controller
             'personas.email','personas.direccion','mpios.nombre as mpio','personas.telefono', 'categorias.id as idCat','categorias.nombre as nomCat',
             'objpqrs.id as idObjpqrs','objpqrs.nombre','serv_pqrs.desc','serv_pqrs.prioridad','serv_pqrs.medio','serv_pqrs.edo','areas.id as idArea',
             'areas.nombre as nomArea','p.id_cargo as idCargo','cargos.nombre as nomCargo','serv_pqrs.id_lider' )
-            ->whereBetween('serv_pqrs.fecha',[$fecI,$fecF])  
+            ->whereDate('serv_pqrs.fecha','>=',$fecI)->whereDate('serv_pqrs.fecha','<=',$fecF) 
             // ->orwhere('categorias.id',$buscar)
             ->orderBy('serv_pqrs.fecha' , 'desc')->orderBy('serv_pqrs.prioridad' , 'asc')->paginate(15);
         

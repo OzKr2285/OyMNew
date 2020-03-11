@@ -25,37 +25,22 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="red in arrayRed" :key="red.id">
+                  <tr v-for="red in arrayDatos" :key="red.id">
                     <td v-text="red.nombre"></td>
 
                     <td>
-                      <button
-                        type="button"
-                        @click="mostrarActualizar(red)"
-                        class="btn btn-warning btn-sm"
-                        data-tooltip
-                        title="Actualizar"
-                      >
-                        <i class="icon-pencil"></i>
-                      </button>
-                      &nbsp;
-                      <template>
-                        <button
-                          type="button"
-                          class="btn btn-danger btn-sm"
-                          data-tooltip
-                          title="Eliminar"
-                          @click="eliminarRed(red)"
-                        >
-                          <i class="icon-trash"></i>
-                        </button>
-                      </template>
+                  <md-button class="md-icon-button " @click="mostrarActualizar(red)" title="Actualizar">                         
+                    <i class="material-icons Color3">edit</i>
+                  </md-button>
+                  <md-button class="md-icon-button md-primary " @click="eliminarRed(red)" title="Eliminar">
+                    <i class="material-icons Color4">delete</i>
+                  </md-button>
+
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
-          </div>
           <nav>
             <ul class="pagination">
               <li class="page-item" v-if="pagination.current_page > 1">
@@ -87,6 +72,7 @@
               </li>
             </ul>
           </nav>
+          </div>
         </template>
         <template v-else-if="listado==0">
           <div class="card-body">
@@ -173,8 +159,7 @@ export default {
   data() {
     return {
       form: {
-        nombre: "",
-        descripcion: ""
+        nombre: ""
       },
       demo: 0,
       tipoAccion: 1,
@@ -182,8 +167,8 @@ export default {
       sending: false,
       redId:0,
 
-      arrayRed: [],
-      arrayRed: [],
+      arrayDatos: [],
+
       modal: 0,
       tituloModal: "",
       tipoAccion: 0,
@@ -205,9 +190,6 @@ export default {
   validations: {
     form: {
       nombre: {
-        required
-      },
-      descripcion: {
         required
       }
     }
@@ -254,7 +236,7 @@ export default {
       this.$v.$touch();
 
       if (!this.$v.$invalid) {
-        this.registrarRed();
+        this.registrarMat();
         this.clearForm();
       }
     },
@@ -291,7 +273,7 @@ export default {
         .get(url)
         .then(function(response) {
           var respuesta = response.data;
-          me.arrayRed = respuesta.red.data;
+          me.arrayDatos = respuesta.red.data;
           me.pagination = respuesta.pagination;
         })
         .catch(function(error) {
@@ -305,13 +287,12 @@ export default {
       //Envia la petición para visualizar la data de esa página
       me.listarRed(page, buscar, criterio);
     },
-    registrarRed() {
+    registrarMat() {
       let me = this;
 
       axios
         .post("/red/registrar", {
-          nombre: this.form.nombre.toUpperCase(),
-          descripcion: this.form.descripcion.toUpperCase()
+          nombre: this.form.nombre.toUpperCase()
         })
         .then(function(response) {
           me.ocultarDetalle();
@@ -404,5 +385,17 @@ export default {
 .text-error {
   color: red !important;
   font-weight: bold;
+}
+.material-icons.Color1 {
+  color: rgb(31, 33, 34);
+}
+.material-icons.Color2 {
+  color: rgba(167, 142, 5, 0.849);
+}
+.material-icons.Color3 {
+  color: rgb(12, 170, 91);
+}
+.material-icons.Color4 {
+  color: rgba(228, 54, 54, 0.863);
 }
 </style>
