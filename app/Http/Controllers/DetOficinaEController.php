@@ -11,7 +11,7 @@ class DetOficinaEController extends Controller
 
     public function index(Request $request)
     {
-        // if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;
@@ -28,7 +28,8 @@ class DetOficinaEController extends Controller
             ->join('ref_equipos','equipos.id_refequipo','=','ref_equipos.id')         
             ->join('tp_equipos','ref_equipos.id_tpequipo','=','tp_equipos.id')         
             ->join('personas','equipos.id_responsable','=','personas.id')         
-            ->select('personas.nombreFull as respo','tp_equipos.nombre','det_oficinae.id','det_oficinae.id_oficina','oficinas.nombre as nomM','ref_equipos.nombre as tpEquipo','equipos.serial','equipos.desc','equipos.id as idEquipo')
+            ->join('modelos','equipos.id_modelo','=','modelos.id')         
+            ->select('personas.nombreFull as respo','tp_equipos.nombre','det_oficinae.id','det_oficinae.id_oficina','oficinas.nombre as nomM','ref_equipos.nombre as tpEquipo','equipos.serial','equipos.desc','equipos.id as idEquipo','modelos.nombre as modelo')
             ->where('det_oficinae.id_oficina',$buscar)
             ->orderBy('oficinas.nombre','asc')->paginate(15);
         }        
@@ -52,7 +53,29 @@ class DetOficinaEController extends Controller
         try{
             DB::beginTransaction();
 
+            $idOficina = $request->idOficina;
+            $detalles = $request->data;            //Array de detalles
+            //Recorro todos los elementos
 
+            foreach($detalles as $ep=>$det)
+            {
+                $detalle = new DetOficinaE();
+                $detalle->id_oficina = $idOficina;
+                $detalle->id_equipo = $det['id'];        
+                $detalle->save();
+            }          
+
+            DB::commit();
+        } catch (Exception $e){
+            DB::rollBack();
+        }
+    }
+    public function update(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+
+        try{
+            DB::beginTransaction();
 
             $idOficina = $request->idOficina;
             $detalles = $request->data;            //Array de detalles

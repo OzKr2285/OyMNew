@@ -80,7 +80,7 @@
                 <div class="md-layout-item md-size-45">
                   <md-field md-clearable>
                     <label>Seleccione la Oficina</label>
-                    <md-select v-model="idOficina" md-dense @input="listarDetalle(page, buscar, criterio)">
+                    <md-select v-model="idOficina" md-dense @input="listarDetalle()">
                       <md-option
                         v-for="objeto in arrayOficina"
                         :key="objeto.id"
@@ -119,8 +119,8 @@
                     <thead>
                       <tr>
                         <th>Serial</th>                        
-                        <th>Tp Equipo</th>                        
                         <th>Equipo</th>                        
+                        <th>Modelo</th>                        
                         <th>Responsable</th>                        
                         <th>Opciones</th>
                       </tr>
@@ -134,8 +134,8 @@
                         :key="`objeto-${index}`"
                       >                        
                         <td v-text="objeto.serial"></td>
-                        <td v-text="objeto.tpEquipo"></td>
                         <td v-text="objeto.nombre"></td>
+                        <td v-text="objeto.modelo"></td>
                         <td v-text="objeto.respo"></td>
                         <td>
                           <md-button class="md-icon-button md-primary " @click="eliminarEquipo(objeto)" title="Eliminar">
@@ -470,12 +470,12 @@ export default {
     },
     clearForm() {
       this.$v.$reset();
-      this.form.nombre = null;
-      this.form.descripcion = null;
+      this.arrayDetMAct=[];
     },
     abrirModal5() {
       // this.idRefE=data["idref"];
-      this.getTpEquipo();
+      this.listarExEtapa(1, this.idTpEquipo,this.criterio);
+      // this.getTpEquipo();
       this.modal5 = 1;
       this.tituloModal = "Seleccione uno o varios Equipos";
       // this.getPerso(1, this.buscar, this.criterio);
@@ -528,6 +528,7 @@ export default {
         me.arrayDetM.push({
           id: data["ide"],
           serial: data["serial"],
+          modelo: data["modelo"],
           tpEquipo: data["nomtpequipo"],
           respo: data["nomperso"],
           nombre: data["nomref"]
@@ -535,6 +536,7 @@ export default {
           me.arrayDetMAct.push({
             id: data["ide"],
             serial: data["serial"],
+            modelo: data["modelo"],
             tpEquipo: data["nomtpequipo"],
             respo: data["nomperso"],
             nombre: data["nomref"]
@@ -556,7 +558,7 @@ export default {
       (this.idDet = data["id"]);      
       (this.idOficina = data["id_oficina"]);      
       (this.tipoAccion = 2), (me.listado = 0);
-      this.listarDetalle(this.page, this.buscar, this.criterio);
+      this.listarDetalle();
     },
     mostrarDetalle() {
       this.clearForm();
@@ -586,15 +588,11 @@ export default {
           console.log(error);
         });
     },
-    listarDetalle(page, buscar, criterio) {
+    listarDetalle() {
       let me = this;
       var url =
-        "/detoficinae?page=" +
-        page +
-        "&buscar=" +
-        this.idOficina +
-        "&criterio=" +
-        criterio;
+        "/detoficinae?buscar=" +
+        this.idOficina 
       axios
         .get(url)
         .then(function(response) {
@@ -658,7 +656,7 @@ export default {
         })
         .then(function(response) {
           me.ocultarDetalle();
-          me.listarRefE(1, "", "nombre");
+          me.listarDetalle();
           me.mensaje("Guardado", "Guardo ");
         })
         .catch(function(error) {
@@ -669,13 +667,14 @@ export default {
       let me = this;
 
       axios
-        .put("/detmercado/actualizar", {
-          idCiclo: this.idCiclo,   
+        .put("/detoficinae/actualizar", {
+          idOficina: this.idOficina,   
           data: this.arrayDetMAct
         })
         .then(function(response) {
-          me.ocultarDetalle();
-          me.listarRefE(1, "", "nombre");
+          // me.ocultarDetalle();
+          me.listarDetalle();
+          me.clearForm();
           me.mensaje("Actualizado", "Actualizó ");
         })
         .catch(function(error) {
@@ -704,8 +703,8 @@ export default {
               id: this.idDet
             })
             .then(function(response) {
-              me.ocultarDetalle();
-              // me.listarRefE(1, "", "nombre");
+              // me.ocultarDetalle();
+              me.listarDetalle();
               me.mensaje("Eliminado", "Eliminó ");
             })
             .catch(function(error) {

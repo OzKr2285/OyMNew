@@ -18,7 +18,7 @@
         </div>
     <div class="sidebar-header">
         <div class="user-pic">
-            <img class="img-avatar img-responsive img-rounded" src="img/avatars/6.png"
+            <img class="img-avatar img-responsive img-rounded" src="img/avatars/{{Auth::user()->img}}"
             alt="User picture">
         </div>
         <div class="user-info">

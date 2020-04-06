@@ -1321,9 +1321,9 @@ export default {
           console.log(error);
         });
     },
-    getMpio() {
+    getMpio(idDpto) {
       let me = this;
-      var url = "/mpio/selectMpio/?buscar=" + this.idDpto;
+      var url = "/mpio/selectMpio/?buscar=" + idDpto;
       axios
         .get(url)
         .then(function(response) {
@@ -1455,9 +1455,9 @@ export default {
       (this.idTpEstacion = data["idtpes"]),
       this.idDpto = data["idDpto"];
 
-      this.getMpio();
       this.getEstacion();
       this.idMp = data["idmpio"];
+      this.getMpio(this.idMp);
       this.idEstacion = data["idEs"];
       this.getEtapas(); 
     },
@@ -1645,9 +1645,9 @@ export default {
     this.getDpto();
     this.getTpEstacion();
     // this.getEtapa();
-    this.listarEtapa(1, this.buscar, this.criterio);
+    // this.listarEtapa(1, this.buscar, this.criterio);
     this.listarEstacion(1, this.buscar, this.criterio);
-    this.listarExEtapa(1, this.buscar, this.criterio);
+    // this.listarExEtapa(1, this.buscar, this.criterio);
   }
 };
 </script>

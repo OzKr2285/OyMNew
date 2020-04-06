@@ -215,6 +215,12 @@
             <template v-if="menu==79">
                 <tppasoe></tppasoe>
             </template>
+            {{-- <template v-if="menu==80">
+                <demo></demo>
+            </template> --}}
+            <template v-if="menu==80">
+                <perfil></perfil>
+            </template>
    
 
             <!-- Programacion  de Mantenimientos -->

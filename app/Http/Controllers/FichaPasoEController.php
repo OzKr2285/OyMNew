@@ -66,4 +66,11 @@ class FichaPasoEController extends Controller
         $fichapasoe->delete();
     
     }
+    public function selectPaso(Request $request){
+        // if (!$request->ajax()) return redirect('/');
+
+        $fichapasoe = FichaPasoE::select('id','nombre')
+        ->orderBy('nombre', 'asc')->get();
+      return ['fichapasoe' => $fichapasoe];
+  }
 }

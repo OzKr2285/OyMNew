@@ -260,6 +260,9 @@
                       <md-button class="md-icon-button md-primary" @click="abrirModal2()">
                         <md-icon>group_add</md-icon>
                       </md-button>
+                      <md-button class="md-icon-button md-accent" @click="getSol()">
+                        <md-icon>refresh</md-icon>
+                      </md-button>
                       <tr>
                         <th>Observación</th>
                         <th>Fecha</th>

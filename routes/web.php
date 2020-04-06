@@ -162,16 +162,15 @@ Route::group(['middleware'=>['auth']],function(){
         Route::get('/detmtoes', 'DetMtoEsController@equiposMto');   
         // Route::get('/detmtoes/get', 'DetMtoEsController@equiposMto');
 
+        Route::post('/detpasoe/registrar', 'DetPasoEController@store');
+        Route::put('/detpasoe/actualizar', 'DetPasoEController@update');
+        Route::get('/detpasoe/detalle', 'DetPasoEController@detalle');
+        Route::post('/detpasoe/eliminar', 'DetPasoEController@destroy');
+
         Route::post('/detred/registrar', 'DetRedController@store');
         Route::put('/detred/actualizar', 'DetRedController@update');
         Route::get('/detred/detalle', 'DetRedController@detalle');
         Route::post('/detred/eliminar', 'DetRedController@destroy');
-
-        Route::get('/diametro', 'DiametroController@index');
-        Route::post('/diametro/registrar', 'DiametroController@store');
-        Route::put('/diametro/actualizar', 'DiametroController@update');
-        Route::post('/diametro/eliminar', 'DiametroController@destroy');
-        Route::get('/diametro/selectDiametro', 'DiametroController@selectDiametro');
 
         Route::get('/conte', 'DetEquipoEstacionController@contE');
         Route::get('/detequipoestacion/estacion', 'DetEquipoEstacionController@indexEstacion');        
@@ -195,6 +194,7 @@ Route::group(['middleware'=>['auth']],function(){
 
         Route::get('/detoficinae', 'DetOficinaEController@index');
         Route::post('/detoficinae/registrar', 'DetOficinaEController@store');
+        Route::put('/detoficinae/actualizar', 'DetOficinaEController@update');
         Route::post('/detoficinae/eliminar', 'DetOficinaEController@destroy');
 
         Route::get('/detmtoec', 'DetMtoECController@index');
@@ -202,6 +202,12 @@ Route::group(['middleware'=>['auth']],function(){
         Route::get('/detmtoveh', 'DetMtoVehController@index');
         Route::post('/detmtoveh/registrar', 'DetMtoVehController@store');
         Route::post('/detmtoveh/eliminar', 'DetMtoVehController@destroy');
+
+        Route::get('/diametro', 'DiametroController@index');
+        Route::post('/diametro/registrar', 'DiametroController@store');
+        Route::put('/diametro/actualizar', 'DiametroController@update');
+        Route::post('/diametro/eliminar', 'DiametroController@destroy');
+        Route::get('/diametro/selectDiametro', 'DiametroController@selectDiametro');
 
         Route::get('/etapa', 'EtapaController@index');
         Route::post('/etapa/registrar', 'EtapaController@store');
@@ -240,6 +246,7 @@ Route::group(['middleware'=>['auth']],function(){
         Route::post('/fichapasoe/registrar', 'FichaPasoEController@store');
         Route::put('/fichapasoe/actualizar', 'FichaPasoEController@update');
         Route::post('/fichapasoe/eliminar', 'FichaPasoEController@destroy');
+        Route::get('/fichapasoe/selectPasoE', 'FichaPasoEController@selectPaso');
         
         Route::get('/fichaveh', 'FichaVehController@index');
         Route::post('/fichaveh/registrar', 'FichaVehController@store');
@@ -425,9 +432,11 @@ Route::group(['middleware'=>['auth']],function(){
         Route::get('/trenetapa/selectTrenEtapa', 'TrenEtapaController@selectTrenEtapa');
   
         Route::get('/user', 'UserController@index');
+        Route::get('/user/getImg', 'UserController@getImg');
         Route::get('user/export/', 'UserController@export');
         Route::post('/user/registrar', 'UserController@store');
         Route::put('/user/actualizar', 'UserController@update');
+        Route::post('/user/imagen', 'UserController@storeImg');
         Route::put('/user/actualizarPw', 'UserController@updatePw');
         Route::put('/user/desactivar', 'UserController@desactivar');
         Route::put('/user/activar', 'UserController@activar');

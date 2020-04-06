@@ -120,7 +120,6 @@ class UserController extends Controller
 
                 $user = User::findOrFail($request->id);
 
-
                 $user->password = bcrypt( $request->password);
                 $user->save();
 
@@ -147,7 +146,42 @@ class UserController extends Controller
         $user->condicion = '1';
         $user->save();
     }
+    public function storeImg(Request $request)
+    {
+        // if (!$request->ajax()) return redirect('/');
+        
+        try{
+            $img = $request->images;
+            $ruta = public_path().'/img/avatars';
+            
+            DB::beginTransaction();
 
+            $i=0;
+            if(count($request->images)){
+                foreach($request->images as $image){
+                $user = User::findOrFail(\Auth::user()->id);
+                $filename = $image->getClientOriginalName();
+                $upload_success = $image->move($ruta, $filename);
+                $user->img =  $filename;
+                $user->save();
+                $i++;
+            }
+        }
+
+            DB::commit();
+        // }
+    } catch (Exception $e){
+        DB::rollBack();
+    }
+
+    }
+    public function getImg(Request $request){
+        if (!$request->ajax()) return redirect('/');
+        $buscar = $request->buscar;           
+        $user = User::select('users.img')->where('users.id',$buscar)->get();
+
+      return ['user' => $user];
+  }
     public function export() 
     {
         return Excel::download(new UsersExport, 'users.xlsx');

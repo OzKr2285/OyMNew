@@ -187,7 +187,7 @@
                     <div class="md-layout-item">
                       <md-field md-clearable>
                         <label>Modelo</label>
-                        <md-select v-model="idModelo" md-dense>
+                        <md-select v-model="idModelo" md-dense >
                           <md-option
                             v-for="modelo in arrayModelo"
                             :key="modelo.id"
@@ -229,7 +229,7 @@
 
                   <div class="md-layout">
                   
-                    <div class="md-layout-item">
+                    <div class="md-layout-item" v-show="mostrarA==1">
                       <md-field md-clearable>
                         <label>Responsable</label>
                         <md-select v-model="idResponsable" md-dense>
@@ -240,7 +240,21 @@
                           >{{perso.nombreFull}}</md-option>
                         </md-select>
                       </md-field>
-                    </div>&nbsp;&nbsp;&nbsp;
+                    </div>
+                    <div class="md-layout-item" v-show="mostrarR==1">
+                    <span class="md-caption">Seleccione Responsable</span>
+                    <multiselect
+                      v-model="arrayPer"
+                      :options="arrayPerso"
+                      :options-limit="10"
+                      :loading="isLoading2" 
+                      @search-change="getPerso"
+                      placeholder="Seleccione un Responsable"
+                      :custom-label="nameWithFull"
+                      label="nombreFull"
+                      track-by="nombreFull"
+                    ></multiselect> 
+                  </div>&nbsp;&nbsp;&nbsp; 
                       <div class="md-layout-item" v-show="mostrarA==1">
                       <md-field md-clearable>
                         <label>Actualizar Proveedor</label>
@@ -253,7 +267,7 @@
                         </md-select>
                       </md-field>
                     </div>
-                    <div class="md-layout-item" v-show="mostrarR==1">
+                    <!-- <div class="md-layout-item" v-show="mostrarR==1">
                       <span>.</span>
                       <v-select
                         :on-search="selectProveedor"
@@ -262,7 +276,23 @@
                         placeholder="Buscar Proveedores..."
                         :onChange="getDatosProveedor"
                       ></v-select>
-                    </div>
+                    </div> -->
+                  <div class="md-layout-item" v-show="mostrarR==1">
+                    <span class="md-caption">Seleccione Proveedor</span>
+                    <multiselect
+                      v-model="arrayP"
+      
+                      :options="arrayProveedor"
+                      :options-limit="10"
+                      :loading="isLoading" 
+                      @search-change="getProveedor"
+                      placeholder="Seleccione un Proveedor"
+                      :custom-label="nameWithLang"
+                      label="nombre"
+                      track-by="nombre"
+                    ></multiselect>
+  
+                  </div>
                   </div>
                   <div class="md-layout">
                     <div class="md-layout-item">
@@ -528,7 +558,8 @@
 // import moment from 'moment';
 
 import { validationMixin } from "vuelidate";
-
+import Multiselect from "vue-multiselect";
+import Toasted from 'vue-toasted';
 import vSelect from "vue-select";
 import {
   MdButton,  
@@ -542,6 +573,9 @@ import {
 } from "vue-material/dist/components";
 // import VueMaterial from 'vue-material'
 // Vue.use(VueMaterial)
+Vue.use(Toasted,  {
+    iconPack : 'material' // set your iconPack, defaults to material. material|fontawesome|custom-class
+});
 Vue.use(MdButton);
 
 Vue.use(MdContent);
@@ -620,13 +654,17 @@ export default {
       arrayTpEquipo: [],
       arrayRefEquipo: [],
       arrayPerso: [],
+      arrayPer: { id: 0, nombreFull: "" },
       arrayProveedor: [],
+      arrayP: { id: 0, nombre: "" },
       arrayAccesorio: [],
       arrayDetalle: [],
       arrayDetEquipo: [],
       arrayDetEquipoAct: [],
       arrayEquipo: [],
       arrayModelo: [],
+      isLoading: false,
+      isLoading2: false,
   
       modal: 0,
       tituloModal: "",
@@ -647,7 +685,8 @@ export default {
     };
   },
   components: {
-    vSelect
+    vSelect,
+    Multiselect
   },
 
   validations: {
@@ -736,6 +775,12 @@ export default {
           break;
       }
     },
+    nameWithLang({ nombre }) {
+      return `${nombre}`;
+    },
+    nameWithFull({ nombreFull }) {
+      return `${nombreFull}`;
+    },
     toString() {
       this.toDate();
     // this.fecCompra =moment(this.fecCompra).format("YYYY-MM-DD");
@@ -779,7 +824,6 @@ export default {
     },
     clearForm() {
       this.$v.$reset();
-      this.arrayProveedor = [];
       this.arrayDetEquipo = [];
       this.arrayDetEquipoAct = [];
       this.mostrarR = 1;
@@ -835,6 +879,7 @@ export default {
           modelo: data["modelo"],
           serial: data["serial"],
         });
+          me.mensajeToast("Agregado","bubble","check","success");
       }
     },
 
@@ -862,18 +907,18 @@ export default {
           console.log(error);
         });
     },
-    selectProveedor(search, loading) {
+    selectProveedor(search) {
       let me = this;
-      loading(true);
+      // loading(true);
 
       var url = "/proveedor/selectProveedor?filtro=" + search;
       axios
         .get(url)
         .then(function(response) {
           let respuesta = response.data;
-          q: search;
+          // q: search;
           me.arrayProveedor = respuesta.proveedores;
-          loading(false);
+          // loading(false);
         })
         .catch(function(error) {
           console.log(error);
@@ -881,14 +926,14 @@ export default {
     },
     getProveedor() {
       let me = this;
-
+      me.isLoading = true;
       var url = "/proveedor/getProveedor";
       axios
         .get(url)
         .then(function(response) {
           let respuesta = response.data;
-
           me.arrayProveedor = respuesta.proveedores;
+          me.isLoading = false;
         })
         .catch(function(error) {
           console.log(error);
@@ -943,16 +988,17 @@ export default {
           console.log(error);
         });
     },
-    getPerso() {
+    getPerso(buscar) {
       let me = this;
-
-      var url = "/persona/selectPersona";
+      me.isLoading2 = true;
+      var url = "/persona/selectPersona?buscar="+ this.buscar;
       axios
         .get(url)
         .then(function(response) {
           //console.log(response);
           var respuesta = response.data;
           me.arrayPerso = respuesta.perso;
+          me.isLoading2 = false;
         })
         .catch(function(error) {
           console.log(error);
@@ -975,6 +1021,7 @@ export default {
     },
 
     mostrarDetalle() {
+      //  this.getProveedor();
       this.clearForm();
       this.getTpEquipo();
       this.getMarca();
@@ -1040,9 +1087,9 @@ export default {
       let me = this;
       axios
         .post("/equipo/registrarcomp", {
-          id_proveedor: this.idproveedor,
+          id_proveedor: this.arrayP.id,
           id_refequipo: this.idRefEquipo,
-          id_responsable: this.idResponsable,
+          id_responsable: this.arrayPer.id,
           desc: this.form.descripcion.toUpperCase(),
           num_fac: this.form.numFac,
           serial: this.form.serial,
@@ -1066,10 +1113,10 @@ export default {
     },
     mostrarActualizar(data = []) {
       this.arrayDetEquipoAct = [];
-      this.getProveedor();
-      this.getTpEquipo();
-      this.getPerso();
-      this.getMarca();
+      // this.getTpEquipo();
+      // // this.getPerso();
+      // this.getMarca();
+      
 
       this.idEquipo = data["ide"];
       this.listarDetEquipo(1, this.idEquipo, "");
@@ -1081,7 +1128,9 @@ export default {
       this.mostrarL = 0;
 
       this.idproveedor = data["id_proveedor"];
+      this.selectProveedor(this.idproveedor);
       this.idResponsable = data["id_responsable"];
+      this.getPerso(this.idResponsable);
       this.idTpEquipo = data["tpequipo"];
       this.idModelo = data["idmodelo"];
       this.idMarca = data["idmarca"];
@@ -1150,9 +1199,9 @@ export default {
               id: this.idAccesorio
             })
             .then(function(response) {
-              me.ocultarDetalle();
-              me.listarAccesorio(1, "", "nombre");
-              me.mensaje("Eliminado", "Eliminó ");
+              // me.ocultarDetalle();
+              me.listarDetEquipo(1, me.idEquipo, "nombre");
+              me.mensajeToast("Eliminado","bubble","check","danger");
             })
             .catch(function(error) {
               console.log(error);
@@ -1200,18 +1249,26 @@ export default {
         }
       });
     },
+    mensajeToast(msj,tema,icono,tp){
+            let toast = this.$toasted.show(msj, { 
+        theme: tema, 
+        type: tp, 
+        position: "top-right", 
+        icon: icono, 
+        duration : 2000
+      });
+    },
     mensaje(tipo, crud) {
       swal(tipo, "El registro se " + crud + " con éxito.", "success");
     }
   },
 
   mounted() {
+    this.getTpEquipo();
+      // this.getPerso();
+    this.getMarca();
     // this.listarAccesorio(1, this.buscar, this.criterio);
     // this.listarDetEquipo(1, this.idEquipo, "");
-    // this.getProveedor();
-    // this.getTpEquipo();
-    // this.getMarca();
-    // this.getPerso();
     this.listarEquipo(1, this.buscar, this.criterio);
   }
 };

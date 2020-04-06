@@ -24,21 +24,20 @@
                 <thead>
                   <tr class="p-3 mb-2 bg-dark text-white">
                     <th>Nombre</th>
-                    <th>Mercado</th>
+                    <th>Red</th>
                     <th>Total</th>
                     <th>Opciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="red in arrayFRed" :key="red.id">
-                    <td v-text="red.nombre"></td>
-
-                    <td v-text="red.nomMercado"></td>
-                    <td v-text="red.total"></td>
+                  <tr v-for="paso in arrayFPasoE" :key="paso.id">
+                    <td v-text="paso.nombre"></td>
+                    <td v-text="paso.nomRed"></td>
+                    <td v-text="paso.total"></td>
                     <td>
                       <button
                         type="button"
-                        @click="mostrarActualizar(red)"
+                        @click="mostrarActualizar(paso)"
                         class="btn btn-warning btn-sm"
                         data-tooltip
                         title="Actualizar"
@@ -52,7 +51,7 @@
                           class="btn btn-danger btn-sm"
                           data-tooltip
                           title="Eliminar"
-                          @click="eliminarEstacion(red)"
+                          @click="eliminarDetPasoE(paso)"
                         >
                           <i class="icon-trash"></i>
                         </button>
@@ -104,7 +103,7 @@
                     <label>Seleccione Paso Especial</label>
                       <md-select v-model="idPaso" md-dense @input="listarDetalle()">
                       <md-option
-                        v-for="objeto in arrayRed"
+                        v-for="objeto in arrayPasoE"
                         :key="objeto.id"
                         :value="objeto.id"
                       >{{objeto.nombre}}</md-option>
@@ -124,8 +123,8 @@
                         <th>Opciones</th>
                       </tr>
                     </thead>
-                    <tbody v-if="arrayDetRed.length">
-                      <tr v-for="(objeto, index)  in arrayDetRed" :key="`objeto-${index}`">
+                    <tbody v-if="arrayDetPasoE.length">
+                      <tr v-for="(objeto, index)  in arrayDetPasoE" :key="`objeto-${index}`">
                         <td v-text="objeto.material"></td>
                         <td v-text="objeto.tuberia"></td>
                         <td>
@@ -151,7 +150,7 @@
                           </md-button>
                           <md-button
                             class="md-icon-button md-primary"
-                            @click="eliminarDetalle(index)"
+                            @click="eliminarDetPasoE(objeto)"
                             title="Eliminar"
                           >
                             <i class="material-icons Color4">delete</i>
@@ -282,7 +281,7 @@
               </div>&nbsp;&nbsp;&nbsp;
                <div class="md-layout">
                <div class="md-layout-item">
-                  <span class="md-caption">Tipo de Red</span>
+                  <span class="md-caption">Tipo de Paso</span>
                     <multiselect
                       v-model="arrayTR"
                       :options="arraytpRed"
@@ -323,7 +322,7 @@
                 type="submit"                
                 class="md-dense md-raised md-primary"
                 :disabled="sending"
-                @click="registrarTramoRed()"
+                @click="registrarTramoPaso()"
               >Agregar</md-button>           
           </div>
         </div>
@@ -408,7 +407,7 @@ export default {
       estacion_id: 0,
 
       arrayDpto: [],
-      arrayDetRed: [],
+      arrayDetPasoE: [],
       arrayMpio: [],
       arrayM: { id: 0, nombre: "", nomDpto: "" },
       arrayMat: { id: 0, nombre: ""},
@@ -419,8 +418,8 @@ export default {
         { id: "2", nombre: "RURAL" },
         { id: "3", nombre: "TRONCAL" }
       ],
-      arrayRed: [],
-      arrayFRed: [],
+      arrayPasoE: [],
+      arrayFPasoE: [],
       arrayDiam: [],
       arrayMaterial: [],
       arrayTub: [],
@@ -448,8 +447,8 @@ export default {
   computed: {
     calcularTotal: function(){
         var resultado=0.0;
-        for(var i=0;i<this.arrayDetRed.length;i++){
-            resultado=resultado+(this.arrayDetRed[i].longitud)
+        for(var i=0;i<this.arrayDetPasoE.length;i++){
+            resultado=resultado+(this.arrayDetPasoE[i].longitud)
         }
         return resultado;
     },
@@ -543,10 +542,7 @@ export default {
       this.fecCrea = "";
       this.cantP = "";
       this.desc = "";
-      this.plano_g = "";
-      this.plano_a = "";
-      this.plano_c = "";
-      this.plano_p = "";
+
     },
     nameWithMpio({ nombre, nomDpto }) {
       return `${nombre} — [${nomDpto}]`;
@@ -621,16 +617,16 @@ export default {
           console.log(error);
         });
     },
-    getFRed() {
+    getFPasoE() {
       let me = this;
 
-      var url = "/fichared/selectRed";
+      var url = "/fichapasoe/selectPasoE";
       axios
         .get(url)
         .then(function(response) {
           //console.log(response);
           var respuesta = response.data;
-          me.arrayRed = respuesta.fichared;
+          me.arrayPasoE = respuesta.fichapasoe;
         })
         .catch(function(error) {
           console.log(error);
@@ -658,7 +654,7 @@ export default {
     //     .then(function(response) {
     //       //console.log(response);
     //       var respuesta = response.data;
-    //       me.arrayRed = respuesta.red;
+    //       me.arrayPasoE = respuesta.red;
     //     })
     //     .catch(function(error) {
     //       console.log(error);
@@ -683,18 +679,8 @@ export default {
       let me = this;
       (this.tipoAccion = 2), (me.listado = 0);
       this.id = data["id"];
-      this.tpRed = data["tp_red"];
-      this.tpDiam = data["id_diametro"];
-      this.idPaso = data["id_red"];
-      this.idMp = data["id_mpio"];
-      this.idMp2 = data["id_mpiofin"];
-      this.fecCrea = data["fec_creacion"];
-      this.cantP = data["cant_poli"];
-      this.desc = data["desc"];
-      this.planoG = data["plano_g"];
-      this.planoA = data["plano_a"];
-      this.planoC = data["plano_c"];
-      this.planoP = data["plano_p"];
+      this.idPaso = data["id"];
+        this.listarDetalle();
     },
 
     ocultarDetalle() {
@@ -702,8 +688,8 @@ export default {
     },
     encuentra(id) {
       var sw = 0;
-      for (var i = 0; i < this.arrayDetRed.length; i++) {
-        if (this.arrayDetRed[i].id == id) {
+      for (var i = 0; i < this.arrayDetPasoE.length; i++) {
+        if (this.arrayDetPasoE[i].id == id) {
           sw = true;
         }
       }
@@ -718,7 +704,7 @@ export default {
           text: "La Disponibilidad seleccionada ya se encuentra agregado!"
         });
       } else {
-        me.arrayDetRed.push({
+        me.arrayDetPasoE.push({
           id: data["idticket"],
           fecha: data["fecha"],
           desc: data["desc"]
@@ -728,7 +714,7 @@ export default {
     listarDatos(page, buscar, criterio) {
       let me = this;
       var url =
-        "/fichared?page=" +
+        "/fichapasoe?page=" +
         page +
         "&buscar=" +
         buscar +
@@ -738,7 +724,7 @@ export default {
         .get(url)
         .then(function(response) {
           var respuesta = response.data;
-          me.arrayFRed = respuesta.fichared.data;
+          me.arrayFPasoE = respuesta.fichapasoe.data;
           me.pagination = respuesta.pagination;
         })
         .catch(function(error) {
@@ -748,7 +734,7 @@ export default {
       listarDetalle(page, buscar, criterio) {
       let me = this;
       var url =
-        "/detred/detalle?page=" +
+        "/detpasoe/detalle?page=" +
         page +
         "&buscar=" +
         this.idPaso +
@@ -758,7 +744,7 @@ export default {
         .get(url)
         .then(function(response) {
           var respuesta = response.data;
-          me.arrayDetRed = respuesta.detred;
+          me.arrayDetPasoE = respuesta.detpasoe;
         })
         .catch(function(error) {
           console.log(error);
@@ -793,14 +779,14 @@ export default {
           console.log(error);
         });
     },
-    registrarTramoRed() {
+    registrarTramoPaso() {
       let me = this;
       axios
-        .post("/detred/registrar", {
-          id_red: this.idPaso,
-           tp_red: this.arrayTR.id,
-          id_material: this.arrayMat.id,
+        .post("/detpasoe/registrar", {
+          id_paso: this.idPaso,
+          tp_pasoe: this.arrayTR.id,
           id_diametro: this.arrayT.id,
+          id_material: this.arrayMat.id,
           fec_opera: this.fecN,
           obs: this.obs,
           longitud: this.longitud
@@ -833,9 +819,9 @@ export default {
           console.log(error);
         });
     },
-    eliminarEstacion(data = []) {
+    eliminarDetPasoE(data = []) {
       swal({
-        title: "Esta seguro de Eliminar la Estación " + data["nombre"],
+        title: "Esta seguro de Eliminar el tramo de Paso Especial " + data["obs"],
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -847,16 +833,16 @@ export default {
         buttonsStyling: false,
         reverseButtons: true
       }).then(result => {
+        let me = this;
+        this.idDet = data["idDet"];
         if (result.value) {
-          let me = this;
-          this.estacion_id = data["id"];
           axios
-            .post("/estacion/eliminar", {
-              id: this.estacion_id
+            .post("/detpasoe/eliminar", {
+              id: this.idDet
             })
             .then(function(response) {
-              me.ocultarDetalle();
-              me.listarRed(1, "", "nombre");
+              me.listarDetalle();
+              // me.listarRed(1, "", "nombre");
               me.mensaje("Eliminado", "Eliminó ");
             })
             .catch(function(error) {
@@ -886,7 +872,7 @@ export default {
   mounted() {
 
     this.getMpio();
-    this.getFRed();
+    this.getFPasoE();
     this.listarDatos(1, this.buscar, this.criterio);
     // this.getDpto();
     // this.getRed();

@@ -11,13 +11,22 @@ class PersonaController extends Controller
     
     public function selectPersona(Request $request){
        if (!$request->ajax()) return redirect('/');
+       $buscar = $request->buscar;
+       if ($buscar==''){
+       
         $perso = Persona::select('personas.id','personas.nombreFull')
         ->where('personas.is_empleado','=',1)
         ->orderBy('nombreFull', 'asc')->get();
+       }else{
+          $perso = Persona::select('personas.id','personas.nombreFull')
+          ->where('personas.is_empleado','=',1)
+          ->where('personas.id','=',$buscar)
+          ->orderBy('nombreFull', 'asc')->get();  
+       }
       return ['perso' => $perso];
   }
     public function selectLider(Request $request){
-      //  if (!$request->ajax()) return redirect('/');
+       if (!$request->ajax()) return redirect('/');
       $idArea = $request->buscar;
 
       $perso = Persona::join('cargos','personas.id_cargo','=','cargos.id')

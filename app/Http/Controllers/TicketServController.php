@@ -361,7 +361,7 @@ class TicketServController extends Controller
                 $detalle->id_tecnico = $det['id'];        
                 $detalle->is_respo = $det['Rol'];        
                 $detalle->save();
-                Mail::to($det['email'])->send(new MessageRecibido($datosEmail,$det));
+                // Mail::to($det['email'])->send(new MessageRecibido($datosEmail,$det));
             }          
             foreach($detalles2 as $ep=>$det)
             {

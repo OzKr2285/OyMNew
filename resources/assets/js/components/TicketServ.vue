@@ -1076,7 +1076,7 @@
                 <md-icon>description</md-icon>
               </md-field>
             </div>
-            <div class="md-layout">
+  
               <button
                 class="btn btn-primary"
                 type="button"
@@ -1086,11 +1086,44 @@
                 aria-controls="collapseExample"
               >Detalles...</button>
               <div class="collapse" id="collapseExample">
-                <div
-                  class="card card-body"
-                >Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.</div>
+                <div class="table-responsive col-md-12">
+                  <table class="table table-bordered table-striped table-sm">
+                    <thead>
+
+                      <!-- <md-button class="md-icon-button md-accent" @click="getSol()">
+                        <md-icon>refresh</md-icon>
+                      </md-button> -->
+                      <tr>
+                        <th>Observación</th>
+                        <th>Fecha</th>
+                        <!-- <th>Opciones</th> -->
+                      </tr>
+                    </thead>
+                    <tbody v-if="arraySol.length">
+                      <tr v-for="(objeto, index)  in arraySol" :key="`objeto-${index}`">
+                        <td v-text="objeto.solucion"></td>
+                        <td v-text="objeto.fecha"></td>
+                        <!-- <td>
+                          <md-button
+                            class="md-icon-button md-primary"
+                            @click="eliminarDetalle(index)"
+                            title="Eliminar"
+                          >
+                            <i class="material-icons Color4">delete</i>
+                          </md-button>
+
+                        </td>-->
+                      </tr>
+                    </tbody>
+                    <tbody v-else>
+                      <tr>
+                        <td colspan="5">NO hay Soluciones registradas</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
+           
 
             <!-- </div>
             </div>-->
@@ -1325,9 +1358,9 @@ export default {
         { id: "MA", name: "Muy Alta" }
       ],
       arrayTpCausal: [
-        { id: "F", name: "FACTURACIÓN" },
-        { id: "I", name: "INSTALACIÓN" },
-        { id: "P", name: "PRESTACIÓN" }
+        { id: "1", name: "FACTURACIÓN" },
+        { id: "2", name: "INSTALACIÓN" },
+        { id: "3", name: "PRESTACIÓN" }
       ],
       // Tipo Documento
       arrayMedio: [
@@ -1364,6 +1397,7 @@ export default {
       arrayTT: { id: 0, name: "Seleccione" },
       arrayL: { id: 0, nombre: "Seleccione", nomCargo: "" },
       arrayLider: [],
+      arraySol: [],
       arrayArea: [],
       arrayDatos: [],
       arrayDispoA: [],
@@ -1549,6 +1583,7 @@ export default {
     abrirModal4(data = []) {
       // this.idRefE=data["idref"];
       this.ticket_id = data["idticket"];
+       this.getSol();
       this.modal4 = 1;
       this.tituloModal =
         "Cerrar caso # " + data["idticket"] + " - " + data["nombreFull"];
@@ -1589,6 +1624,22 @@ export default {
         this.abrirModal3();
       }
     },
+    getSol() {
+      let me = this;
+
+      var url = "/SolServPqrs/getsol?buscar=" + this.ticket_id;
+      axios
+        .get(url)
+        .then(function(response) {
+          //console.log(response);
+          var respuesta = response.data;
+          me.arraySol = respuesta.solServ;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+
     getArea() {
       let me = this;
 

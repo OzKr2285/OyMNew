@@ -139,6 +139,7 @@ class EquiposController extends Controller
             'equipos.tag','equipos.fec_compra','equipos.fec_garantia','equipos.fec_instala','equipos.link','equipos.datachip','equipos.id_refequipo','equipos.desc',
             'equipos.datachip','tp_equipos.id as tpequipo','tp_equipos.nombre as nomtpequipo','marcas.id as idmarca','equipos.edo_mto')
             ->where('equipos.is_equipo',1)
+            ->where('equipos.estado',0)
             ->orderBy('ref_equipos.nombre', 'asc')->paginate(15);
         }
         else{
@@ -152,6 +153,7 @@ class EquiposController extends Controller
             'equipos.tag','equipos.fec_compra','equipos.fec_garantia','equipos.fec_instala','equipos.link','equipos.datachip','equipos.id_refequipo','equipos.desc',
             'equipos.datachip','tp_equipos.id as tpequipo','tp_equipos.nombre as nomtpequipo','marcas.id as idmarca','equipos.edo_mto')
             ->where('equipos.is_equipo',1)
+            ->where('equipos.estado',0)
             ->Where('equipos.id_refequipo',$buscar)
             // ->orWhere('modelos.nombre', 'like', '%'. $buscar . '%')
             // ->orWhere('equipos.serial', 'like', '%'. $buscar . '%')

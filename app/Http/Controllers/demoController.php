@@ -78,7 +78,7 @@ class demoController extends Controller
                 // dd($_FILES);
                 // dd($request->all());
                       $img = $request->images;
-                      $ruta = public_path().'/vehiculos';
+                      $ruta = public_path().'vehiculos';
                 // $nombre=$img[0]->getClientOriginalName();
                 $i=0;
                 if(count($request->images)){
