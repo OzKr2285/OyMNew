@@ -82,7 +82,7 @@
                        <md-button
                         class="md-icon-button"
                         @click="mostrarActualizar(objeto)"
-                        title="Actualizar"
+                        title="Ejecutar"
                       >
                         <i class="material-icons Color3">assignment</i>
                       </md-button>
@@ -171,8 +171,13 @@
                       </tr>
                     </tbody>
                     </table>
-                  </div>
                 </div>
+                  </div>
+                    <div class="modal-footer">
+                      <md-card-actions>
+                        <md-button type="button" class="md-raised" @click="ocultarDetalle2()">Cerrar</md-button>
+                      </md-card-actions>
+                    </div>
 
           </md-tab>
           <md-tab id="tab-pages" md-label="Historial" md-icon="pages"></md-tab>
@@ -232,11 +237,16 @@
                     </tbody>
                   </table>
                 </div>
-                         <div class="md-layout">
-                <md-field>
+              <div class="md-layout">
+                <md-field :class="getValidationClass('obs')">
                   <label>Observación</label>
                   <md-textarea v-model="obs"></md-textarea>
                   <md-icon>description</md-icon>
+                    <span
+                      class="md-error"
+                      v-if="!$v.obs.required"
+                    >Olvidaste ingresar el trabajo realizado
+                    </span>
                 </md-field>
               </div>
               </md-card-content>
@@ -1030,14 +1040,12 @@ export default {
     vSelect
   },
   validations: {
-    form: {
-      nombre: {
-        required
-      },
-      descripcion: {
+
+  
+      obs: {
         required
       }
-    }
+    
   },
 
   computed: {
@@ -1491,7 +1499,7 @@ export default {
     },
 
     getValidationClass(fieldName) {
-      const field = this.$v.form[fieldName];
+      const field = this.$v[fieldName];
       if (field) {
         return {
           "md-invalid": field.$invalid && field.$dirty
@@ -1765,6 +1773,9 @@ export default {
         this.listarDetAct();
     },
     ocultarDetalle() {
+      this.listado = 0;
+    },
+    ocultarDetalle2() {
       this.listado = 1;
     },
 

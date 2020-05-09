@@ -17,10 +17,10 @@ class TpEstacionController extends Controller
         $criterio = $request->criterio;
         
         if ($buscar==''){
-            $tpestacion = TpEstacion::orderBy('id', 'descripcion')->paginate(15);
+            $tpestacion = TpEstacion::orderBy('id', 'desc')->paginate(15);
         }
         else{
-            $tpestacion = TpEstacion::where($criterio, 'like', '%'. $buscar . '%')->orderBy('id', 'descripcion')->paginate(15);
+            $tpestacion = TpEstacion::where($criterio, 'like', '%'. $buscar . '%')->orderBy('id', 'desc')->paginate(15);
         }
         
 
@@ -42,7 +42,7 @@ class TpEstacionController extends Controller
         if (!$request->ajax()) return redirect('/');
         $tpestacion = new TpEstacion();
         $tpestacion->nombre = $request->nombre;
-        $tpestacion->descripcion = $request->descripcion;
+        $tpestacion->desc = $request->descripcion;
         $tpestacion->save();
     }
     public function update(Request $request)
@@ -50,7 +50,7 @@ class TpEstacionController extends Controller
         if (!$request->ajax()) return redirect('/');
         $tpestacion = TpEstacion::findOrFail($request->id);
         $tpestacion->nombre = $request->nombre;
-        $tpestacion->descripcion = $request->descripcion;
+        $tpestacion->desc = $request->descripcion;
         $tpestacion->save();
     }
     public function destroy(Request $request)

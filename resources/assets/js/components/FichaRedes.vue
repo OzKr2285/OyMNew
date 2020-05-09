@@ -25,6 +25,7 @@
                   <tr class="p-3 mb-2 bg-dark text-white">
                     <th>Nombre</th>
                     <th>Mercado</th>
+                    <th>Tipo Red</th>
                     <th>Total</th>
                     <th>Opciones</th>
                   </tr>
@@ -32,8 +33,18 @@
                 <tbody>
                   <tr v-for="red in arrayFRed" :key="red.id">
                     <td v-text="red.nombre"></td>
-
                     <td v-text="red.nomMercado"></td>
+                    <td>
+                        <template v-if="red.tp_red==1">
+                          <span>Urbana</span>
+                        </template>
+                        <template else v-if="red.tp_red==2">
+                          <span>Rural</span>
+                        </template>
+                        <template else v-if="red.tp_red==3">
+                          <span>Troncal</span>
+                        </template>
+                    </td>
                     <td v-text="red.total"></td>
                     <td>
                       <button
@@ -321,14 +332,14 @@
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
               <md-button
-              v-if="tipoAccion2==1"
+              v-if="tipoAccion==1"
                 type="submit"                
                 class="md-dense md-raised md-primary"
                 :disabled="sending"
                 @click="registrarTramoRed()"
               >Agregar</md-button>           
               <md-button
-                v-if="tipoAccion==1"
+                v-if="tipoAccion2==1"
                 type="submit"                
                 class="md-dense md-raised md-primary"
                 :disabled="sending"
@@ -570,12 +581,12 @@ export default {
     abrirModal(data = []) {
       // this.idRefE=data["idref"];
       // this.ticket_id = data["idticket"];
-      this.tipoAccion2 = 1;
-      this.tipoAccion = 0;
+      this.tipoAccion2 = 0;
+      this.tipoAccion = 1;
       this.getDiametro();
       this.getMaterial();
       this.modal = 1;
-      this.tituloModal = "Agregar sección de Red ";
+      this.tituloModal = "Registrar sección de Red ";
 
     },
     cerrarModal() {
@@ -583,6 +594,8 @@ export default {
       this.tituloModal = "";
     },
     mostrarDetalle() {
+      this.tipoAccion2=0;
+      this.tipoAccion=1;
       this.clearForm();
       let me = this;
       (this.tipoAccion = 1), (me.listado = 0);
@@ -701,8 +714,11 @@ export default {
     },
     mostrarActualizarModal(data = []) {
       let me = this;
-      (this.tipoAccion = 2);
-      (this.tipoAccion2 = 0);
+      this.tituloModal = "Actualizar sección de Red ";
+      this.getDiametro();
+      this.getMaterial();
+      (this.tipoAccion = 0);
+      (this.tipoAccion2 = 1);
       this.idDetRed = data["idDet"];
       this.longitud = data["longitud"];
       this.obs = data["obs"];
@@ -721,7 +737,7 @@ export default {
         this.arrayTR.id ="3";
         this.arrayTR.nombre ="TRONCAL";
       }
-      this.abrirModal();
+      this.modal = 1;
 
     },
 
@@ -773,8 +789,9 @@ export default {
           console.log(error);
         });
     },
-      listarDetalle(page, buscar, criterio) {
+      listarDetalle(page, buscar, criterio) {  
       let me = this;
+      this.tipoAccion2=0;
       var url =
         "/detred/detalle?page=" +
         page +
@@ -851,7 +868,7 @@ export default {
           tp_red: this.arrayTR.id,
           id_material: this.arrayMat.id,
           id_diametro: this.arrayT.id,
-          fec_opera: this.fecN,
+          fec_opera: this.fecN2,
           obs: this.obs,
           longitud: this.longitud
         })
@@ -888,7 +905,7 @@ export default {
             .then(function(response) {
               me.listarDetalle();
               // me.listarRed(1, "", "nombre");
-              me.mensaje("Eliminado", "Eliminó ");
+              me.mensajeToast("Eliminado","bubble","check","danger");
             })
             .catch(function(error) {
               console.log(error);

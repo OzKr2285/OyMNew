@@ -99,7 +99,7 @@
                     <template slot="md-autocomplete-item" slot-scope="{ item }">{{ item.nombre }}</template>
                   </md-autocomplete>
                   </div> -->
-                    <div class="md-layout-item">
+                    <!-- <div class="md-layout-item">
                     <md-field  >
                       <label>Departamento</label>
                       <md-select v-model="idDpto" md-dense @input="getMpio">
@@ -111,7 +111,7 @@
                       </md-select>
                     </md-field>
                   
-                  </div>&nbsp;&nbsp;&nbsp;
+                  </div>&nbsp;&nbsp;&nbsp; -->
                   <!-- <div class="md-layout-item" v-show="mostrarC==1">
                     <md-autocomplete md-dense v-model="idMp" :md-options="arrayMpio.map(x=>({
                       'id':x.id,
@@ -123,7 +123,7 @@
                     <template slot="md-autocomplete-item" slot-scope="{ item }">{{ item.nombre }}</template>
                   </md-autocomplete>
                   </div> -->
-                    <div class="md-layout-item" >
+                    <!-- <div class="md-layout-item" >
                     <md-field md-clearable>
                       <label>Municipio</label>
                       <md-select v-model="idMp" md-dense>
@@ -135,7 +135,7 @@
                       </md-select>
                     </md-field>
                   
-                  </div>&nbsp;&nbsp;&nbsp;
+                  </div>&nbsp;&nbsp;&nbsp; -->
                   <div class="md-layout-item">
                     <md-field md-clearable>
                       <label>Tipo de Estación</label>
@@ -1532,7 +1532,7 @@ export default {
           axios
         .post("/detequipoestacion/registrar", {
           id_estacion: this.idEstacion,
-          id_mpio: this.idMp,
+          // id_mpio: this.idMp,
           id_etapa: this.idEtapa,
           // tp_tren: this.tpTren,
 
@@ -1642,7 +1642,7 @@ export default {
   },
 
   mounted() {
-    this.getDpto();
+    // this.getDpto();
     this.getTpEstacion();
     // this.getEtapa();
     // this.listarEtapa(1, this.buscar, this.criterio);

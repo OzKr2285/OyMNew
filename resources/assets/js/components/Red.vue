@@ -22,6 +22,7 @@
                   <tr class="p-3 mb-2 bg-dark text-white">
                     <th>Nombre</th>
                     <th>Mercado</th>
+                    <th>Tipo Red</th>
                     <th>Opciones</th>
                   </tr>
                 </thead>
@@ -30,6 +31,18 @@
 
                     <td v-text="red.nombre"></td>
                     <td v-text="red.nomMercado"></td>
+                    <td>
+                        <template v-if="red.tp_red==1">
+                          <span>Urbana</span>
+                        </template>
+                        <template else v-if="red.tp_red==2">
+                          <span>Rural</span>
+                        </template>
+                        <template else v-if="red.tp_red==3">
+                          <span>Troncal</span>
+                        </template>
+                    </td>
+  
                     <td>
                       <button
                         type="button"
@@ -96,6 +109,7 @@
               <md-card-content>
  
                   <div class="md-layout">
+                  <div class="md-layout-item">
                     <md-field md-clearable>
                       <label for="first-name">Ingrese el nombre de la Red</label>
                       <br>
@@ -107,6 +121,25 @@
                         :disabled="sending"
                       />
                     </md-field>
+                  </div>&nbsp;&nbsp;&nbsp; 
+                  <div class="md-layout-item md-size-20">
+                    <md-field>
+                    <label for="age">Polivalvulas</label>
+                    <md-input type="number" id="cantP" name="cantP" autocomplete="cantP" v-model="cantP" :disabled="sending" />
+                  </md-field>
+                  </div>&nbsp;&nbsp;&nbsp; 
+                  <div class="md-layout-item md-size-20">
+                      <md-field md-clearable>
+                    <label>Tipo de red</label>
+                    <md-select v-model="tpRed" md-dense >
+                      <md-option
+                        v-for="objeto in arraytpRed"
+                        :key="objeto.id"
+                        :value="objeto.id"
+                      >{{objeto.nombre}}</md-option>
+                    </md-select>
+                  </md-field>
+                  </div>
                   </div>
                   <div class="md-layout">
                   <!-- <div class="md-layout-item">
@@ -261,7 +294,11 @@ export default {
       tpDiam: 0,
       fecN: format(now, dateFormat),
       fecN2: "",
-
+      arraytpRed: [
+        { id: "1", nombre: "URBANA" },
+        { id: "2", nombre: "RURAL" },
+        { id: "3", nombre: "TRONCAL" }
+      ],
       planoG: "",
       planoC: "",
       planoA: "",
@@ -495,9 +532,11 @@ export default {
       this.obs = data["desc"];
       this.idRed = data["id"];
       this.idMercado = data["idMer"];
+      this.tpRed = data["tp_red"];
+      this.cantP = data["cant_p"];
       this.idMp = data["id_mpio"];
       this.listarDetalle();
-      this.idMp2 = data["id_mpiofin"];
+      // this.idMp2 = data["id_mpiofin"];
 
     },
 
@@ -563,6 +602,8 @@ export default {
         .post("/fichared/registrar", {
           id_mpio: this.idMp,
           nombre: this.nombre.toUpperCase(),
+          tp_red: this.tpRed,
+          cantp: this.cantP,
           desc: this.obs,
           plano_g: this.planoG,
           plano_a: this.planoA,
@@ -587,6 +628,8 @@ export default {
           id_mpio: this.idMp,
           nombre: this.nombre.toUpperCase(),
           desc: this.obs,
+          tp_red: this.tpRed,
+          cantp: this.cantP,
           id: this.idRed
         })
         .then(function(response) {

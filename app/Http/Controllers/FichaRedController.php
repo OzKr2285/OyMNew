@@ -18,7 +18,7 @@ class FichaRedController extends Controller
         if ($buscar==''){
             $fichared = FichaRed::join('det_mercados','fichared.id_mpio','=','det_mercados.id')  
             ->join('mercados','det_mercados.id_mercado','=','mercados.id')               
-            ->select('fichared.tp_red','fichared.id','fichared.nombre','fichared.desc','fichared.id_mpio','total','mercados.id as idMer','mercados.nombre as nomMercado')
+            ->select('fichared.tp_red','fichared.id','fichared.nombre','fichared.desc','fichared.cant_p','fichared.id_mpio','total','mercados.id as idMer','mercados.nombre as nomMercado')
             ->orderBy('fichared.tp_red', 'fichared.id_red')->paginate(15);
         }
         else{
@@ -46,6 +46,8 @@ class FichaRedController extends Controller
         $fichared->id_mpio = $request->id_mpio;
         $fichared->nombre = $request->nombre;
         $fichared->desc = $request->desc;
+        $fichared->cant_p = $request->cantp;
+        $fichared->tp_red = $request->tp_red;
         $fichared->plano_g = $request->plano_g;
         $fichared->plano_a = $request->plano_a;
         $fichared->plano_c = $request->plano_c;
@@ -59,6 +61,8 @@ class FichaRedController extends Controller
         // $fichared->id_red = $request->id_red;
         $fichared->id_mpio = $request->id_mpio;
         $fichared->nombre = $request->nombre;
+        $fichared->cant_p = $request->cantp;
+        $fichared->tp_red = $request->tp_red;
         $fichared->desc = $request->desc;
         $fichared->save();
     }

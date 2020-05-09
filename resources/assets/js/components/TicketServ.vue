@@ -68,7 +68,7 @@
           <div class="card-body">
             <div class="md-layout">
               <div class="md-layout-item">
-                <md-field md-clearable>
+                <md-field >
                   <label>Qué desea Buscar</label>
                   <md-input v-model="buscar" @keypress="listarDatos(1, buscar, criterio)"></md-input>
                 </md-field>
@@ -229,7 +229,7 @@
               <md-card-content>
                 <div class="md-layout">
                   <div class="md-layout-item">
-                    <md-field md-clearable :class="getValidationClass('cedula')">
+                    <md-field  :class="getValidationClass('cedula')">
                       <label for="first-cc">Número de identificación o NIU</label>
                       <md-input
                         @keyup.enter="getUsuario(form.cedula)"
@@ -249,7 +249,7 @@
                     </md-field>
                   </div>&nbsp;&nbsp;&nbsp;
                   <div class="md-layout-item">
-                    <md-field md-clearable>
+                    <md-field >
                       <label for="first-name">Nombres</label>
                       <md-input
                         class="md-body-2"
@@ -264,7 +264,7 @@
                     </md-field>
                   </div>&nbsp;&nbsp;&nbsp;
                   <div class="md-layout-item">
-                    <md-field md-clearable>
+                    <md-field >
                       <label for="first-ape">Apellidos</label>
                       <md-input
                         class="md-body-2"
@@ -279,7 +279,7 @@
                     </md-field>
                   </div>&nbsp;&nbsp;&nbsp;
                   <div class="md-layout-item md-size-22">
-                    <md-field md-clearable>
+                    <md-field >
                       <label>Celular</label>
                       <span class="md-prefix">
                         <i class="material-icons">phone_iphone</i>
@@ -290,7 +290,7 @@
                 </div>
                 <div class="md-layout">
                   <div class="md-layout-item">
-                    <md-field md-clearable>
+                    <md-field >
                       <label>Dirección</label>
                       <span class="md-prefix">
                         <i class="material-icons">house</i>
@@ -299,7 +299,7 @@
                     </md-field>
                   </div>&nbsp;&nbsp;&nbsp;
                   <div class="md-layout-item">
-                    <md-field md-clearable>
+                    <md-field >
                       <label>E-mail</label>
                       <span class="md-prefix">
                         <i class="material-icons">email</i>
@@ -310,7 +310,7 @@
                 </div>
                 <div class="md-layout">
                   <div class="md-layout-item md-size-35">
-                    <!-- <md-field md-clearable>
+                    <!-- <md-field >
                       <label>Tipo de Solicitud</label>
                       <md-select v-model="idCategoria" md-dense @input="getObjeto">
                         <md-option
@@ -332,7 +332,7 @@
                     ></multiselect>
                   </div>&nbsp;&nbsp;&nbsp;
                   <div v-show="isPetR==0" class="md-layout-item">
-                    <!-- <md-field md-clearable>
+                    <!-- <md-field >
                       <label>Objeto de la Solicitud</label>
                       <md-select v-model="idObjeto" md-dense @input="setDispoA">
                         <md-option
@@ -354,7 +354,7 @@
                     ></multiselect>
                   </div>
                   <div v-show="isPetR==1" class="md-layout-item">
-                    <!-- <md-field md-clearable>
+                    <!-- <md-field >
                       <label>Objeto de la Solicitud</label>
                       <md-select v-model="idObjeto" md-dense @input="setDispoA">
                         <md-option
@@ -376,7 +376,7 @@
                     ></multiselect>
                   </div>&nbsp;&nbsp;&nbsp;
                   <div v-show="isPetR==1" class="md-layout-item">
-                    <!-- <md-field md-clearable>
+                    <!-- <md-field >
                       <label>Objeto de la Solicitud</label>
                       <md-select v-model="idObjeto" md-dense @input="setDispoA">
                         <md-option
@@ -400,7 +400,7 @@
                 <div class="md-layout">
                   <div class="md-layout-item md-size-35">
                     <!-- <div class="md-layout-item md-size-25">
-                      <md-field md-clearable>
+                      <md-field >
                         <label>Área Asignada</label>
                         <md-select v-model="idArea" md-dense>
                           <md-option
@@ -437,7 +437,7 @@
 
                 <div class="md-layout md-size-35">
                   <div v-show="isPetR==1" class="md-layout-item">
-                    <!-- <md-field md-clearable>
+                    <!-- <md-field >
                       <label>Objeto de la Solicitud</label>
                       <md-select v-model="idObjeto" md-dense @input="setDispoA">
                         <md-option
@@ -458,7 +458,7 @@
                     ></multiselect>
                   </div>&nbsp;&nbsp;&nbsp;
                   <div class="md-layout-item">
-                    <!-- <md-field md-clearable>
+                    <!-- <md-field >
                       <label>Medio</label>
                       <md-select v-model="idMedio" md-dense>
                         <md-option
@@ -479,7 +479,7 @@
                     ></multiselect>
                   </div>&nbsp;&nbsp;&nbsp;
                   <div class="md-layout-item">
-                    <!-- <md-field md-clearable>
+                    <!-- <md-field >
                       <label>Prioridad</label>
                       <md-select v-model="idPrioridad" md-dense>
                         <md-option
@@ -1168,7 +1168,7 @@
             <div class="card-body">
               <div class="md-layout">
                 <div class="md-layout-item">
-                  <md-field md-clearable>
+                  <md-field >
                     <label>Qué desea Buscar</label>
                     <md-input v-model="buscar" @keypress="listarPersona(1,buscar)"></md-input>
                   </md-field>

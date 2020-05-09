@@ -50,7 +50,7 @@
             <tbody>
               <tr v-for="tpestacion in arrayTpEstacion" :key="tpestacion.id">
                 <td v-text="tpestacion.nombre"></td>
-                <td v-text="tpestacion.descripcion"></td>
+                <td v-text="tpestacion.desc"></td>
 
                 <td>
                   <md-button class="md-icon-button " @click="abrirModal('tpestacion','actualizar',tpestacion)" title="Actualizar">                         
@@ -460,7 +460,7 @@ export default {
               this.tipoAccion = 2;
               this.tpestacion_id = data["id"];
               this.form.nombre = data["nombre"];
-              this.form.descripcion = data["descripcion"];
+              this.form.descripcion = data["desc"];
               break;
             }
           }

@@ -7640,7 +7640,7 @@ base-chart.chart {
   border-bottom: 1px solid #c2cfd6; }
   .app-header.navbar .navbar-brand {
     display: inline-block;
-    width: 55px;
+    width: 155px;
     height: 55px;
     padding: 0.5rem 1rem;
     margin-right: 0;
@@ -7989,7 +7989,7 @@ base-chart.chart {
     position: relative;
     -ms-flex: 0 0 50px;
         flex: 0 0 50px;
-    background-color: rgba(58, 84, 199, 0.2);
+    background-color: rgba(0, 0, 0, 0.2);
     border: 0; }
     .sidebar .sidebar-minimizer::before {
       position: absolute;
@@ -9622,13 +9622,6 @@ body {
 
   /* Damos un color de fondo mientras la imagen está cargando  */
   background-color: #ffffff;
-}
-.btn-ttc,
-.btn-ttc:hover,
-.btn-ttc:active {
-  color: white;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-color: #03546e;
 }
 
 *[dir="rtl"] {

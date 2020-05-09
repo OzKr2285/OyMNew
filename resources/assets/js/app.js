@@ -47,6 +47,7 @@ Vue.component('tabdemo', require('./components/tabDemo.vue'));
 Vue.component('cargo', require('./components/Cargo.vue'));
 Vue.component('oficina', require('./components/Oficina.vue'));
 Vue.component('perfil', require('./components/Perfil.vue'));
+Vue.component('dashboard', require('./components/Dashboard.vue'));
 
 // Programacion de Mantenimientos
 Vue.component('mtoes', require('./components/MtoEs.vue'));

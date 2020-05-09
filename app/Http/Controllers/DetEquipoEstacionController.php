@@ -76,7 +76,7 @@ class DetEquipoEstacionController extends Controller
                 $equipo->id_estacion = $request->id_estacion;
                 $equipo->id_etapa =$det['id_etapa'];         
                 $equipo->tp_tren = $det['tp_tren'];
-                $equipo->id_mpio = $request->id_mpio;             
+                // $equipo->id_mpio = $request->id_mpio;             
                 $equipo->save();
             }          
 

@@ -81,7 +81,7 @@
                   <md-button
                     class="md-icon-button"
                     @click="abrirModal2(persona)"
-                    title="Actualizar"
+                    title="Cambio Clave"
                   >
                     <i class="material-icons ColorBlack">vpn_key</i>
                   </md-button>

@@ -20,7 +20,7 @@
               <table class="table table-bordered table-striped table-sm">
                 <thead>
                   <tr class="p-3 mb-2 bg-dark text-white">
-                    <th>Categoría</th>
+                    <th>Tipo Solicitud</th>
                     <th>Objeto PQR</th>
                     <th>Descripción</th>
                     <th>Opciones</th>

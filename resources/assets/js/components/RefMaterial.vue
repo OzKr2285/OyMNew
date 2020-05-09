@@ -20,23 +20,25 @@
               <table class="table table-bordered table-striped table-sm">
                 <thead>
                   <tr class="p-3 mb-2 bg-dark text-white">
+                    <th>Código</th>
                     <th>Tipo de Material</th>
                     <th>Nombre</th>
-                    <th>Cant.</th>
                     <th>Und. Med.</th>
-                    <th>Costo</th>
-                    <th>Valor</th>
+                    <th>Cant.</th>
+                    <th>Valor Unitario</th>
                     <th>Opciones</th>
+                    <!-- <th>Valor</th> -->
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="objeto in arrayMain" :key="objeto.id">
+                    <td v-text="objeto.nombre"></td>
                     <td v-text="objeto.nomE"></td>
                     <td v-text="objeto.nombre"></td>
-                    <td v-text="objeto.cant"></td>
                     <td v-text="objeto.und_med"></td>
+                    <td v-text="objeto.cant"></td>
                     <td v-text="objeto.costo"></td>
-                    <td v-text="objeto.valor"></td>
+                    <!-- <td v-text="objeto.valor"></td> -->
                     <td>
                       <md-button class="md-icon-button " @click="mostrarActualizar(objeto)" title="Actualizar">                         
                       <i class="material-icons Color3">edit</i>

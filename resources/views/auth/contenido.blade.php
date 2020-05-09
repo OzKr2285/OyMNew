@@ -12,8 +12,8 @@
   <title>Sistema OYM - OzKr-ENERCER</title>
  
   <link href="css/plantilla.css" rel="stylesheet">
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  {{-- <script src="//code.jquery.com/jquery-1.11.1.min.js"></script> --}}
+  {{-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> --}}
   
 
 </head>

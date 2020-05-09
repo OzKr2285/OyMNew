@@ -54,10 +54,10 @@
                                 <a href="#"><i class="icon-bag"></i>Cargos</a>                                                                               
                             </li>                                
                             <li @click="menu=42" >
-                                <a  href="#"><i class="icon-bag"></i>Marcas</a>
+                                <a  href="#"><i class="icon-bag"></i>Marcas Eq.</a>
                             </li>
                             <li @click="menu=43" >
-                                <a  href="#"><i class="icon-bag"></i>Modelos</a>
+                                <a  href="#"><i class="icon-bag"></i>Modelos Eq.</a>
                             </li> 
                             <li @click="menu=59" >
                                 <a  href="#"><i class="icon-bag"></i>Marcas Veh.</a>
@@ -81,13 +81,13 @@
                                 <a href="#"><i class="icon-bag"></i>Usuarios</a>
                             </li>
                             <li @click="menu=57" >
-                                <a  href="#"><i class="icon-bag"></i>Técnicos</a>
+                                <a  href="#"><i class="icon-bag"></i>Personal</a>
                             </li>
                             <li @click="menu=36" >
                                 <a  href="#"><i class="icon-bag"></i>Proveedores</a>
                             </li>
                             <li @click="menu=48" >
-                                <a  href="#"><i class="icon-user-following"></i>Tp. Material</a>
+                                <a  href="#"><i class="icon-user-following"></i>Grupo Material</a>
                             </li>
                             <li @click="menu=49" >
                                 <a  href="#"><i class="icon-user-following"></i>Ref. Material</a>
@@ -119,7 +119,7 @@
                                 <a  href="#"><i class="icon-bag"></i>Act Vehículos</a>
                             </li>
                             <li @click="menu=58" >
-                                <a  href="#"><i class="icon-bag"></i>Diámetros</a>
+                                <a  href="#"><i class="icon-bag"></i>Unds. Constructivas</a>
                             </li> 
 
                             <li @click="menu=13" >
@@ -160,7 +160,7 @@
                                 <a  href="#"><i class="icon-bag"></i>Material Red</a>
                             </li>
                             <li @click="menu=78" >
-                                <a  href="#"><i class="icon-bag"></i>Pasos Especiales</a>
+                                <a  href="#"><i class="icon-bag"></i>Paso Red</a>
                             </li>
                        
                             <li @click="menu=79" >
@@ -224,7 +224,7 @@
                                     <a  href="#"><i class="fas fa-project-diagram"></i>Redes</a>
                                 </li>
                                 <li @click="menu=11" >
-                                    <a  href="#"><i class="fas fa-bacon"></i>Pasos Especiales</a>
+                                    <a  href="#"><i class="fas fa-bacon"></i>Paso Red</a>
                                 </li>
                             </ul>
                         </div>
@@ -252,7 +252,7 @@
                                     <a  href="#"><i class="fas fa-project-diagram"></i>Redes</a>
                                 </li>
                                 <li @click="menu=71" >
-                                    <a  href="#"><i class="fas fa-bacon"></i>Pasos Especiales</a>
+                                    <a  href="#"><i class="fas fa-bacon"></i>Paso Red</a>
                                 </li>
                             </ul>
                         </div>
@@ -280,7 +280,7 @@
                                     <a  href="#"><i class="fas fa-project-diagram"></i>Redes</a>
                                 </li>
                                 <li @click="menu=71" >
-                                    <a  href="#"><i class="fas fa-bacon"></i>Pasos Especiales</a>
+                                    <a  href="#"><i class="fas fa-bacon"></i>Paso Red</a>
                                 </li>
                             </ul>
                         </div>

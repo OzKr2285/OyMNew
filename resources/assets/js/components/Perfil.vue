@@ -39,7 +39,7 @@
         <md-card-header>
         <md-card-header-text>
           <div class="md-title">{{nombreFull}}</div>
-        <div class="md-subhead">Subtitle here</div>
+        <div class="md-subhead">Usuario</div>
         </md-card-header-text>
          <md-menu md-size="big" md-direction="bottom-end">
           <md-button class="md-icon-button" md-menu-trigger>
@@ -47,13 +47,13 @@
           </md-button>
 
           <md-menu-content>
-            <md-menu-item @click="changeImg" >
+            <md-menu-item @click="abrirModal" >
               <span>Cambio de Clave</span>
-              <md-icon>phone</md-icon>
+              <md-icon>vpn_key</md-icon>
             </md-menu-item>
             <md-menu-item @click="changeImg">
               <span>Cambio de Imagen</span>
-              <md-icon>phone</md-icon>
+              <md-icon>face</md-icon>
             </md-menu-item>
 
           </md-menu-content>
@@ -80,10 +80,114 @@
         </md-card-expand-content>
       </md-card-expand>
     </md-card>
+        <md-card md-with-hover>
+      <md-ripple>
+        <md-card-header>
+          <div class="md-title">Información Personal</div>
+          <div class="md-subhead">Actualice sus datos</div>
+        </md-card-header>
+
+        <md-card-content>
+
+                  <div class="md-layout">
+                  <div class="md-layout-item">
+                    <md-field md-clearable :class="getValidationClass('nombres')">
+                      <label for="first-name">Nombres</label>
+                      <md-input
+                        name="first-name"
+                        id="first-name"
+                        autocomplete="given-name"
+                        v-model="form.nombres"
+                        :disabled="sending"
+                      />
+                      <span
+                        class="md-error"
+                        v-if="!$v.form.nombres.required"
+                      >Es necesario ingresar un Nombre</span>
+                      <!-- <span class="md-error" v-else-if="!$v.form.firstName.minlength">Invalid first name</span> -->
+                    </md-field>
+                  </div>&nbsp;&nbsp;&nbsp;
+                  <div class="md-layout-item">
+                    <md-field md-clearable :class="getValidationClass('apellidos')">
+                      <label for="first-ape">Apellidos</label>
+                      <md-input
+                        name="first-ape"
+                        id="first-ape"
+                        autocomplete="given-name"
+                        v-model="form.apellidos"
+                        :disabled="sending"
+                      />
+                      <span
+                        class="md-error"
+                        v-if="!$v.form.apellidos.required"
+                      >Es necesario ingresar un Apellido</span>
+                      <!-- <span class="md-error" v-else-if="!$v.form.firstName.minlength">Invalid first name</span> -->
+                    </md-field>
+                  </div>
+                  </div>
+                  <div class="md-layout">
+                  <div class="md-layout-item">
+                    <md-field md-clearable>
+                      <label>Celular</label>
+                      <span class="md-prefix">
+                        <i class="material-icons">phone_iphone</i>
+                      </span>
+                      <md-input v-model="telefono" md-counter="10" maxlength="10"></md-input>
+                    </md-field>
+                  </div>
+                  <div class="md-layout-item">
+                    <md-datepicker
+                      v-model="fecNac"
+                      value="fecNac"
+                      @input="toString"
+                      md-immediately
+                      :md-model-type="String"
+                    >
+                      <label>Fecha de Cumpleaños</label>
+                    </md-datepicker>
+                  </div>
+                  </div>
+                  <div class="md-layout">
+                    <md-field md-clearable>
+                      <label>Dirección</label>
+                      <span class="md-prefix">
+                        <i class="material-icons">house</i>
+                      </span>
+                      <md-input v-model="direccion"></md-input>
+                    </md-field>
+                  </div>
+                  <div class="md-layout">
+                    <md-field md-clearable :class="getValidationClass('email')">
+                      <label>E-mail</label>
+                      <span class="md-prefix">
+                        <i class="material-icons">email</i>
+                      </span>
+                      <md-input v-model="form.email" md-counter="80"></md-input>
+                      <span class="md-error" v-if="!$v.form.email.email">Email incorrecto</span>
+                    </md-field>
+                  </div>
+
+        </md-card-content>
+
+            <md-card-actions>
+              <md-button
+                type="submit"
+                class="md-dense md-raised md-primary"
+                :disabled="sending"
+                @click="abrirModal()"
+              >Actualizar</md-button>
+            </md-card-actions>
+      </md-ripple>
+    </md-card>
        <!-- <h1 :text="`${user}`"></h1> -->
           </div>
         </template>
         <template v-else-if="listado==0">
+          <div>
+               <button type="button" class="close" @click="abrirList" aria-label="Close">
+              <span aria-hidden="true">X</span>
+            </button>
+          </div>
   <div
           class="uploader"
           @dragenter="OnDragEnter"
@@ -106,6 +210,7 @@
               <label for="file">Selecciona una Imágen</label>
               <input type="file" id="file" @change="onInputChange" multiple>
             </div>
+         
           </div>
 
           <div class="images-preview" v-show="images.length">
@@ -126,7 +231,61 @@
     <!--Inicio del modal agregar/actualizar-->
 
     <!-- /.modal-dialog -->
+     <div
+      class="modal fade"
+      tabindex="-1"
+      :class="{'mostrar' : modal}"
+      role="dialog"
+      aria-labelledby="myModalLabel"
+      style="display: none;"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dark modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" v-text="tituloModal"></h4>
+            <button type="button" class="close" @click="cerrarModal()" aria-label="Close">
+              <span aria-hidden="true">X</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action method="post" enctype="multipart/form-data" class="form-horizontal">
+              <md-card-content>
+                <md-field>
+                <label>Password</label>
+                <md-input v-model="password" type="password" :disabled="sending"></md-input>
+                </md-field>
 
+                <md-field>
+                <label>Confirme su Password</label>
+                <md-input v-model="password2" type="password" :disabled="sending"></md-input>
+                </md-field>
+                <span
+                class="md-error"
+                v-if="!$v.password2.sameAspassword2"
+                >El password NO coincide</span>
+              </md-card-content>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <md-card-actions>
+              <md-button type="button" class="md-raised" @click="cerrarModal()">Cerrar</md-button>
+            </md-card-actions>
+            <md-card-actions>
+              <md-button
+                type="submit"               
+                class="md-dense md-raised md-primary"
+                :disabled="sending"
+                @click="actualizarPw()"
+              >Actualizar</md-button>
+            </md-card-actions>
+
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
     <!--Fin del modal-->
   </main>
 </template>
@@ -143,6 +302,7 @@ import {
   MdField,
   MdCard,
   MdMenu,
+  MdRipple,
   MdList
 } from "vue-material/dist/components";
 // import VueMaterial from 'vue-material'
@@ -152,8 +312,9 @@ Vue.use(MdContent);
 Vue.use(MdField);
 Vue.use(MdCard);
 Vue.use(MdMenu);
+Vue.use(MdRipple);
 Vue.use(MdList);
-import { required, minLength } from "vuelidate/lib/validators";
+import { required, minLength, email, sameAs } from "vuelidate/lib/validators";
 
 export default {
   components: {
@@ -165,7 +326,10 @@ export default {
     return {
 
       form: {
-        nombre: ""
+        nombres: "",
+        apellidos: "",
+        email: "",
+        email2: ""
       },
       demo: 0,
       tipoAccion: 1,
@@ -180,16 +344,19 @@ export default {
       dragCount: 0,
       files: [],
       images: [],
-
+      direccion: "",
+      telefono: "",
       arrayDatos: [],
       arrayImg: [],
       arrayPerso: [],
       arrayM: { id: 0, nombre: "" },
-      arrayModelo: [],
       modal: 0,
       tituloModal: "",
       tipoAccion: 0,
       nombreFull: "",
+      password: "",
+      password2: "",
+      fecNac: "",
 
       pagination: {
         total: 0,
@@ -206,9 +373,21 @@ export default {
   },
 
   validations: {
-    form: {
-      nombre: {
+    password2: {
+      sameAspassword2: sameAs("password")
+    },
+form: {
+      nombres: {
         required
+      },
+      apellidos: {
+        required
+      },
+      email: {
+        email
+      },
+      email2: {
+        sameAsemail2: sameAs("email")
       }
     }
   },
@@ -243,10 +422,6 @@ export default {
     }
   },
   methods: {
-
-    //   nameWithLang ({ nombre, id }) {
-    //   return `${nombre} — [${id}]`
-    // },
 
     getValidationClass(fieldName) {
       const field = this.$v.form[fieldName];
@@ -327,22 +502,6 @@ export default {
 
       Array.from(files).forEach(file => this.addImage(file));
     },
-    // onUpload() {
-    //   let me = this;
-    //   const formData = new FormData();
-
-    //   this.files.forEach(file => {
-    //     formData.append("images[]", file, file.name);
-    //   });
-
-    //   axios.put("/user/imagen", formData).then(response => {
-    //     me.mensaje("Guardado", "Todas las imagenes se han almacenado ");
-    //     // this.$toastr.s("All images uplaoded successfully");
-    //     this.images = [];
-    //     this.files = [];
-    //   });
-    // },
-
     upload() {
       let me = this;
       const formData = new FormData();
@@ -373,6 +532,11 @@ export default {
           me.arrayPerso = respuesta.perso;
 
             me.nombreFull = me.arrayPerso[0]["nombreFull"];
+            me.form.nombres = me.arrayPerso[0]["nombres"];
+            me.form.apellidos = me.arrayPerso[0]["apellidos"];
+            me.telefono = me.arrayPerso[0]["telefono"];
+            me.direccion = me.arrayPerso[0]["direccion"];
+            me.form.email = me.arrayPerso[0]["email"];
 
         })
         .catch(function(error) {
@@ -397,54 +561,38 @@ export default {
           console.log(error);
         });
     },
-    validarDatos() {
-      this.$v.$touch();
+      actualizarPw() {
+      let me = this;
 
-      if (!this.$v.$invalid) {
-        this.registrarModelo();
-        this.clearForm();
-      }
+      axios
+        .put("/user/actualizarPw", {
+          id: user.content,
+          password: this.password
+        
+        })
+        .then(function(response) {
+          me.cerrarModal();
+          me.mensaje("Actualizado", "Actualizó ");
+          // me.listarPersona(1, "", "nombre");
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
+ 
     clearForm() {
       this.$v.$reset();
       this.form.nombre = null;
     },
-    getMarca() {
-      let me = this;
+       abrirModal() {
+      // this.idRefE=data["idref"];
 
-      var url = "/marca/selectMarca";
-      axios
-        .get(url)
-        .then(function(response) {
-          //console.log(response);
-          var respuesta = response.data;
-          me.arrayMarca = respuesta.marca;
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+      this.modal = 1;
+      this.tituloModal = "Asigne un Password para "+ this.nombreFull;
     },
-    getModelo() {
-      let me = this;
-
-      var url = "/modelo/selectModelo?buscar=" + this.idMarca;
-      axios
-        .get(url)
-        .then(function(response) {
-          let respuesta = response.data;
-          me.arrayModelo = respuesta.modelo;
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-    },
-    mostrarActualizar(data = []) {
-      let me = this;
-      (this.tipoAccion = 2), (me.listado = 0);
-      (this.arrayM.id = data["idMarca"]),
-      (this.arrayM.nombre = data["nommarca"]),
-        (this.modelo_id = data["id"]),
-        (this.form.nombre = data["nombre"]);
+    cerrarModal() {
+      this.modal = 0;
+      this.tituloModal = "";
     },
     mostrarDetalle() {
       this.clearForm();
@@ -453,99 +601,6 @@ export default {
     },
     ocultarDetalle() {
       this.listado = 1;
-    },
-    listarDatos(page, buscar, criterio) {
-      let me = this;
-      var url =
-        "/modelo?page=" + page + "&buscar=" + buscar + "&criterio=" + criterio;
-      axios
-        .get(url)
-        .then(function(response) {
-          var respuesta = response.data;
-          me.arrayDatos = respuesta.datos.data;
-          me.pagination = respuesta.pagination;
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-    },
-    cambiarPagina(page, buscar, criterio) {
-      let me = this;
-      //Actualiza la página actual
-      me.pagination.current_page = page;
-      //Envia la petición para visualizar la data de esa página
-      me.listarDatos(page, buscar, criterio);
-    },
-    registrarModelo() {
-      let me = this;
-
-      axios
-        .post("/modelo/registrar", {
-          idMarca: this.arrayM.id,
-          nombre: this.form.nombre.toUpperCase()
-        })
-        .then(function(response) {
-          me.ocultarDetalle();
-          me.listarDatos(1, "", "nombre");
-          me.mensaje("Guardado", "Guardo ");
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-    },
-    actualizarModelo() {
-      let me = this;
-
-      axios
-        .put("/modelo/actualizar", {
-          idMarca: this.arrayM.id,
-          nombre: this.form.nombre.toUpperCase(),
-          id: this.modelo_id
-        })
-        .then(function(response) {
-          me.ocultarDetalle();
-          me.listarDatos(1, "", "nombre");
-          me.mensaje("Actualizado", "Actualizó ");
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-    },
-    eliminarModelo(data = []) {
-      swal({
-        title: "Esta seguro de Eliminar la Estación " + data["nombre"],
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Aceptar!",
-        cancelButtonText: "Cancelar",
-        confirmButtonClass: "btn btn-success",
-        cancelButtonClass: "btn btn-danger",
-        buttonsStyling: false,
-        reverseButtons: true
-      }).then(result => {
-        if (result.value) {
-          let me = this;
-          this.modelo_id = data["id"];
-          axios
-            .post("/modelo/eliminar", {
-              id: this.modelo_id
-            })
-            .then(function(response) {
-              me.ocultarDetalle();
-              me.listarDatos(1, "", "nombre");
-              me.mensaje("Eliminado", "Eliminó ");
-            })
-            .catch(function(error) {
-              console.log(error);
-            });
-        } else if (
-          // Read more about handling dismissals
-          result.dismiss === swal.DismissReason.cancel
-        ) {
-        }
-      });
     },
 
     mensaje(tipo, crud) {
@@ -556,7 +611,7 @@ export default {
   mounted() {
     this.getUsuario();
     this.getImg();
-    this.listarDatos(1, this.buscar, this.criterio);
+
   }
 };
 </script>
@@ -566,7 +621,7 @@ export default {
   position: absolute !important;
 }
   .md-card {
-    width: 420px;
+    width: 45%;
     margin: 4px;
     display: inline-block;
     vertical-align: top;

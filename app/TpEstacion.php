@@ -8,7 +8,8 @@ class TpEstacion extends Model
 {
     //
     protected $table = 'tp_estaciones';
-    protected $fillable = ['nombre','descripcion'];
+    protected $fillable = ['nombre','desc'];
+    public $timestamps = false;
     
     public function Estaciones()
     {
