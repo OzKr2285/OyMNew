@@ -77,7 +77,7 @@
             <actividad></actividad>
             </template>
             <template v-if="menu==35">
-            <actividade></actividade>
+             <actividade></actividade>
             </template>
             <template v-if="menu==41">
             <ecomputo></ecomputo>
@@ -223,6 +223,17 @@
                 <perfil></perfil>
             </template>
    
+            <template v-if="menu==81">
+                <etrabajo></etrabajo>
+            </template>
+            <template v-if="menu==82">
+                <eqtrabajoe></eqtrabajoe>
+            </template>
+   
+            <template v-if="menu==83">
+                <mtoet></mtoet>
+            </template>
+   
 
             <!-- Programacion  de Mantenimientos -->
             <template v-if="menu==20">
@@ -266,6 +277,22 @@
             <template v-if="menu==76">
                 <red></red>
             </template>
+            <template v-if="menu==32">
+                <insumoe></insumoe>
+            </template>
+            <template v-if="menu==35">
+                <actividade></actividade>
+            </template>
+            <template v-if="menu==82">
+                <eqtrabajoe></eqtrabajoe>
+            </template>
+            <template v-if="menu==81">
+                <etrabajo></etrabajo>
+            </template>
+            <template v-if="menu==83">
+                <mtoet></mtoet>
+            </template>
+   
    
             @else
 

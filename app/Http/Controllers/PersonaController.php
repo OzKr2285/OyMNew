@@ -48,6 +48,7 @@ class PersonaController extends Controller
         ->where('personas.is_empleado','=',1)
         ->where('personas.id_cargo','=',25)
         ->orWhere('personas.id_cargo','=',26)
+        ->orWhere('personas.id_cargo','=',21)
         ->orWhere('personas.id_cargo','=',5)
         ->orderBy('nombreFull', 'asc')->paginate(10);
       }
@@ -55,6 +56,7 @@ class PersonaController extends Controller
         $perso = Persona::select('personas.id','personas.nombreFull','personas.email')
         ->where('personas.is_empleado','=',1)
         ->where('personas.id_cargo','=',25)
+        ->where('personas.id_cargo','=',21)
         ->Where('personas.id_cargo','=',26)
         ->orWhere('personas.num_doc', 'like', '%'. $buscar . '%')  
         ->orWhere('personas.nombreFull', 'like', '%'. $buscar . '%')          

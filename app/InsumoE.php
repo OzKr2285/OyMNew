@@ -8,6 +8,6 @@ class InsumoE extends Model
 {
     //
     protected $table = 'insumose';
-    protected $fillable = ['id','desc'];
+    protected $fillable = ['id','desc','id_refequipo'];
     public $timestamps = false;
 }

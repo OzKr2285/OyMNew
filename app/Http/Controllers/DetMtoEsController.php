@@ -21,19 +21,18 @@ class DetMtoEsController extends Controller
             ->join('equipos','det_equipos_estacion.id_equipo','=','equipos.id') 
             ->join('ref_equipos','equipos.id_refequipo','=','ref_equipos.id')  
             ->join('modelos','equipos.id_modelo','=','modelos.id')           
-            ->select('det_mto_es.id_mto','ref_equipos.nombre','det_equipos_estacion.tp_tren','det_equipos_estacion.id_etapa','etapas.nombre as nomEtapa','equipos.tag','equipos.serial','modelos.nombre as modelo')            
+            ->select('det_mto_es.id as idDet','det_mto_es.id_mto','ref_equipos.nombre','det_equipos_estacion.tp_tren','det_equipos_estacion.id_etapa','etapas.nombre as nomEtapa','equipos.tag','equipos.serial','modelos.nombre as modelo','equipos.id as idEquipo')            
             ->orderBy('det_mto_es.id', 'asc')->get();
         }
         else{
-            $equipo = DetMtoEs::join('det_equipos_estacion','det_mto_es.id_equipo','=','det_equipos_estacion.id')
-            ->join('etapas','det_equipos_estacion.id_etapa','=','etapas.id')
-            ->join('equipos','det_equipos_estacion.id_equipo','=','equipos.id') 
+            $equipo = DetMtoEs::join('equipos','det_mto_es.id_equipo','=','equipos.id') 
+            ->join('etapas','det_mto_es.id_etapa','=','etapas.id')
             ->join('ref_equipos','equipos.id_refequipo','=','ref_equipos.id')    
             ->join('modelos','equipos.id_modelo','=','modelos.id')         
-            ->select('det_mto_es.id_mto','ref_equipos.nombre','ref_equipos.id as idRefE','det_equipos_estacion.tp_tren','det_equipos_estacion.id_etapa','etapas.nombre as nomEtapa','equipos.tag','equipos.serial','modelos.nombre as modelo')            
+            ->select('det_mto_es.id as idDet','det_mto_es.id_mto','ref_equipos.nombre','ref_equipos.id as idRefE','det_mto_es.tp_tren','det_mto_es.id_etapa','etapas.nombre as nomEtapa','equipos.tag','equipos.serial','modelos.nombre as modelo','equipos.id as idEquipo')            
             ->where('det_mto_es.id_mto',$buscar)            
             ->orderBy('etapas.nombre', 'asc')
-            ->orderBy('det_equipos_estacion.tp_tren', 'asc')
+            ->orderBy('det_mto_es.tp_tren', 'asc')
             ->orderBy('det_mto_es.id', 'asc')->get();
             
         }

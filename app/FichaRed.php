@@ -10,6 +10,7 @@ class FichaRed extends Model
     protected $table = 'fichared';
     protected $fillable = [
         'tp_red', 
+        'clasi', 
         'cant_p', 
         'nombre',
         'id_mpio',

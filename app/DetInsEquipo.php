@@ -8,7 +8,7 @@ class DetInsEquipo extends Model
 {
     //
     protected $table = 'det_ins_equipo';
-    protected $fillable = ['id','id_insumo','id_refequipo','observacion'];
+    protected $fillable = ['id','id_insumo','observacion'];
     public $timestamps = false;
 
  

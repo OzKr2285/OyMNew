@@ -37,21 +37,21 @@
               <table class="table table-bordered table-striped table-sm">
                 <thead>
                   <tr class="p-3 mb-2 bg-dark text-white">
-                    <th>TAG</th>
-                    <th>Serial</th>
-                    <th>Nombre</th>
+                    <th>Categoría</th>
                     <th>Modelo</th>
+                    <th>Serial</th>
                     <th>Proveedor</th>
+                    <th>TAG</th>
                     <th>Opciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`">
-                    <td v-text="equipo.tag"></td>
-                    <td v-text="equipo.serial"></td>
                     <td v-text="equipo.nomref"></td>
                     <td v-text="equipo.modelo"></td>
+                    <td v-text="equipo.serial"></td>
                     <td v-text="equipo.nomprov"></td>
+                    <td v-text="equipo.tag"></td>
                     <td>
                     <md-button class="md-icon-button " @click="mostrarActualizar(equipo)" title="Actualizar">                         
                       <i class="material-icons Color3">edit</i>
@@ -335,20 +335,20 @@
                 <table class="table table-bordered table-striped table-sm">
                   <thead>
                     <tr>
-                      <th>Serial</th>
                       <th>Nombre</th>
-                      <th>Descripción</th>
                       <th>Modelo</th>
+                      <th>Serial</th>
+                      <th>Descripción</th>
                       <th>Opciones</th>
                     </tr>
                   </thead>
                   <tbody v-if="arrayDetEquipo.length">
                     <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
                     <tr v-for="(detalle, index) in arrayDetEquipo" :key="`detalle-${index}`">
-                      <td v-text="detalle.serial"></td>
                       <td v-text="detalle.nombre"></td>
-                      <td v-text="detalle.desc"></td>
                       <td v-text="detalle.modelo"></td>
+                      <td v-text="detalle.serial"></td>
+                      <td v-text="detalle.desc"></td>
 
                       <td>
                         <button

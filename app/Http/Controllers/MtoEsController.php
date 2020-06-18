@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\MtoEs;
 use App\DetMtoEs;
+use App\TecMtoEs;
 
 class MtoEsController extends Controller
 {
@@ -47,6 +48,27 @@ class MtoEsController extends Controller
             'mto' => $mto
         ];
     }
+    public function store2(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+
+        try{
+            DB::beginTransaction();      
+            $detalles = $request->data;//Array de detalles
+            // //Recorro todos los elementos
+            foreach($detalles as $ep=>$det)
+            {
+                $detalle = new TecMtoEs();
+                $detalle->id_mto_es = $request->id_mto;
+                $detalle->id_tecnico =$det['id'];                                                                                                                                      
+                $detalle->is_respo =$det['Rol'];                                                                                                                                      
+                $detalle->save();
+            }          
+            DB::commit();
+        } catch (Exception $e){
+            DB::rollBack();
+        }      
+    }
     public function store(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
@@ -72,6 +94,8 @@ class MtoEsController extends Controller
                 $detalle = new DetMtoEs();
                 $detalle->id_mto = $mto->id;
                 $detalle->id_equipo =$det['id_equipo'];                                                                     
+                $detalle->tp_tren =$det['tp_tren'];                                                                     
+                $detalle->id_etapa =$det['id_etapa'];                                                                     
                 $detalle->save();
             }          
             DB::commit();

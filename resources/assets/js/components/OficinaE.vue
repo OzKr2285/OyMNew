@@ -5,7 +5,8 @@
       <!-- Ejemplo de tabla Listado -->
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i> Gestión Equipos Oficina
+          <i class="m-0 font-weight-bold text-primary fas fa-charging-station"></i> 
+          <strong class="lead">Gestión Equipos Oficina</strong >
           <button
             type="button"
             @click="mostrarDetalle()"
@@ -247,7 +248,7 @@
                     <th>Serial</th>
                     <th>Equipo</th>
                     <th>Modelo</th>
-                    <th>Descripción</th>
+                    <th>Responsable</th>
                     <th>Selección</th>
                   </tr>
                 </thead>
@@ -259,7 +260,7 @@
                     <td v-text="objeto.serial"></td>
                     <td v-text="objeto.nomref"></td>
                     <td v-text="objeto.modelo"></td>
-                    <td v-text="objeto.desc"></td>
+                    <td v-text="objeto.nomperso"></td>
                     <td>
                       <button
                         type="button"

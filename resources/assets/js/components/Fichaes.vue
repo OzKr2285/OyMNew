@@ -4,8 +4,9 @@
     <div class="container-fluid">
       <!-- Ejemplo de tabla Listado -->
       <div class="card">
-        <div class="card-header">
-          <i class="fa fa-align-justify"></i> Gestión de Estaciones
+        <div class="card-header ">
+          <i class="m-0 font-weight-bold text-primary fa fa-align-justify"></i> 
+          <strong class="lead">Gestión de Estaciones</strong >
           <button
             type="button"
             @click="mostrarDetalle()"
@@ -15,37 +16,86 @@
           </button>
         </div>
         <template v-if="listado==1">
-      
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table table-bordered table-striped table-sm">
-                <thead>
-                  <tr class="p-3 mb-2 bg-dark text-white">
-                    <th>Tipo Estacion</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Opciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="estacion in arrayEstacion" :key="estacion.id">
-                    <td v-text="estacion.tpnombre"></td>
-                    <td v-text="estacion.nombre"></td>
-                    <td v-text="estacion.descripcion"></td>
-                    <td>
-                      <md-button class="md-icon-button " @click="mostrarActualizar(estacion)" title="Actualizar">                         
-                        <i class="material-icons Color3">edit</i>
-                      </md-button>
-                      <md-button class="md-icon-button md-primary " @click="eliminarEstacion(estacion)" title="Eliminar">
-                        <i class="material-icons Color4">delete</i>
-                      </md-button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
- 
+           <div class="card-body">
+         <!-- DataTales Example -->
+          <div class="card shadow mb-4">
+
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-striped table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Tipo de Estación</th>
+                      <th>Nombre</th>
+                      <th>Descripción</th>
+                      <th>Opciones</th>
+                    </tr>
+                  </thead>
+                    <tbody>
+                    <!-- <tr v-for="accesorio in arrayAccesorio" :key="accesorio.id">
+                      <td>{{accesorio.nombre}}</td>
+        
+                    </tr> -->
+               
+                    </tbody>
+    
+                  <tfoot>
+                    <tr>
+                      <th>Tipo de Estación</th>
+                      <th>Nombre</th>
+                      <th>Descripción</th>
+                      <th>Opciones</th>
+                    </tr>
+                  </tfoot> 
+                  <tbody>
+                 
+                    
+                  </tbody>
+                </table>
+              </div>
             </div>
-          <nav>
+          </div>
+
+          <!-- <table class="table table-bordered table-striped table-sm" id="dataTable2" >
+            <thead>
+              <tr class="p-3 mb-2 bg-dark text-white">
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Modelo</th>
+                <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="accesorio in arrayAccesorio" :key="accesorio.id">
+                <td v-text="accesorio.nombre"></td>
+                <td v-text="accesorio.desc"></td>
+                <td v-text="accesorio.modelo"></td>
+
+                <td>
+                  <button
+                    type="button"
+               
+                    class="btn btn-warning btn-sm"
+                    data-tooltip
+                    title="Actualizar"
+                  >
+                    <i class="icon-pencil"></i>
+                  </button>
+                  &nbsp;
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm"
+                    data-tooltip
+                    title="Eliminar"
+                    @click="eliminarAccesorio(accesorio)"
+                  >
+                    <i class="icon-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table> -->
+          <!-- <nav>
             <ul class="pagination">
               <li class="page-item" v-if="pagination.current_page > 1">
                 <a
@@ -75,8 +125,11 @@
                 >Sig</a>
               </li>
             </ul>
-          </nav>
-          </div>
+          </nav> -->
+    
+
+        </div>
+
         </template>
         <template v-else-if="listado==0">
           <div>
@@ -176,9 +229,9 @@
               >
                 <template v-if="bDetEtapa" >             
                   <div class="col-md-12">
-                          <tr v-for="(etapa, index)  in arrayNomEstacion" :key="`etapa-${index}`">                 
-                      <h5><td  v-text="'Estación - '+ etapa.nombre"></td></h5>
-                    </tr>
+                      <tr v-for="(etapa, index)  in arrayNomEstacion" :key="`etapa-${index}`">                 
+                        <h5><td  v-text="'Estación - '+ etapa.nombre"></td></h5>
+                      </tr>
                     <div class="form-group">
                       <button @click="abrirModal" class="btn btn-dark form-control btnagregar">
                         <i class="icon-plus"></i>
@@ -201,7 +254,7 @@
                           <td v-text="detalle.desc"></td>          
                     <td>
                       <md-button class="md-icon-button " @click="eliminarDetalle(index)" title="Eliminar Etapa">                         
-                        <i class="material-icons Color4">delete_sweep</i>
+                        <i class="material-icons ColorRojo">delete_sweep</i>
                       </md-button>                                                
                       </td>
                         </tr>
@@ -229,9 +282,9 @@
 
                 <div class="md-layout">
                   <div class="table-responsive col-md-12">
-                   <tr v-for="(etapa, index)  in arrayNomEstacion" :key="`etapa-${index}`">                 
-                    <h5><td  v-text="'Estación - '+ etapa.nombre"></td></h5>
-                   </tr>
+                   <!-- <tr v-for="(etapa, index)  in arrayNomEstacion" :key="`etapa-${index}`">                  -->
+                    <h5><td  v-text="'Estación - '+ this.nomEstacion"></td></h5>
+                   <!-- </tr> -->
                     <table class="table table-bordered table-striped table-sm">
                       <thead>
                         <tr>
@@ -249,13 +302,13 @@
 
                           <td>
                             <md-button class="md-icon-button " @click="regEquiposPpal(detalle)" title="Equipos Etapa Principal">                         
-                              <i class="material-icons Color1">settings_input_component</i>
+                              <i class="material-icons ColorAma">settings_input_component</i>
                             </md-button>
                             <md-button class="md-icon-button md-primary " @click="regEquiposByPass(detalle)" title="Equipos By Pass">
-                              <i class="material-icons Color3">group_work</i>
+                              <i class="material-icons ColorGris">group_work</i>
                             </md-button>                            
                             <md-button class="md-icon-button md-primary " @click="verEquipos(detalle)" title="Ver Equipos">
-                              <i class="material-icons Color2">visibility</i>
+                              <i class="material-icons ColorAzul">visibility</i>
                             </md-button>                            
                             <!-- <button
                               @click="regEquiposPpal(detalle)"
@@ -316,24 +369,24 @@
             <table class="table table-bordered table-striped table-sm">
               <thead>
                 <tr>
-                  <th>TAG</th>
-                  <th>Serial</th>
-                  <th>Modelo</th>
                   <th>Nombre</th>                  
+                  <th>Modelo</th>
+                  <th>Serial</th>
+                  <th>TAG</th>
                   <th>Opciones</th>
                 </tr>
               </thead>
               <tbody v-if="arrayTrenPpal.length">
                 <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
                 <tr v-for="(detalle, index) in arrayTrenPpal" :key="`detalle-${index}`">
-                  <td v-text="detalle.tag"></td>
-                  <td v-text="detalle.serial"></td>
-                  <td v-text="detalle.modelo"></td>
                   <td v-text="detalle.nomequipo"></td>                  
+                  <td v-text="detalle.modelo"></td>
+                  <td v-text="detalle.serial"></td>
+                  <td v-text="detalle.tag"></td>
 
                   <td>
                     <md-button class="md-icon-button " @click="eliminarDetalle2(index)" title="Eliminar Equipo">                         
-                      <i class="material-icons Color4">delete_forever</i>
+                      <i class="material-icons ColorRojo">delete_forever</i>
                     </md-button>
                   </td>
                 </tr>
@@ -388,24 +441,24 @@
             <table class="table table-bordered table-striped table-sm">
               <thead>
                 <tr>
-                  <th>TAG</th>
-                  <th>Serial</th>
-                  <th>Modelo</th>
                   <th>Nombre</th>
+                  <th>Modelo</th>
+                  <th>Serial</th>
+                  <th>TAG</th>
                   <th>Opciones</th>
                 </tr>
               </thead>
               <tbody v-if="arrayTrenByPass.length">
                 <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
                 <tr v-for="(detalle, index) in arrayTrenByPass" :key="`detalle-${index}`">
-                  <td v-text="detalle.tag"></td>
-                  <td v-text="detalle.serial"></td>
-                  <td v-text="detalle.modelo"></td>
                   <td v-text="detalle.nomequipo"></td>
+                  <td v-text="detalle.modelo"></td>
+                  <td v-text="detalle.serial"></td>
+                  <td v-text="detalle.tag"></td>
 
                   <td>
                     <md-button class="md-icon-button " @click="eliminarDetalle3(index)" title="Eliminar Equipo">                         
-                      <i class="material-icons Color4">delete_forever</i>
+                      <i class="material-icons ColorRojo">delete_forever</i>
                     </md-button>
                   </td>
                 </tr>
@@ -456,20 +509,20 @@
               <table class="table table-bordered table-striped table-sm">
                 <thead>
                   <tr>
-                    <th>TAG</th>
-                    <th>Serial</th>
-                    <th>Modelo</th>
                     <th>Nombre</th>                  
+                    <th>Modelo</th>
+                    <th>Serial</th>
+                    <th>TAG</th>
                     <th>Opciones</th>
                   </tr>
                 </thead>
                 <tbody v-if="arrayTrenPpal.length">
                   <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
                   <tr v-for="(detalle, index) in arrayTrenPpal" :key="`detalle-${index}`">
-                    <td v-text="detalle.tag"></td>
-                    <td v-text="detalle.serial"></td>
-                    <td v-text="detalle.modelo"></td>
                     <td v-text="detalle.nombre"></td>                  
+                    <td v-text="detalle.modelo"></td>
+                    <td v-text="detalle.serial"></td>
+                    <td v-text="detalle.tag"></td>
 
                     <td>
                       <button
@@ -502,20 +555,20 @@
               <table class="table table-bordered table-striped table-sm">
                 <thead>
                   <tr>
-                    <th>TAG</th>
-                    <th>Serial</th>
-                    <th>Modelo</th>
                     <th>Nombre</th>                  
+                    <th>Modelo</th>
+                    <th>Serial</th>
+                    <th>TAG</th>
                     <th>Opciones</th>
                   </tr>
                 </thead>
                 <tbody v-if="arrayTrenByPass.length">
                   <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
                   <tr v-for="(detalle, index) in arrayTrenByPass" :key="`detalle-${index}`">
-                    <td v-text="detalle.tag"></td>
-                    <td v-text="detalle.serial"></td>
-                    <td v-text="detalle.modelo"></td>
                     <td v-text="detalle.nombre"></td>                  
+                    <td v-text="detalle.modelo"></td>
+                    <td v-text="detalle.serial"></td>
+                    <td v-text="detalle.tag"></td>
 
                     <td>
                       <button
@@ -739,10 +792,10 @@
                 <thead>
                   <tr>
                     <th>Opciones</th>
-                    <th>TAG</th>
-                    <th>Serial</th>
-                    <th>Modelo</th>
                     <th>Nombre</th>
+                    <th>Modelo</th>
+                    <th>Serial</th>
+                    <th>TAG</th>
                     <th>Descripción</th>
                   </tr>
                 </thead>
@@ -757,10 +810,10 @@
                         <i class="icon-check"></i>
                       </button>
                     </td>
-                    <td v-text="etapa.tag"></td>
-                    <td v-text="etapa.serial"></td>
-                    <td v-text="etapa.modelo"></td>
                     <td v-text="etapa.nomequipo"></td>
+                    <td v-text="etapa.modelo"></td>
+                    <td v-text="etapa.serial"></td>
+                    <td v-text="etapa.tag"></td>
                     <td v-text="etapa.desc"></td>
                   </tr>
                 </tbody>
@@ -874,6 +927,7 @@ export default {
       tpTren:0,
       numFact: "",
       nomEquipo: "",
+      nomEstacion: "",
       serial: "",
       modelo: "",
       fecCompra: "",
@@ -909,6 +963,14 @@ export default {
       tipoAccion: 0,
 
       pagination: {
+        total: 0,
+        current_page: 0,
+        per_page: 0,
+        last_page: 0,
+        from: 0,
+        to: 0
+      },
+      pagination2: {
         total: 0,
         current_page: 0,
         per_page: 0,
@@ -974,6 +1036,28 @@ export default {
     },
     //Calcula los elementos de la paginación
     pagesNumber: function() {
+      if (!this.pagination2.to) {
+        return [];
+      }
+
+      var from = this.pagination2.current_page - this.offset;
+      if (from < 1) {
+        from = 1;
+      }
+
+      var to = from + this.offset * 2;
+      if (to >= this.pagination2.last_page) {
+        to = this.pagination2.last_page;
+      }
+
+      var pagesArray = [];
+      while (from <= to) {
+        pagesArray.push(from);
+        from++;
+      }
+      return pagesArray;
+    },
+    pagesNumber2: function() {
       if (!this.pagination.to) {
         return [];
       }
@@ -1454,8 +1538,10 @@ export default {
       (this.tipoAccion = 2), (me.listado = 0);
       (this.idTpEstacion = data["idtpes"]),
       this.idDpto = data["idDpto"];
+      this.nomEstacion = data["nombre"];
 
       this.getEstacion();
+      // this.getNomEstacion();
       this.idMp = data["idmpio"];
       this.getMpio(this.idMp);
       this.idEstacion = data["idEs"];
@@ -1474,7 +1560,7 @@ export default {
     cambiarPagina(page, buscar, criterio) {
       let me = this;
       //Actualiza la página actual
-      me.pagination.current_page = page;
+      me.pagination2.current_page = page;
       //Envia la petición para visualizar la data de esa página
       me.listarEstacion(page, buscar, criterio);
     },
@@ -1498,8 +1584,9 @@ export default {
         .get(url)
         .then(function(response) {
           var respuesta = response.data;
-          me.arrayEstacion = respuesta.estacion.data;
-          me.pagination = respuesta.pagination;
+          me.arrayEstacion = respuesta.estacion;
+          me.myTable(me.arrayEstacion);
+          // me.pagination2 = respuesta.pagination;
         })
         .catch(function(error) {
           console.log(error);
@@ -1638,6 +1725,50 @@ export default {
     },
     mensaje(tipo, crud) {
       swal(tipo, "El registro se " + crud + " con éxito.", "success");
+    },   
+    myTable(datas){
+      let me = this;
+
+    $(document).ready(function() {
+      
+      var table = $('#dataTable').DataTable({destroy: true,
+      data:datas,
+      "language": {
+                "lengthMenu": "Ver _MENU_ registros por página",
+                "zeroRecords": "NO existen Datos",
+                "info": "mostrando la página _PAGE_ de _PAGES_",
+                "infoEmpty": "No hay registros disponibles",
+                "search":         "Buscar:",
+                 "paginate": {
+                    "first":      "Prim",
+                    "last":       "Ant",
+                    "next":       "Sig",
+                    "previous":   "Ant"
+                },
+                "infoFiltered": "(filtrado de _MAX_ total registros)"
+            },
+          "columns": [
+            { "data": "tpnombre" },
+            { "data": "nombre" },
+            { "data": "descripcion" },
+            // {"defaultContent": "<button class='btn'> <i class='fa fa-home'></i></button>"}
+            // {"defaultContent": "<button type='button' @click='hola() class='btn btn-success btn-sm' data-tooltip title='Actualizar' > <i class='icon-pencil'></i>  </button> "},
+            {"defaultContent": "<button type='button' id='editar' class='editar btn btn-success btn-sm' data-tooltip title='Actualizar' > <i class='fas fa-edit'></i>  </button> <button type='button'id='eliminar' class='eliminar btn btn-danger btn-sm' data-tooltip title='Eliminar' > <i class='fas fa-trash-alt'></i> </button>  "}
+            // {"defaultContent": "<button type='button' id='editar' class='editar btn btn-success btn-sm' data-tooltip title='Actualizar' > <i class='fas fa-edit'></i>  </button>"}
+            // {"defaultContent": " <button type='button' class='md-raised' @click='this.hola()'> Cerrar </button>"}
+        ]});
+
+          $('#dataTable tbody').on( 'click', '.editar', function () {
+                me.datos = table.row( $(this).parents('tr') ).data();
+                me.mostrarActualizar(me.datos);
+                    //  console.log(data['nombre']);
+            } );
+          $('#dataTable tbody').on( 'click', '.eliminar', function () {
+                me.datos= table.row( $(this).parents('tr') ).data();
+                me.eliminarAccesorio(me.datos)
+                    //  console.log(data['modelo']);
+            } );
+    });   
     }
   },
 
@@ -1671,8 +1802,8 @@ export default {
   font-weight: bold;
 }
 
-.material-icons.Color1 { color: rgba(252, 183, 34, 0.89); }
-.material-icons.Color2 { color: rgba(69, 111, 201, 0.849); }
-.material-icons.Color3 { color: rgb(73, 73, 73); }
-.material-icons.Color4 { color: rgba(228, 54, 54, 0.863); }
+.material-icons.ColorAma { color: rgba(223, 176, 74, 0.89); }
+.material-icons.ColorAzul { color: rgba(29, 85, 150, 0.89); }
+.material-icons.ColorGris { color: rgb(44, 43, 43); }
+.material-icons.ColorRojo { color: rgba(228, 54, 54, 0.863); }
 </style>

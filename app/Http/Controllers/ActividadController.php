@@ -39,6 +39,9 @@ class ActividadController extends Controller
         if (!$request->ajax()) return redirect('/');
        $actividad = new Actividad();
        $actividad->nombre = $request->nombre;
+       $actividad->duracion = $request->duracion;
+       $actividad->equivale = $request->equivale;
+       $actividad->is_equipo = $request->is_equipo;
        $actividad->desc = $request->desc;
        $actividad->save();
     }
@@ -47,6 +50,9 @@ class ActividadController extends Controller
         if (!$request->ajax()) return redirect('/');
        $actividad = Actividad::findOrFail($request->id);
        $actividad->nombre = $request->nombre;
+       $actividad->duracion = $request->duracion;
+       $actividad->equivale = $request->equivale;
+       $actividad->is_equipo = $request->is_equipo;
        $actividad->desc = $request->desc;
        $actividad->save();
     }

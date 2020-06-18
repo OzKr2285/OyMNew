@@ -44,6 +44,9 @@
               <tr class="p-3 mb-2 bg-dark text-white">
                 <th>Nombre</th>
                 <th>Descripción</th>
+                <th>Duración</th>
+                <th>Equivale</th>
+                <th>Aplica</th>
                 <th>Opciones</th>
               </tr>
             </thead>
@@ -51,7 +54,25 @@
               <tr v-for="objeto in arrayAct" :key="objeto.id">
                 <td v-text="objeto.nombre"></td>
                 <td v-text="objeto.desc"></td>
-
+                <td v-text="objeto.duracion"></td>
+                <td v-text="objeto.equivale"></td>
+                <td>
+                    <template v-if="objeto.is_equipo==0">
+                      <span>EQ-ESTACIÓN</span>
+                    </template>
+                    <template else v-if="objeto.is_equipo==1">
+                      <span>EQ-COMPUTO</span>
+                    </template>
+                    <template else v-if="objeto.is_equipo==2">
+                      <span>EQ-TRABAJO</span>
+                    </template>
+                    <template else v-if="objeto.is_equipo==3">
+                      <span>RED</span>
+                    </template>
+                    <template else v-if="objeto.is_equipo==4">
+                      <span>PASO ESPECIAL</span>
+                    </template>
+                </td>
                 <td>
                   <md-button class="md-icon-button " @click="abrirModal('actividad','actualizar',objeto)" title="Actualizar">                         
                     <i class="material-icons Color3">edit</i>
@@ -119,22 +140,65 @@
           <div class="modal-body">
             <form action method="post" enctype="multipart/form-data" class="form-horizontal">
               <md-card-content>
-                <md-field :class="getValidationClass('nombre')">
-                  <label for="first-name">Nombre</label>
-                  <md-input
-                    name="first-name"
-                    id="first-name"
-                    autocomplete="given-name"
-                    v-model="form.nombre"
-                    :disabled="sending"
-                  />
-                  <span
-                    class="md-error"
-                    v-if="!$v.form.nombre.required"
-                  >Olvidaste ingresar el nombre de la actividad</span>
-                  <!-- <span class="md-error" v-else-if="!$v.form.firstName.minlength">Invalid first name</span> -->
-                </md-field>
-
+                <div class="md-layout">
+                  <md-field :class="getValidationClass('nombre')">
+                    <label for="first-name">Nombre</label>
+                    <md-input
+                      name="first-name"
+                      id="first-name"
+                      autocomplete="given-name"
+                      v-model="form.nombre"
+                      :disabled="sending"
+                    />
+                    <span
+                      class="md-error"
+                      v-if="!$v.form.nombre.required"
+                    >Olvidaste ingresar el nombre de la actividad</span>
+                    <!-- <span class="md-error" v-else-if="!$v.form.firstName.minlength">Invalid first name</span> -->
+                  </md-field>
+                 </div>
+              <div class="md-layout">
+                <div class="md-layout-item">
+                  <span class="md-body">Aplica para</span>
+                  <multiselect
+                    v-model="arrayIEq"
+                    :options="arrayisEquipo"
+                    placeholder="Seleccione Ficha"
+                    :custom-label="nameWithequipo"
+                    label="nombre"
+                    track-by="nombre"
+                  ></multiselect>
+                  </div>&nbsp;&nbsp;&nbsp;
+                <div class="md-layout-item">
+                  <md-field>
+                    <label for="first-name">Duración - Minutos</label>
+                    <md-input
+                      type="number"
+                      name="first-duracion"
+                      id="first-name"
+                      autocomplete="given-duracion"
+                      v-model="duracion"
+                      :disabled="sending"
+                    />
+                  </md-field>
+                </div>
+                &nbsp; &nbsp; &nbsp;
+                <div class="md-layout-item">
+                  <md-field>
+                    <label for="first-name">Equivalencia - Puntos</label>
+                    <md-input
+                      type="number"
+                      name="first-equivale"
+                      id="first-name"
+                      autocomplete="given-equivale"
+                      v-model="equivale"
+                      :disabled="sending"
+                    />
+                  </md-field>
+                </div>
+                 
+              </div>
+              <div class="md-layout">
                 <md-field :class="getValidationClass('descripcion')">
                   <label for="desc-name">Descripción</label>
                   <md-input
@@ -147,7 +211,7 @@
                   <span class="md-error" v-if="!$v.form.descripcion.required">Ingrese la descripción</span>
                   <!-- <span class="md-error" v-else-if="!$v.form.firstName.minlength">Invalid first name</span> -->
                 </md-field>
-
+              </div>
                
               </md-card-content>
             </form>
@@ -188,6 +252,7 @@
 
 <script>
 import { validationMixin } from "vuelidate";
+import Multiselect from "vue-multiselect";
 import { MdButton, MdContent, MdField,MdAutocomplete,MdCard, MdMenu, MdList } from "vue-material/dist/components";
 // import VueMaterial from 'vue-material'
 // Vue.use(VueMaterial)
@@ -201,7 +266,9 @@ Vue.use(MdList);
 import { required, minLength } from "vuelidate/lib/validators";
 
 export default {
-
+  components: {
+    Multiselect
+  },
   mixins: [validationMixin],
 
   data() {
@@ -214,12 +281,22 @@ export default {
       },
       sending: false,
       idInsumo: 0,
+
+      duracion: 0,
+      equivale: 0,
      
       arrayAct: [],
       modal: 0,
       tituloModal: "",
       tipoAccion: 0,
-
+      arrayIEq: { id: 0, nombre: "Seleccione Ficha" },
+      arrayisEquipo: [
+        { id: 0, nombre: "EQ-ESTACIÓN" },
+        { id: 1, nombre: "EQ-COMPUTO" },
+        { id: 2, nombre: "EQ-TRABAJO" },
+        { id: 3, nombre: "RED" },
+        { id: 4, nombre: "PASO ESPECIAL" }
+      ],
       pagination: {
         total: 0,
         current_page: 0,
@@ -295,7 +372,9 @@ export default {
       this.form.nombre = null;
       this.form.descripcion = null;
     },
-    
+    nameWithequipo({ nombre }) {
+      return `${nombre}`;
+    },
     listarAct(page, buscar, criterio) {
       let me = this;
       var url =
@@ -324,15 +403,15 @@ export default {
       me.listarAct(page, buscar, criterio);
     },
     registrarAct() {
-      //   if (this.validartpestacion()) {
-      //     return;
-      //   }
 
       let me = this;
 
       axios
         .post("/actividad/registrar", {
           nombre: this.form.nombre.toUpperCase(),
+          duracion: this.duracion,
+          equivale: this.equivale ,
+          is_equipo: this.arrayIEq.id ,
           desc: this.form.descripcion.toUpperCase()
         })
         .then(function(response) {
@@ -354,6 +433,9 @@ export default {
       axios
         .put("/actividad/actualizar", {
           nombre: this.form.nombre.toUpperCase(),
+          duracion: this.duracion,
+          equivale: this.equivale ,
+          is_equipo: this.arrayIEq.id ,
           desc: this.form.descripcion.toUpperCase(),
           id: this.idInsumo
         })
@@ -428,7 +510,24 @@ export default {
               this.tituloModal = "Actualizar Actividad";
               this.tipoAccion = 2;
               this.idInsumo = data["id"];
+                this.arrayIEq.id = data["is_equipo"];
+              if(data["is_equipo"]==0){
+                this.arrayIEq.nombre = "EQ-ESTACIÓN";
+              }else if(data["is_equipo"]==1){
+                this.arrayIEq.nombre = "EQ-COMPUTO";
+              }
+              else if(data["is_equipo"]==2){
+                this.arrayIEq.nombre = "EQ-TRABAJO";
+              }
+              else if(data["is_equipo"]==3){
+                this.arrayIEq.nombre = "RED";
+              }
+              else{
+                this.arrayIEq.nombre = "PASO ESPECIAL";
+              }
               this.form.nombre = data["nombre"];
+              this.duracion = data["duracion"];
+              this.equivale = data["equivale"];
               this.form.descripcion = data["desc"];
               break;
             }
@@ -467,4 +566,5 @@ export default {
 .material-icons.Color2 { color: rgba(167, 142, 5, 0.849); }
 .material-icons.Color3 { color: rgb(12, 170, 91); }
 .material-icons.Color4 { color: rgba(228, 54, 54, 0.863); }
+
 </style>

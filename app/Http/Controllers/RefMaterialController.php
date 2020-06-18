@@ -18,12 +18,12 @@ class RefMaterialController extends Controller
         
         if ($buscar==''){
         $refe = RefMaterial::join('tp_material','ref_materiales.id_tp_material','=','tp_material.id')
-        ->select('ref_materiales.id','tp_material.nombre as nomE','ref_materiales.id_tp_material','ref_materiales.nombre','ref_materiales.cant','ref_materiales.und_med','ref_materiales.costo','ref_materiales.valor')
+        ->select('ref_materiales.id','tp_material.nombre as nomE','ref_materiales.id_tp_material','ref_materiales.nombre','ref_materiales.cant','ref_materiales.und_med','ref_materiales.costo','ref_materiales.codigo')
         ->orderBy('tp_material.nombre','asc','ref_material.nombre')->paginate(15);
         }
         else{
             $refe = RefMaterial::join('tp_material','ref_materiales.id_tp_material','=','tp_material.id')
-            ->select('ref_materiales.id','tp_material.nombre as nomE','ref_materiales.id_tp_material','ref_materiales.nombre','ref_materiales.cant','ref_materiales.und_med','ref_materiales.costo','ref_materiales.valor')
+            ->select('ref_materiales.id','tp_material.nombre as nomE','ref_materiales.id_tp_material','ref_materiales.nombre','ref_materiales.cant','ref_materiales.und_med','ref_materiales.costo','ref_materiales.codigo')
             
             ->orderBy('tp_material.nombre','asc','ref_material.nombre')->paginate(15);
         }        
@@ -52,7 +52,7 @@ class RefMaterialController extends Controller
             }
         else{
             $refm = RefMaterial::join('tp_material','ref_materiales.id_tp_material','=','tp_material.id')
-            ->select('ref_materiales.id','tp_material.nombre as nomE','ref_materiales.id_tp_material','ref_materiales.nombre','ref_materiales.cant','ref_materiales.und_med','ref_materiales.costo','ref_materiales.valor')
+            ->select('ref_materiales.id','tp_material.nombre as nomE','ref_materiales.id_tp_material','ref_materiales.nombre','ref_materiales.cant','ref_materiales.und_med','ref_materiales.costo')
             ->where('ref_materiales.id_tp_material', $buscar)
             ->where('ref_materiales.nombre', 'like', '%'. $criterio . '%')
             ->orderBy('tp_material.nombre')->paginate(15);
@@ -69,6 +69,36 @@ class RefMaterialController extends Controller
             'refM' => $refm
         ];
     }
+    public function getRefInsumo(Request $request)
+    {
+        // if (!$request->ajax()) return redirect('/');
+
+        $buscar = $request->buscar;
+        $criterio = $request->criterio;
+        if ($buscar==''){
+            $refI = RefMaterial::join('tp_material','ref_materiales.id_tp_material','=','tp_material.id')
+            ->select('ref_materiales.id','tp_material.nombre as nomTpM','ref_materiales.id_tp_material','ref_materiales.nombre','ref_materiales.cant','ref_materiales.und_med','ref_materiales.costo','ref_materiales.codigo')            
+            ->orderBy('tp_material.nombre')->paginate(15);
+            }
+        else{
+            $refI = RefMaterial::join('tp_material','ref_materiales.id_tp_material','=','tp_material.id')
+            ->select('ref_materiales.id','tp_material.nombre as nomTpM','ref_materiales.id_tp_material','ref_materiales.nombre','ref_materiales.cant','ref_materiales.und_med','ref_materiales.costo','ref_materiales.codigo')            
+            ->where('ref_materiales.id_tp_material', $buscar)
+            ->where('ref_materiales.nombre', 'like', '%'. $criterio . '%')
+            ->orderBy('tp_material.nombre')->paginate(15);
+            }     
+        return [
+            'pagination' => [
+                'total'        => $refI->total(),
+                'current_page' => $refI->currentPage(),
+                'per_page'     => $refI->perPage(),
+                'last_page'    => $refI->lastPage(),
+                'from'         => $refI->firstItem(),
+                'to'           => $refI->lastItem(),
+            ],
+            'refI' => $refI
+        ];
+    }
     public function store(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
@@ -78,7 +108,7 @@ class RefMaterialController extends Controller
          $refequipo->cant = $request->cantidad;
          $refequipo->und_med = $request->und_med;
          $refequipo->costo = $request->costo;
-         $refequipo->valor = $request->valor;
+         $refequipo->codigo = $request->valor;
          $refequipo->save();
     }
     public function update(Request $request)
@@ -90,7 +120,7 @@ class RefMaterialController extends Controller
          $refequipo->cant = $request->cantidad;
          $refequipo->und_med = $request->und_med;
          $refequipo->costo = $request->costo;
-         $refequipo->valor = $request->valor;
+         $refequipo->codigo = $request->valor;
          $refequipo->save();
     }
     public function destroy(Request $request)

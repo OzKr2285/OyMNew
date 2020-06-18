@@ -22,31 +22,24 @@ class DetEquipoEstacionController extends Controller
             ->join('mpios','estaciones.idmpio','=','mpios.id')            
             ->join('dptos','mpios.id_dpto','=','dptos.id')            
             ->select('tp_estacions.id as idtpes','tp_estacions.nombre as tpnombre','estaciones.id as idEs','estaciones.nombre','estaciones.descripcion','dptos.id as idDpto','estaciones.idmpio') 
-            ->distinct()           
-            ->orderBy('estaciones.nombre', 'asc')->paginate(15);
+            ->distinct('tp_estacions.id')           
+            ->orderBy('estaciones.nombre', 'asc')->get();
         //     $estacion = Equipo::join('proveedores','equipos.id_proveedor','proveedores.id')
         //     ->join('marcas','equipos.id_marca','marcas.id')
         //     ->join('personas','equipos.id_responsable','personas.id')
         //     ->select('equipos.serial','equipos.nombre as nomequipo','equipos.desc','equipos.modelo','proveedores.id','proveedores.nombre as nomprov', 'marcas.id','marcas.nombre as nommarca',
         //     'personas.id','personas.nombre as nomperso')
-        //     ->orderBy('nombre', 'asc')->paginate(15);
+        //     ->orderBy('nombre', 'asc')->->get();
         }
         else{
             $estacion = Equipo::where($criterio, 'like', '%'. $buscar . '%')
             ->Where('estado',0)            
-            ->orderBy('nombre', 'asc')->paginate(15);
+            ->orderBy('nombre', 'asc')->get();
         }
         
 
         return [
-            'pagination' => [
-                'total'        => $estacion->total(),
-                'current_page' => $estacion->currentPage(),
-                'per_page'     => $estacion->perPage(),
-                'last_page'    => $estacion->lastPage(),
-                'from'         => $estacion->firstItem(),
-                'to'           => $estacion->lastItem(),
-            ],
+  
             'estacion' => $estacion
         ];
     }

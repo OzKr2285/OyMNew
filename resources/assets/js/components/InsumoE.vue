@@ -5,7 +5,8 @@
       <!-- Ejemplo de tabla Listado -->
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i> Gestión de Insumos por Equipo
+          <i class="m-0 font-weight-bold text-primary fas fa-charging-station"></i> 
+          <strong class="lead">Gestión de Insumos por Equipo</strong >
           <button
             type="button"
             @click="mostrarDetalle()"
@@ -102,7 +103,7 @@
                       <template slot="md-autocomplete-item" slot-scope="{ item }">{{ item.nombre }}</template>
                     </md-autocomplete>
                   </div>&nbsp;&nbsp;&nbsp;
-                  <div class="md-layout-item" v-show="mostrarC==2">
+                  <!-- <div class="md-layout-item" v-show="mostrarC==2">
                     <md-field md-clearable>
                       <label>Tipo de Equipo</label>
                       <md-select v-model="idTpEquipo2" md-dense @input="getRefE2">
@@ -113,7 +114,7 @@
                         >{{tpequipo.nombre}}</md-option>
                       </md-select>
                     </md-field>
-                  </div>&nbsp;&nbsp;&nbsp;
+                  </div>&nbsp;&nbsp;&nbsp; -->
                   <div class="md-layout-item" v-show="mostrarC==1">
                     <!-- <md-field md-clearable> -->
                     <md-autocomplete
@@ -134,7 +135,7 @@
 
                     <!-- </md-field> -->
                   </div>
-                  <div class="md-layout-item" v-show="mostrarC==2">
+                  <!-- <div class="md-layout-item" v-show="mostrarC==2">
                     <md-field md-clearable>
                       <label>Referencia del Equipo</label>
                       <md-select v-model="idRefEquipo2" md-dense >
@@ -145,26 +146,12 @@
                         >{{refequipo.nombre}}</md-option>
                       </md-select>
                     </md-field>
-                    <!-- <label>Referencia del Equipo</label>
-                      <md-select v-model="idRefEquipo2" md-dense>
-                        <md-option
-                          v-for="(refequipo,index) in arrayRefEquipo"
-                          :key="`refequipo-${index}`"
-                          :value="refequipo.id"
-                        >{{refequipo.nombre}}</md-option>
-                    </md-select> -->
-                  </div>
-                  <div class="md-layout-item md-size-5">
-                    <br />
-                    <md-button
-                      class="md-icon-button md-dense md-raised md-primary"
-                      @click="abrirModal"
-                    >
-                      <md-icon>add</md-icon>
-                    </md-button>
-                  </div>
+        
+                  </div> -->
+
                 </div>
                 <div class="md-layout" md-clearable>
+                <div class="md-layout-item" md-clearable>
              
                     <md-field :class="getValidationClass('descripcion')">
                       <label for="desc-name">Descripción</label>
@@ -175,8 +162,17 @@
                         v-model="descripcion"
                         :disabled="sending"
                       />
-                    </md-field>
-              
+                    </md-field>            
+                </div>
+                  <div class="md-layout-item md-size-5">
+                    <br />
+                    <md-button
+                      class="md-icon-button md-dense md-raised md-primary"
+                      @click="abrirModal"
+                    >
+                      <md-icon>add</md-icon>
+                    </md-button>
+                  </div>
                 </div>
                 <h4>Insumos</h4>
 
@@ -262,7 +258,39 @@
             </button>
           </div>
           <div class="modal-body">
-            <div class="md-layout">
+          <div class="form-group row">
+            <div class="col-md-12">
+              <div class="input-group">
+                <select
+                    class="form-control col-md-6"
+                    v-model="idInsumo"
+                    @change="listarInsumos(1, this.idInsumo,criterio )"
+                  >
+                    <option
+                      v-for="objeto in arrayInsumo"
+                      :key="objeto.id"
+                      :value="objeto.id"
+                      >{{ objeto.nombre }}</option
+                    >
+                  </select>
+                  <input
+                    type="text"
+                    v-model="criterio"
+                    @keypress="listarInsumos(1,this.idInsumo,criterio)"
+                    class="form-control"
+                    placeholder="Texto a buscar"
+                  >
+                  <button
+                    type="submit"
+                    @click="listarInsumos(1, this.idInsumo,criterio)"
+                    class="btn btn-primary"
+                  >
+                    <i class="fa fa-search"></i> Buscar
+                  </button>
+                    </div>
+              </div>
+            </div>
+            <!-- <div class="md-layout"> -->
               <!-- <div class="md-layout-item">
                 <md-field >
                   <label for="desc-name">Descripción</label>
@@ -275,7 +303,7 @@
                   />                  
                 </md-field>
               </div>&nbsp;&nbsp;&nbsp;-->
-              <div class="md-layout-item">
+              <!-- <div class="md-layout-item">
                 <md-field md-clearable>
                   <label>Qué desea Buscar</label>
                   <md-input v-model="buscar" @keypress="listarInsumo(1,buscar,criterio)"></md-input>
@@ -290,14 +318,14 @@
                   <md-icon>search</md-icon>
                 </md-button>
               </div>
-            </div>
+            </div> -->
             <div class="table-responsive">
               <table class="table table-bordered table-striped table-sm">
                 <thead>
                   <tr>
                     <th>Opciones</th>
                     <th>Nombre</th>
-                    <th>Descripción</th>
+                    <!-- <th>Descripción</th> -->
                   </tr>
                 </thead>
                 <tbody>
@@ -312,7 +340,7 @@
                       </button>
                     </td>
                     <td v-text="detinsumo.nombre"></td>
-                    <td v-text="detinsumo.desc"></td>
+                    <!-- <td v-text="detinsumo.desc"></td> -->
                   </tr>
                 </tbody>
               </table>
@@ -410,6 +438,7 @@ export default {
       listado: 1,
       sending: false,
       idInsumoe: 0,
+      idInsumo: 0,
       idTpEquipo: "",
       idTpEquipo2: "",
       idRefEquipo: "",
@@ -420,8 +449,10 @@ export default {
       searchTerm: "",
 
       arrayInsumos: [],
+      arrayInsumo: [],
       arrayCriterio: ["Nombre", "Desc"],
       arrayDetInsumos: [],
+      arrayActDetInsumos: [],
       arrayInsumosE: [],
       arrayTpEquipo: [],
       arrayRefEquipo: [],
@@ -438,7 +469,7 @@ export default {
         to: 0
       },
       offset: 3,
-      criterio: "nombre",
+      criterio: "",
       buscar: ""
     };
   },
@@ -519,6 +550,21 @@ export default {
           console.log(error);
         });
     },
+    getInsumo() {
+      let me = this;
+
+      var url = "/tpmaterial/selectTpMaterial";
+      axios
+        .get(url)
+        .then(function(response) {
+          //console.log(response);
+          var respuesta = response.data;
+          me.arrayInsumo = respuesta.tpmaterial;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
     getRefE() {
       let me = this;
 
@@ -536,12 +582,32 @@ export default {
     getRefE2() {
       let me = this;
 
-      var url = "/refequipo/selectRefEquipo?buscar=" + this.idTpEquipo2;
+      var url = "/refequipo/selectRefEquipo?buscar=" + this.idTpEquipo2.id;
       axios
         .get(url)
         .then(function(response) {
           let respuesta = response.data;
           me.arrayRefEquipo = respuesta.refequipo;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    listarInsumos(page, buscar,criterio) {
+      let me = this;
+      var url =
+        "refmaterial/getRefM?page=" +
+        page +
+        "&buscar=" +
+        this.idInsumo +
+        "&criterio=" +
+        criterio;
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayInsumos = respuesta.refM.data;
+          me.pagination = respuesta.pagination;
         })
         .catch(function(error) {
           console.log(error);
@@ -587,6 +653,12 @@ export default {
           desc: data["desc"],
           observacion: this.observacion
         });
+        me.arrayActDetInsumos.push({
+          id: data["id"],
+          nombre: data["nombre"],
+          desc: data["desc"],
+          observacion: this.observacion
+        });
       }     
     },
 
@@ -608,11 +680,13 @@ export default {
       let me = this;
       this.mostrarC = 2;
       (this.tipoAccion = 2), (me.listado = 0);
+      this.idTpEquipo2 =  data["idTpE"];
       this.idInsumoe =  data["id"];
       this.descripcion = data["desc"];
       this.listarDetInsumo(1, this.idInsumoe);      
 
       this.getRefE2();
+      this.idRefEquipo2 =  data["idRefE"];
     },
     mostrarDetalle() {
       this.getTpEquipo();
@@ -695,11 +769,12 @@ export default {
         .put("/detinsumo/actualizar", {   
           id: this.idInsumoe,   
           idDet: this.idDet,   
-          idRefEquipo: this.idRefEquipo2,          
+          idRefEquipo: this.idRefEquipo,          
           descripcion: this.descripcion.toUpperCase(),  
-          data: this.arrayDetInsumos       
+          data: this.arrayActDetInsumos       
         })
         .then(function(response) {
+          me.arrayActDetInsumos=[]; 
           me.ocultarDetalle();
           me.listarInsumoE(1, "", "nombre");
           me.mensaje("Actualizado", "Actualizó ");
@@ -752,6 +827,7 @@ export default {
 
   mounted() {
     this.getTpEquipo();
+    this.getInsumo();
     this.listarInsumoE(1, this.buscar, this.criterio);
   }
 };

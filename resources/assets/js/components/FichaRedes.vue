@@ -5,7 +5,9 @@
       <!-- Ejemplo de tabla Listado -->
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i> Gestion Ficha  Redes
+          <i class="m-0 font-weight-bold text-primary fa fa-align-justify"></i> 
+          <strong class="lead">Gestion Ficha  Redes</strong >
+          <!-- <i class="fa fa-align-justify"></i> Gestion Ficha  Redes -->
           <button
             type="button"
             @click="mostrarDetalle()"
@@ -25,6 +27,7 @@
                   <tr class="p-3 mb-2 bg-dark text-white">
                     <th>Nombre</th>
                     <th>Mercado</th>
+                    <th>Clasificación</th>
                     <th>Tipo Red</th>
                     <th>Total</th>
                     <th>Opciones</th>
@@ -36,13 +39,18 @@
                     <td v-text="red.nomMercado"></td>
                     <td>
                         <template v-if="red.tp_red==1">
-                          <span>Urbana</span>
+                          <span>Primaria</span>
                         </template>
                         <template else v-if="red.tp_red==2">
-                          <span>Rural</span>
+                          <span>Secundaria</span>
                         </template>
-                        <template else v-if="red.tp_red==3">
+                    </td>
+                    <td>
+                        <template v-if="red.clasi==1">
                           <span>Troncal</span>
+                        </template>
+                        <template else v-if="red.clasi==2">
+                          <span>Distribución</span>
                         </template>
                     </td>
                     <td v-text="red.total"></td>
@@ -127,8 +135,8 @@
                   <table class="table table-bordered table-striped table-sm">
                     <thead>
                       <tr>
-                        <th>Canalización</th>
-                        <th>Tubería</th>
+                        <th>Grupo</th>
+                        <th>Unidad Constructiva</th>
                         <th>Tipo Red</th>
                         <th>Longitud</th>
                         <th>Observación</th>
@@ -137,8 +145,8 @@
                     </thead>
                     <tbody v-if="arrayDetRed.length">
                       <tr v-for="(objeto, index)  in arrayDetRed" :key="`objeto-${index}`">
+                        <td v-text="objeto.nommat"></td>
                         <td v-text="objeto.material"></td>
-                        <td v-text="objeto.tuberia"></td>
                         <td>
                         <template v-if="objeto.tp_red==1">
                           <span>Urbana</span>
@@ -146,9 +154,7 @@
                         <template else v-if="objeto.tp_red==2">
                           <span>Rural</span>
                         </template>
-                        <template else v-if="objeto.tp_red==3">
-                          <span>Troncal</span>
-                        </template>
+   
                     </td>
                         <td v-text="objeto.longitud"></td>
                         <td v-text="objeto.obs">mts</td>
@@ -271,22 +277,23 @@
           <div class="modal-body">
         
               <div class="md-layout">
-                <span class="md-body">Tubería</span>
+                <span class="md-body">Grupo unidad Constructiva</span>
                 <multiselect
-                  v-model="arrayT"
-                  :options="arrayTub"
-                  placeholder="Seleccione un tipo de Tubería"
+                  v-model="arrayMat"
+                  @input="getGrupoC"
+                  :options="arrayMaterial"
+                  placeholder="Seleccione un tipo Grupo"
                   :custom-label="nameWithTub"
                   label="nombre"
                   track-by="nombre"
                 ></multiselect>
               </div>
               <div class="md-layout">
-                <span class="md-body">Canalización</span>
+                <span class="md-body">Unidad Constructiva</span>
                 <multiselect
-                  v-model="arrayMat"
-                  :options="arrayMaterial"
-                  placeholder="Seleccione un Material"
+                  v-model="arrayT"
+                  :options="arrayTub"
+                  placeholder="Seleccione unidad constructiva"
                   :custom-label="nameWithNombre"
                   label="nombre"
                   track-by="nombre"
@@ -321,12 +328,15 @@
                 ></datepicker>
               </div> 
               </div>
+              <div>
+
               <div class="md-layout">
                 <md-field>
                   <label>Observación</label>
                   <md-textarea v-model="obs"></md-textarea>
                   <md-icon>description</md-icon>
                 </md-field>
+              </div>
               </div>
             </div>
             <div class="modal-footer">
@@ -436,8 +446,7 @@ export default {
       arrayTR: { id: 0, nombre: ""},
       arraytpRed: [
         { id: "1", nombre: "URBANA" },
-        { id: "2", nombre: "RURAL" },
-        { id: "3", nombre: "TRONCAL" }
+        { id: "2", nombre: "RURAL" }
       ],
       arrayRed: [],
       arrayFRed: [],
@@ -583,7 +592,7 @@ export default {
       // this.ticket_id = data["idticket"];
       this.tipoAccion2 = 0;
       this.tipoAccion = 1;
-      this.getDiametro();
+      this.getGrupoC();
       this.getMaterial();
       this.modal = 1;
       this.tituloModal = "Registrar sección de Red ";
@@ -631,16 +640,16 @@ export default {
           console.log(error);
         });
     },
-    getDiametro() {
+    getGrupoC() {
       let me = this;
 
-      var url = "/diametro/selectDiametro";
+      var url = "/detTpMaterial/?buscar="+this.arrayMat.id;
       axios
         .get(url)
         .then(function(response) {
           //console.log(response);
           var respuesta = response.data;
-          me.arrayTub = respuesta.diametro;
+          me.arrayTub = respuesta.dettpm;
         })
         .catch(function(error) {
           console.log(error);
@@ -715,17 +724,17 @@ export default {
     mostrarActualizarModal(data = []) {
       let me = this;
       this.tituloModal = "Actualizar sección de Red ";
-      this.getDiametro();
+      this.getGrupoC();
       this.getMaterial();
       (this.tipoAccion = 0);
       (this.tipoAccion2 = 1);
       this.idDetRed = data["idDet"];
       this.longitud = data["longitud"];
       this.obs = data["obs"];
-      this.arrayT.id = data["idTub"];
-      this.arrayT.nombre = data["tuberia"];
-      this.arrayMat.id = data["idMat"];
-      this.arrayMat.nombre = data["material"];
+      this.arrayT.id = data["idMat"];
+      this.arrayT.nombre = data["material"];
+      this.arrayMat.id = data["idtpmat"];
+      this.arrayMat.nombre = data["nommat"];
       this.fecN = data["fec_opera"];
       if(data["tp_red"]==1){
         this.arrayTR.id ="1";
@@ -733,9 +742,6 @@ export default {
       }else if(data["tp_red"]==2){
         this.arrayTR.id ="2";
         this.arrayTR.nombre ="RURAL";
-      }else{
-        this.arrayTR.id ="3";
-        this.arrayTR.nombre ="TRONCAL";
       }
       this.modal = 1;
 
@@ -844,8 +850,7 @@ export default {
         .post("/detred/registrar", {
           id_red: this.idRed,
            tp_red: this.arrayTR.id,
-          id_material: this.arrayMat.id,
-          id_diametro: this.arrayT.id,
+          id_material: this.arrayT.id,
           fec_opera: this.fecN2,
           obs: this.obs,
           longitud: this.longitud
@@ -866,8 +871,7 @@ export default {
           id: this.idDetRed,
           id_red: this.idRed,
           tp_red: this.arrayTR.id,
-          id_material: this.arrayMat.id,
-          id_diametro: this.arrayT.id,
+          id_material: this.arrayT.id,
           fec_opera: this.fecN2,
           obs: this.obs,
           longitud: this.longitud

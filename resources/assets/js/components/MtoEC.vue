@@ -256,9 +256,27 @@
                         <td v-text="objeto.desc"></td>
                         <td v-text="objeto.respo"></td>
                         <td>
-                          <md-button class="md-icon-button md-primary " @click="eliminarDetalle(index,objeto)" title="Eliminar">
-                            <i class="material-icons Color4">delete</i>
+                        <md-button class="md-icon-button " @click="abrirModal3(objeto)" title="Agregar Actividades">                         
+                        <i class="material-icons Color1">playlist_add_check</i>
+                        </md-button>
+                        <md-button class="md-icon-button md-primary " @click="verAct(objeto)" title="Ver Actividades">
+                            <i class="material-icons Color2">visibility</i>
                           </md-button>
+                        <md-button class="md-icon-button" @click="abrirModal7(objeto)" title="Agregar Herramientas">
+                            <i class="material-icons Color5">build</i>
+                          </md-button>
+                        <md-button class="md-icon-button md-primary" @click="verEqHta(objeto)" title="Ver Herramientas">
+                            <i class="material-icons Color3">visibility</i>
+                          </md-button>
+                        <md-button class="md-icon-button" @click="abrirModal4(objeto)" title="Agregar Insumos">
+                            <i class="material-icons Color6">format_paint</i>
+                          </md-button>
+                        <md-button class="md-icon-button md-primary" @click="verIns(objeto)" title="Ver Insumos">
+                            <i class="material-icons Color3">visibility</i>
+                        </md-button>
+                        <md-button class="md-icon-button md-primary " @click="eliminarDetalle(index,objeto)" title="Eliminar">
+                          <i class="material-icons Color4">delete</i>
+                        </md-button>
                         </td>
                       </tr>
                     </tbody>
@@ -779,7 +797,7 @@
                 </thead>
                 <tbody v-if="arrayAct.length">
                   <tr v-for="(objeto, index)  in arrayAct" :key="`objeto-${index}`">
-                    <td v-text="objeto.desc"></td>
+                    <td v-text="objeto.nomAct"></td>
                     <td>
                       <button
                         type="button"
@@ -968,7 +986,7 @@
             <button
               type="button"
               class="close"
-              @click="cerrarModal5()"
+              @click="cerrarModal6()"
               aria-label="Close"
             >
               <span aria-hidden="true">×</span>
@@ -1099,7 +1117,7 @@
             <button
               type="button"
               class="btn btn-secondary"
-              @click="cerrarModal5()"
+              @click="cerrarModal6()"
             >
               Cerrar
             </button>
@@ -1109,6 +1127,7 @@
       </div>
       <!-- /.modal-dialog -->
     </div>
+    
   </main>
 </template>
 
@@ -1395,7 +1414,8 @@ export default {
       this.tituloModal = "Seleccione uno o varios Equipos";
     },
     abrirModal3(data = []) {
-      this.idRefE=data["idref"];
+      this.idRefE=data["idRefE"];
+      this.idDet=data["idDet"];
       this.modal3 = 1;
       this.tituloModal = "Seleccione una o varias Actividades";
       this.listarActE(1, this.buscar, this.criterio);
@@ -1515,6 +1535,10 @@ export default {
     },
     cerrarModal5() {
       this.modal5 = 0;
+      this.tituloModal = "";
+    },
+    cerrarModal6() {
+      this.modal6 = 0;
       this.tituloModal = "";
     },
     encuentra(id) {
@@ -1659,8 +1683,8 @@ export default {
       } else {
           me.arrayMtoAct.push({
           id: data["id"],
-          idRefE: data["idRef"],          
-          nombre: data["nombre"],
+          idRefE: data["idRefE"],          
+          nombre: data["nomAct"],
           desc: data["desc"]
         });
           me.mensaje("Agregar", "Agrego ");

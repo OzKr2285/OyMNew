@@ -5,7 +5,8 @@
       <!-- Ejemplo de tabla Listado -->
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i> Gestion Redes
+          <i class="m-0 font-weight-bold text-primary fas fa-project-diagram"></i> 
+          <strong class="lead">Gestión  Redes</strong >
           <button
             type="button"
             @click="mostrarDetalle()"
@@ -33,13 +34,10 @@
                     <td v-text="red.nomMercado"></td>
                     <td>
                         <template v-if="red.tp_red==1">
-                          <span>Urbana</span>
+                          <span>Primaria</span>
                         </template>
                         <template else v-if="red.tp_red==2">
-                          <span>Rural</span>
-                        </template>
-                        <template else v-if="red.tp_red==3">
-                          <span>Troncal</span>
+                          <span>Secundaria</span>
                         </template>
                     </td>
   
@@ -122,15 +120,15 @@
                       />
                     </md-field>
                   </div>&nbsp;&nbsp;&nbsp; 
-                  <div class="md-layout-item md-size-20">
+                  <div class="md-layout-item md-size-10">
                     <md-field>
                     <label for="age">Polivalvulas</label>
                     <md-input type="number" id="cantP" name="cantP" autocomplete="cantP" v-model="cantP" :disabled="sending" />
                   </md-field>
                   </div>&nbsp;&nbsp;&nbsp; 
-                  <div class="md-layout-item md-size-20">
+                    <div class="md-layout-item md-size-20">
                       <md-field md-clearable>
-                    <label>Tipo de red</label>
+                    <label>Tipo de Red</label>
                     <md-select v-model="tpRed" md-dense >
                       <md-option
                         v-for="objeto in arraytpRed"
@@ -139,7 +137,20 @@
                       >{{objeto.nombre}}</md-option>
                     </md-select>
                   </md-field>
+                  </div>&nbsp;&nbsp;&nbsp; 
+                  <div class="md-layout-item md-size-20">
+                      <md-field md-clearable>
+                    <label>Clasificación</label>
+                    <md-select v-model="tpClas" md-dense >
+                      <md-option
+                        v-for="objeto in arraytpClas"
+                        :key="objeto.id"
+                        :value="objeto.id"
+                      >{{objeto.nombre}}</md-option>
+                    </md-select>
+                  </md-field>
                   </div>
+                
                   </div>
                   <div class="md-layout">
                   <!-- <div class="md-layout-item">
@@ -284,6 +295,7 @@ export default {
       demo: 0,
       fecCrea: now,
       tpRed: 0,
+      tpClas: 0,
       cantP: 0,
       cbx: 1,
 
@@ -295,9 +307,12 @@ export default {
       fecN: format(now, dateFormat),
       fecN2: "",
       arraytpRed: [
-        { id: "1", nombre: "URBANA" },
-        { id: "2", nombre: "RURAL" },
-        { id: "3", nombre: "TRONCAL" }
+        { id: "1", nombre: "PRIMARIA" },
+        { id: "2", nombre: "SECUNDARIA" }
+      ],
+      arraytpClas: [
+        { id: "1", nombre: "TRONCAL" },
+        { id: "2", nombre: "DISTRIBUCIÓN" }
       ],
       planoG: "",
       planoC: "",
@@ -533,6 +548,7 @@ export default {
       this.idRed = data["id"];
       this.idMercado = data["idMer"];
       this.tpRed = data["tp_red"];
+      this.tpClas = data["clasi"];
       this.cantP = data["cant_p"];
       this.idMp = data["id_mpio"];
       this.listarDetalle();
@@ -603,6 +619,7 @@ export default {
           id_mpio: this.idMp,
           nombre: this.nombre.toUpperCase(),
           tp_red: this.tpRed,
+          clasi: this.tpClas,
           cantp: this.cantP,
           desc: this.obs,
           plano_g: this.planoG,
@@ -629,6 +646,7 @@ export default {
           nombre: this.nombre.toUpperCase(),
           desc: this.obs,
           tp_red: this.tpRed,
+          clasi: this.tpClas,
           cantp: this.cantP,
           id: this.idRed
         })

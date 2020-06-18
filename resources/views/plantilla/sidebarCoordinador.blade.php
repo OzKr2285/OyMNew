@@ -36,11 +36,11 @@
         <ul>
             <li class="sidebar-dropdown ">
                 <ul>
-                    <li class="header-menu">
+                    {{-- <li class="header-menu">
                         <span>TABLAS MAESTRAS</span>
-                    </li>
+                    </li> --}}
  
-                    <li class="sidebar-dropdown">
+                    {{-- <li class="sidebar-dropdown">
                         <a href="#">
                             <i class="fas fa-clipboard"></i>
                             <span class="menu-text">Mantenimiento</span>                         
@@ -60,7 +60,7 @@
                        
                             </ul>                            
                         </div>                        
-                    </li>
+                    </li> --}}
   
                     <li class="header-menu">
                         <span>MANTENIMIENTO</span>
@@ -72,9 +72,37 @@
                         </a>                                        
                         <div class="sidebar-submenu">
                             <ul>
-                                <li @click="menu=9" >
+                                <li @click="menu=81" >
+                                    <a  href="#"><i class="fas fa-tools"></i>Equipos y Herramientas</a>
+                                </li>
+                                {{-- <li @click="menu=9" >
                                     <a  href="#"><i class="fas fa-project-diagram"></i>Redes</a>
-                                </li>             
+                                </li>    
+                                <li @click="menu=32" >
+                                    <a  href="#"><i class="icon-user-following"></i>Insumos x Equipos</a>
+                                </li> 
+                                <li @click="menu=35" >
+                                    <a  href="#"><i class="icon-user-following"></i>Act. x Equipo</a>
+                                </li>  
+                                <li @click="menu=82" >
+                                    <a  href="#"><i class="icon-bag"></i>Eq-Trab x Equipos</a>
+                                </li>   --}}
+             
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="sidebar-dropdown">
+                        <a href="#">
+                        <i class="far fa-calendar-alt"></i>
+                            <span class="menu-text">Programar  Mantenimiento</span>
+                        </a>
+                        <div class="sidebar-submenu">
+                            <ul>                                    
+
+                                <li @click="menu=83" >
+                                    <a  href="#"><i class="fas fa-tools"></i>Equipos y Herramientas</a>
+                                </li>
+     
                             </ul>
                         </div>
                     </li>

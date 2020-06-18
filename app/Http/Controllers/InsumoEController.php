@@ -16,7 +16,11 @@ class InsumoEController extends Controller
         $criterio = $request->criterio;
         
         if ($buscar==''){
-            $insumo = InsumoE::orderBy('desc', 'asc')->paginate(15);
+            // $insumo = InsumoE::orderBy('desc', 'asc')->paginate(15);
+            $insumo = InsumoE::join('ref_equipos','insumose.id_refequipo','=','ref_equipos.id')     
+            ->join('tp_equipos','ref_equipos.id_tpequipo','=','tp_equipos.id')          
+            ->select('insumose.id','insumose.desc','tp_equipos.id as idTpE','ref_equipos.id as idRefE')                                               
+            ->orderBy('insumose.desc', 'asc')->paginate(15);
         }
         else{
             $insumo = InsumoE::where($criterio, 'like', '%'. $buscar . '%')->orderBy('desc', 'asc')->paginate(15);

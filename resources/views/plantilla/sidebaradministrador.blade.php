@@ -140,11 +140,14 @@
                             <li @click="menu=12" >
                                 <a  href="#"><i class="icon-bag"></i>Etapas</a>
                             </li>
-                            <li @click="menu=31" >
+                            {{-- <li @click="menu=31" >
                                 <a  href="#"><i class="icon-bag"></i>Insumos</a>
-                            </li>
+                            </li> --}}
                             <li @click="menu=32" >
                                 <a  href="#"><i class="icon-bag"></i>Insumos x Equipos</a>
+                            </li>  
+                            <li @click="menu=82" >
+                                <a  href="#"><i class="icon-bag"></i>Hrr-Trab x Equipos</a>
                             </li>  
 
                             <!-- <li @click="menu=6" >
@@ -156,11 +159,11 @@
                             <li @click="menu=76" >
                                 <a  href="#"><i class="icon-bag"></i>Redes</a>
                             </li>
-                            <li @click="menu=10" >
-                                <a  href="#"><i class="icon-bag"></i>Material Red</a>
-                            </li>
+                            {{-- <li @click="menu=10" >
+                                <a  href="#"><i class="icon-bag"></i>Grupo Red</a>
+                            </li> --}}
                             <li @click="menu=78" >
-                                <a  href="#"><i class="icon-bag"></i>Paso Red</a>
+                                <a  href="#"><i class="icon-bag"></i>Paso Especial</a>
                             </li>
                        
                             <li @click="menu=79" >
@@ -177,18 +180,28 @@
                         </a>
                         <div class="sidebar-submenu">
                             <ul>
-                                <li @click="menu=38" >
-                                    <a  href="#"><i class="icon-user"></i>Tp. Solicitudes</a>
-                                </li>
-                                <li @click="menu=39" >
-                                    <a  href="#"><i class="icon-user-following"></i>Obj. Solicitudes</a>
-                                </li>
                                 <li @click="menu=44" >
                                     <a  href="#"><i class="icon-user-following"></i>Cat. Actividades</a>
                                 </li>
                                 <li @click="menu=45" >
                                     <a  href="#"><i class="icon-user-following"></i>Actividades</a>
                                 </li> 
+                            </ul>                            
+                        </div>                        
+                    </li>
+                    <li class="sidebar-dropdown">
+                        <a href="#">
+                            <i class="fas fa-clipboard-list"></i>
+                            <span class="menu-text">PQR'S</span>                         
+                        </a>
+                        <div class="sidebar-submenu">
+                            <ul>
+                                <li @click="menu=38" >
+                                    <a  href="#"><i class="icon-user"></i>Tp. Solicitudes</a>
+                                </li>
+                                <li @click="menu=39" >
+                                    <a  href="#"><i class="icon-user-following"></i>Obj. Solicitudes</a>
+                                </li>
                                 <li @click="menu=66" >
                                     <a  href="#"><i class="icon-user-following"></i>Tp. Tramite</a>
                                 </li> 
@@ -217,6 +230,9 @@
                                 <li @click="menu=41" >
                                     <a  href="#"><i class="fas fa-laptop"></i>E. de Cómputo</a>
                                 </li>
+                                <li @click="menu=81" >
+                                    <a  href="#"><i class="fas fa-tools"></i>Equipos y Herramientas</a>
+                                </li>
                                 <li @click="menu=6" >
                                     <a  href="#"><i class="fas fa-car"></i>Vehículos</a>
                                 </li>
@@ -224,7 +240,7 @@
                                     <a  href="#"><i class="fas fa-project-diagram"></i>Redes</a>
                                 </li>
                                 <li @click="menu=11" >
-                                    <a  href="#"><i class="fas fa-bacon"></i>Paso Red</a>
+                                    <a  href="#"><i class="fas fa-bacon"></i>Cruces Esp.</a>
                                 </li>
                             </ul>
                         </div>
@@ -241,6 +257,9 @@
                                 </li>
                                 <li @click="menu=54" >
                                     <a  href="#"><i class="fas fa-laptop"></i> E. de Cómputo</a>
+                                </li>
+                                <li @click="menu=83" >
+                                    <a  href="#"><i class="fas fa-tools"></i>Equipos y Herramientas</a>
                                 </li>
                                 <!-- <li @click="menu=41" >
                                     <a  href="#"><i class="icon-basket-loaded"></i> E. de Estación</a>
@@ -270,6 +289,9 @@
                                 <li @click="menu=77" >
                                     <a  href="#"><i class="fas fa-laptop"></i> E. de Cómputo</a>
                                 </li>
+                                <li @click="menu=82" >
+                                    <a  href="#"><i class="fas fa-tools"></i>Equipos y Herramientas</a>
+                                </li>
                                 <!-- <li @click="menu=41" >
                                     <a  href="#"><i class="icon-basket-loaded"></i> E. de Estación</a>
                                 </li>                                  -->
@@ -286,6 +308,23 @@
                         </div>
                     </li>
                     <li class="header-menu">
+                        <span>PQR'S</span>
+                    </li>
+                    <li class="sidebar-dropdown">
+                        <a href="#">
+                            <i class="fa fa-globe"></i>
+                            <span class="menu-text">Solicitud PQR'S</span>
+                        </a>
+                        <div class="sidebar-submenu">
+                            <ul>
+                            <li @click="menu=40" >
+                                <a  href="#"><i class="icon-user-following"></i>PQR'S</a>
+                            </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="header-menu">
                         <span>OPERACIÓN</span>
                     </li>
                     <li class="sidebar-dropdown">
@@ -293,13 +332,13 @@
                             <i class="fa fa-globe"></i>
                             <span class="menu-text">Act. de Operación</span>
                         </a>
-                        <div class="sidebar-submenu">
+                        {{-- <div class="sidebar-submenu">
                             <ul>
                             <li @click="menu=40" >
-                                <a  href="#"><i class="icon-user-following"></i>Solicitud</a>
+                                <a  href="#"><i class="icon-user-following"></i>PQR'S</a>
                             </li>
                             </ul>
-                        </div>
+                        </div> --}}
                         <li class="sidebar-dropdown">
                         <a href="#">
                             <i class="fa fa-globe"></i>

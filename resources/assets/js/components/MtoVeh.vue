@@ -150,7 +150,7 @@
                     </md-datepicker>
                   </div>&nbsp;&nbsp;&nbsp;
                   <div class="md-layout-item">
-                 <md-field md-clearable>
+                 <md-field>
                       <label>Tipo Mantenimiento</label>
                       <md-select v-model="tpMto" md-dense>
                         <md-option
@@ -162,7 +162,7 @@
                     </md-field>
                   </div>&nbsp;&nbsp;&nbsp;
                   <div class="md-layout-item">
-                 <md-field md-clearable>
+                 <md-field>
                       <label>Frecuencia</label>
                       <md-select v-model="frec" md-dense >
                         <md-option
@@ -382,7 +382,7 @@
                   </tr>
                 </tbody>
               </table>
-            <div class="md-layout" md-clearable>
+            <div class="md-layout">
                   <md-field  >
                     <label>Observación del Mantenimiento</label>
                     <md-textarea v-model="descripcion"></md-textarea>

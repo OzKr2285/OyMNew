@@ -46,7 +46,7 @@
                 <thead>
                   <tr class="p-3 mb-2 bg-dark text-white">                    
                     <th>Serial</th>
-                    <th>Nombre</th>
+                    <th>Categoría</th>
                     <th>Modelo</th>
                     <th>Proveedor</th>
                     <th>Opciones</th>

@@ -5,13 +5,23 @@
       <!-- Ejemplo de tabla Listado -->
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i> Mantenimiento de Estaciones.
+          <i class="m-0 font-weight-bold text-primary fas fa-charging-station"></i> 
+          <strong class="lead">Mantenimiento de Estaciones.</strong >
+      
           <button
             type="button"
             @click="mostrarDetalle()"
             class="btn btn-success btn-sm"
           >
             <i class="icon-plus"></i>&nbsp;Nuevo
+          </button>
+          <button v-show="del==1"
+            title="Eliminados"
+            type="button"
+            @click="abrirModal6()"
+            class="btn btn-danger btn-sm"
+          >
+            <i class="fas fa-trash-alt"></i>&nbsp;
           </button>
         </div>
         <template v-if="listado==1">
@@ -74,6 +84,7 @@
                   </tr>
                 </tbody>
               </table>
+            </div>
           <nav>
             <ul class="pagination">
               <li class="page-item" v-if="pagination.current_page > 1">
@@ -105,7 +116,6 @@
               </li>
             </ul>
           </nav>
-            </div>
           </div>
         </template>
         <template v-else-if="listado==0">
@@ -224,7 +234,7 @@
                           <td v-text="detalle.desc"></td>
 
                           <td>   
-                            <md-button class="md-icon-button md-primary " @click="eliminarDetalle(index)" title="Eliminar">
+                            <md-button class="md-icon-button md-primary " @click="eliminarDetalle(index,detalle)" title="Eliminar">
                               <i class="material-icons Color4">delete</i>
                             </md-button>                      
  
@@ -312,20 +322,20 @@
             <table class="table table-bordered table-striped table-sm">
               <thead>
                 <tr>
-                  <th>TAG</th>
-                  <th>Serial</th>
-                  <th>Modelo</th>
                   <th>Nombre</th>                  
+                  <th>Modelo</th>
+                  <th>Serial</th>
+                  <th>TAG</th>
                   <th>Opciones</th>
                 </tr>
               </thead>
               <tbody v-if="arrayTrenPpal.length">
                 <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
                 <tr v-for="(detalle, index) in arrayTrenPpal" :key="`detalle-${index}`">
-                  <td v-text="detalle.tag"></td>
-                  <td v-text="detalle.serial"></td>
-                  <td v-text="detalle.modelo"></td>
                   <td v-text="detalle.nombre"></td>                  
+                  <td v-text="detalle.modelo"></td>
+                  <td v-text="detalle.serial"></td>
+                  <td v-text="detalle.tag"></td>
 
                   <td>
                     <!-- <button
@@ -337,7 +347,7 @@
                     >
                       <i class="icon-check"></i>
                     </button> -->
-                     <template v-if="detalle.edo_mto">
+                     <template v-if="detalle.edo_mto=='1'">
                         <button type="button" class="btn btn-info btn-sm" data-tooltip title="En Mantenimiento" @click="dessetTecnico(articulo.id)">
                           <i class="fa fa-hourglass-start"></i>
                         </button>
@@ -398,20 +408,20 @@
             <table class="table table-bordered table-striped table-sm">
               <thead>
                 <tr>
-                  <th>TAG</th>
-                  <th>Serial</th>
-                  <th>Modelo</th>
                   <th>Nombre</th>
+                  <th>Modelo</th>
+                  <th>Serial</th>
+                  <th>TAG</th>
                   <th>Opciones</th>
                 </tr>
               </thead>
               <tbody v-if="arrayTrenByPass.length">
                 <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
                 <tr v-for="(detalle, index) in arrayTrenByPass" :key="`detalle-${index}`">
+                  <td v-text="detalle.nombre"></td>
+                  <td v-text="detalle.modelo"></td>
                   <td v-text="detalle.tag"></td>
                   <td v-text="detalle.serial"></td>
-                  <td v-text="detalle.modelo"></td>
-                  <td v-text="detalle.nombre"></td>
 
                   <td>
                     <template v-if="detalle.edo_mto">
@@ -448,7 +458,7 @@
                         class="md-dense md-raised md-primary"
                         :disabled="sending"
                         @click="registrarEquiposEs()"
-                      >Guardarr</md-button>
+                      >Guardar</md-button>
                       
                       <md-button
                         type="submit"
@@ -475,23 +485,22 @@
               <table class="table table-bordered table-striped table-sm">
                 <thead>
                   <tr>
-                    <th>Etapa</th>
-                    <th>TAG</th>
-                    <th>Serial</th>
-                    <th>Modelo</th>
                     <th>Nombre</th>                  
+                    <th>Modelo</th>
+                    <th>Etapa</th>
+                    <th>Serial</th>
                     <th>Tren</th>                  
+                    <th>TAG</th>
                     <th>Opciones</th>
                   </tr>
                 </thead>
                 <tbody v-if="arrayVerMto.length">
                   <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
                   <tr v-for="(detalle, index) in arrayVerMto" :key="`detalle-${index}`">
-                    <td v-text="detalle.nomEtapa"></td>
-                    <td v-text="detalle.tag"></td>
-                    <td v-text="detalle.serial"></td>
-                    <td v-text="detalle.modelo"></td>
                     <td v-text="detalle.nombre"></td>                  
+                    <td v-text="detalle.modelo"></td>
+                    <td v-text="detalle.nomEtapa"></td>
+                    <td v-text="detalle.serial"></td>
                     <td>
                        <template v-if="detalle.tp_tren==0">
                         <span class="badge badge-success">Principal</span>
@@ -500,6 +509,7 @@
                         <span class="badge badge-primary">By Pass</span>
                       </template>
                     </td>                  
+                    <td v-text="detalle.tag"></td>
                     <td>
                     <md-button class="md-icon-button " @click="abrirModal3(detalle)" title="Agregar Actividades">                         
                         <i class="material-icons Color1">playlist_add_check</i>
@@ -507,10 +517,16 @@
                     <md-button class="md-icon-button md-primary " @click="verAct(detalle)" title="Ver Actividades">
                         <i class="material-icons Color2">visibility</i>
                       </md-button>
-                    <md-button class="md-icon-button" @click="abrirModal4(detalle)" title="Agregar Insumos">
-                        <i class="material-icons Color1">build</i>
+                    <md-button class="md-icon-button" @click="abrirModal7(detalle)" title="Agregar Herramientas">
+                        <i class="material-icons Color5">build</i>
                       </md-button>
-                    <md-button class="md-icon-button md-primary" @click="verAct(detalle)" title="Ver Insumos">
+                    <md-button class="md-icon-button md-primary" @click="verEqHta(detalle)" title="Ver Herramientas">
+                        <i class="material-icons Color3">visibility</i>
+                      </md-button>
+                    <md-button class="md-icon-button" @click="abrirModal4(detalle)" title="Agregar Insumos">
+                        <i class="material-icons Color6">format_paint</i>
+                      </md-button>
+                    <md-button class="md-icon-button md-primary" @click="verIns(detalle)" title="Ver Insumos">
                         <i class="material-icons Color3">visibility</i>
                       </md-button>
                     </td>
@@ -546,13 +562,13 @@
                     <th>Opciones</th>
                   </tr>
                 </thead>
-                <tbody v-if="arrayMtoAct.length">
+                <tbody v-if="arrayVerAct.length">
                   <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
-                  <tr v-for="(detalle, index) in arrayMtoAct" :key="`detalle-${index}`">
-                    <td v-text="detalle.tag"></td>               
+                  <tr v-for="(detalle, index) in arrayVerAct" :key="`detalle-${index}`">
+                    <td v-text="detalle.nombre"></td>               
 
                     <td>
-                      <button
+                      <!-- <button
                         @click="abrirModal3(detalle)"
                         type="button"
                         class="btn btn-dark btn-sm"
@@ -560,7 +576,149 @@
                         title="Agregar Actividades"
                       >
                         <i class="icon-plus"></i>
+                      </button> -->
+                      <button
+                        @click="abrirModal3(detalle)"
+                        type="button"
+                        class="btn btn-info btn-sm"
+                        data-tooltip
+                        title="Ver Actividades"
+                      >
+                        <i class="fa fa-tasks"></i>
                       </button>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody v-else>
+                  <tr>
+                    <td colspan="5">NO hay Actividades relacionados a la etapa seleccionada.</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              </div>
+                <div class="modal-footer">
+                  <md-card-actions>
+                    <md-button type="submit" class="md-dense md-raised" @click="ocultarDetalle()">Cerrar</md-button>
+                    <md-button type="submit" class="md-dense md-raised"  @click="atrasMnt()">Atras</md-button>
+                  </md-card-actions>
+                    <!-- <md-card-actions>
+                      <md-button
+                        type="submit"
+                        v-if="tipoAccion==1"
+                        class="md-dense md-raised md-primary"
+                        :disabled="sending"
+                        @click="registrarEquiposEs()"
+                      >Guardarr</md-button>
+                      
+                      <md-button
+                        type="submit"
+                        v-if="tipoAccion==2"
+                        class="md-dense md-raised md-primary"
+                        :disabled="sending"
+                        @click="actualizarEstacion()"
+                      >Actualizar</md-button>
+                    </md-card-actions> -->
+              </div>
+            </template>
+            <template v-if="bVerEqH">
+              <!-- ver las actividades asignadas a cada equipo -->
+              <div class="table-responsive col-md-12">
+                  <tr v-for="(act, index)  in arrayNomEstacion" :key="`etapa-${index}`">                 
+                  <h5><td  v-text="'Herramientas - '+ act.nombre"></td></h5></tr>
+                    <table class="table table-bordered table-striped table-sm">
+                <thead>
+                  <tr>
+                    <th>Actividad</th>                 
+                    <th>Opciones</th>
+                  </tr>
+                </thead>
+                <tbody v-if="arrayVerEqHta.length">
+                  <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
+                  <tr v-for="(detalle, index) in arrayVerEqHta" :key="`detalle-${index}`">
+                    <td v-text="detalle.nombre"></td>               
+
+                    <td>
+                      <!-- <button
+                        @click="abrirModal3(detalle)"
+                        type="button"
+                        class="btn btn-dark btn-sm"
+                        data-tooltip
+                        title="Agregar Actividades"
+                      >
+                        <i class="icon-plus"></i>
+                      </button> -->
+                      <button
+                        @click="abrirModal3(detalle)"
+                        type="button"
+                        class="btn btn-info btn-sm"
+                        data-tooltip
+                        title="Ver Actividades"
+                      >
+                        <i class="fa fa-tasks"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody v-else>
+                  <tr>
+                    <td colspan="5">NO hay Actividades relacionados a la etapa seleccionada.</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              </div>
+                <div class="modal-footer">
+                  <md-card-actions>
+                    <md-button type="submit" class="md-dense md-raised" @click="ocultarDetalle()">Cerrar</md-button>
+                    <md-button type="submit" class="md-dense md-raised"  @click="atrasMnt()">Atras</md-button>
+                  </md-card-actions>
+                    <!-- <md-card-actions>
+                      <md-button
+                        type="submit"
+                        v-if="tipoAccion==1"
+                        class="md-dense md-raised md-primary"
+                        :disabled="sending"
+                        @click="registrarEquiposEs()"
+                      >Guardarr</md-button>
+                      
+                      <md-button
+                        type="submit"
+                        v-if="tipoAccion==2"
+                        class="md-dense md-raised md-primary"
+                        :disabled="sending"
+                        @click="actualizarEstacion()"
+                      >Actualizar</md-button>
+                    </md-card-actions> -->
+              </div>
+            </template>
+            <template v-if="bVerIns">
+              <!-- ver las actividades asignadas a cada equipo -->
+              <div class="table-responsive col-md-12">
+                  <tr v-for="(act, index)  in arrayNomEstacion" :key="`etapa-${index}`">                 
+                  <h5><td  v-text="'Insumos - '+ act.nombre"></td></h5></tr>
+                    <table class="table table-bordered table-striped table-sm">
+                <thead>
+                  <tr>
+                    <th>Actividad</th>                 
+                    <th>Opciones</th>
+                  </tr>
+                </thead>
+                <tbody v-if="arrayVerIns.length">
+                  <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
+                  <tr v-for="(detalle, index) in arrayVerIns" :key="`detalle-${index}`">
+                    <td v-text="detalle.nombre"></td>               
+
+                    <td>
+                      <!-- <button
+                        @click="abrirModal3(detalle)"
+                        type="button"
+                        class="btn btn-dark btn-sm"
+                        data-tooltip
+                        title="Agregar Actividades"
+                      >
+                        <i class="icon-plus"></i>
+                      </button> -->
                       <button
                         @click="abrirModal3(detalle)"
                         type="button"
@@ -722,8 +880,8 @@
                 v-if="tipoAccion==1"
                 class="md-dense md-raised md-primary"
                 :disabled="sending"
-                @click="registrarEquiposEs()"
-              >Guardarr</md-button>              
+                @click="registrarMto()"
+              >Guardar</md-button>              
               <md-button
                 type="submit"
                 v-if="tipoAccion==2"
@@ -902,11 +1060,11 @@
                 <thead>
                   <tr>
                     <th>Opciones</th>
-                    <th>TAG</th>
-                    <th>Serial</th>
-                    <th>Modelo</th>
                     <th>Nombre</th>
+                    <th>Modelo</th>
+                    <th>Serial</th>
                     <th>Descripción</th>
+                    <th>TAG</th>
                   </tr>
                 </thead>
                 <tbody v-if="arrayAct.length">
@@ -920,11 +1078,11 @@
                         <i class="icon-check"></i>
                       </button>
                     </td>
-                    <td v-text="etapa.tag"></td>
-                    <td v-text="etapa.serial"></td>
-                    <td v-text="etapa.modelo"></td>
                     <td v-text="etapa.nomequipo"></td>
+                    <td v-text="etapa.modelo"></td>
+                    <td v-text="etapa.serial"></td>
                     <td v-text="etapa.desc"></td>
+                    <td v-text="etapa.tag"></td>
                   </tr>
               </tbody>
                 <tbody v-else>
@@ -1030,7 +1188,7 @@
                 </thead>
                 <tbody v-if="arrayAct.length">
                   <tr v-for="(objeto, index)  in arrayAct" :key="`objeto-${index}`">
-                    <td v-text="objeto.desc"></td>
+                    <td v-text="objeto.nomAct"></td>
                     <td>
                       <button
                         type="button"
@@ -1110,22 +1268,18 @@
           </div>
           <div class="modal-body">
             <div class="form-group row">
-              <div class="col-md-6">
+              <div class="col-md-12">
                 <div class="input-group">
-                  <select class="form-control col-md-3" v-model="criterio">
-                    <option value="Nombre">Nombre</option>
-                    <option value="Descripción">Descripción</option>
-                  </select>
                   <input
                     type="text"
-                    v-model="buscar"
-                    @keypress="listarInsE(1, this.idRefE, criterio)"
+                    v-model="criterio"
+                    @keypress="listarInsumos(1,this.idInsumo,criterio)"
                     class="form-control"
                     placeholder="Texto a buscar"
                   >
                   <button
                     type="submit"
-                    @click="listarInsE(1, this.idRefE, criterio)"
+                    @click="listarInsumos(1, this.idInsumo,criterio)"
                     class="btn btn-primary"
                   >
                     <i class="fa fa-search"></i> Buscar
@@ -1141,13 +1295,13 @@
                     <th>Opciones</th>
                   </tr>
                 </thead>
-                <tbody v-if="arrayIns.length">
-                  <tr v-for="(objeto, index)  in arrayIns" :key="`objeto-${index}`">
+                <tbody v-if="arrayDetInsumo.length">
+                  <tr v-for="(objeto, index)  in arrayDetInsumo" :key="`objeto-${index}`">
                     <td v-text="objeto.nombre"></td>
                     <td>
                       <button
                         type="button"
-                        @click="agregarDetIns(objeto)"
+                        @click="agregarDetInsEq(objeto)"
                         class="btn btn-success btn-sm"
                       >
                         <i class="icon-check"></i>
@@ -1316,6 +1470,250 @@
       </div>
       <!-- /.modal-dialog -->
     </div>
+
+     <div
+      class="modal fade"
+      tabindex="-1"
+      :class="{'mostrar' : modal6}"
+      role="dialog"
+      aria-labelledby="myModalLabel"
+      style="display: none;"
+      aria-hidden="true"
+    >
+    <div class="modal-dialog modal-dark modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" v-text="tituloModal"></h4>
+            <button
+              type="button"
+              class="close"
+              @click="cerrarModal6()"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+  
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped table-sm">
+                <thead>
+                  <tr>
+
+                    <th>Nombre</th>
+                    <th>Selección</th>
+                  </tr>
+                </thead>
+                <tbody v-if="arrayDel.length">
+                  <tr
+                    v-for="(objeto, index) in arrayDel"
+                    :key="`objeto-${index}`"
+                  >
+                    <td v-text="objeto.nombre"></td>
+
+                    <td>
+                      <button
+                        type="button"
+                        @click="agregarEtapa(index,objeto)"
+                        class="btn btn-success btn-sm"
+                      >
+                        <i class="icon-check"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody v-else>
+                  <tr>       
+                    {{this.del=0}}             
+                    <td colspan="5">NO hay Equipos registrados en esta Categoria.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <nav>
+              <ul class="pagination">
+                <li class="page-item" v-if="pagination.current_page > 1">
+                  <a
+                    class="page-link"
+                    href="#"
+                    @click.prevent="
+                      cambiarPaginaM(
+                        pagination.current_page - 1,
+                        buscar,
+                        criterio
+                      )
+                    "
+                    >Ant</a
+                  >
+                </li>
+                <li
+                  class="page-item"
+                  v-for="page in pagesNumber"
+                  :key="page"
+                  :class="[page == isActived ? 'active' : '']"
+                >
+                  <a
+                    class="page-link"
+                    href="#"
+                    @click.prevent="cambiarPaginaM(page, buscar, criterio)"
+                    v-text="page"
+                  ></a>
+                </li>
+                <li
+                  class="page-item"
+                  v-if="pagination.current_page < pagination.last_page"
+                >
+                  <a
+                    class="page-link"
+                    href="#"
+                    @click.prevent="
+                      cambiarPaginaM(
+                        pagination.current_page + 1,
+                        buscar,
+                        criterio
+                      )
+                    "
+                    >Sig</a
+                  >
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              @click="cerrarModal6()"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+     <div
+      class="modal fade"
+      tabindex="-1"
+      :class="{'mostrar' : modal7}"
+      role="dialog"
+      aria-labelledby="myModalLabel"
+      style="display: none;"
+      aria-hidden="true"
+    >
+    <div class="modal-dialog modal-dark modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" v-text="tituloModal"></h4>
+            <button
+              type="button"
+              class="close"
+              @click="cerrarModal7()"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+  
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped table-sm">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Selección</th>
+                  </tr>
+                </thead>
+                <tbody v-if="arrayDetEqHta.length">
+                  <tr
+                    v-for="(objeto, index) in arrayDetEqHta"
+                    :key="`objeto-${index}`"
+                  >
+                    <td v-text="objeto.nombre"></td>
+
+                    <td>
+                      <button
+                        type="button"
+                        @click="agregarDetEqHta(objeto)"
+                        class="btn btn-success btn-sm"
+                      >
+                        <i class="icon-check"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody v-else>
+                  <tr>       
+                    {{this.del=0}}             
+                    <td colspan="5">NO hay Herramientas registradas en para este Equipo.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <nav>
+              <ul class="pagination">
+                <li class="page-item" v-if="pagination.current_page > 1">
+                  <a
+                    class="page-link"
+                    href="#"
+                    @click.prevent="
+                      cambiarPaginaM(
+                        pagination.current_page - 1,
+                        buscar,
+                        criterio
+                      )
+                    "
+                    >Ant</a
+                  >
+                </li>
+                <li
+                  class="page-item"
+                  v-for="page in pagesNumber"
+                  :key="page"
+                  :class="[page == isActived ? 'active' : '']"
+                >
+                  <a
+                    class="page-link"
+                    href="#"
+                    @click.prevent="cambiarPaginaM(page, buscar, criterio)"
+                    v-text="page"
+                  ></a>
+                </li>
+                <li
+                  class="page-item"
+                  v-if="pagination.current_page < pagination.last_page"
+                >
+                  <a
+                    class="page-link"
+                    href="#"
+                    @click.prevent="
+                      cambiarPaginaM(
+                        pagination.current_page + 1,
+                        buscar,
+                        criterio
+                      )
+                    "
+                    >Sig</a
+                  >
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              @click="cerrarModal7()"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
   </main>
 </template>
 
@@ -1378,6 +1776,7 @@ export default {
       // variables Mto Estacion
 
       tpMto: 1,
+      del: 0,
       frec: 0,
       idRefE:0,
       idTec:0,
@@ -1387,8 +1786,14 @@ export default {
       idEquipo: 0,
       idEstacion: 0,
 
+      idDetA: 0,
+      idDetEq: 0,
+      idMtoEq: 0,
+      idAct: 0,
       idEtapa: 0,
       idMto: 0,
+      idDet: 0,
+      idInsumo: 0,
       idTrenEtapa: 0,
       idproveedor: 0,
       idMarca: 0,
@@ -1407,6 +1812,9 @@ export default {
       arrayFrec: [{id:0 ,name:"INMEDIATO"},{id:1 ,name:"1 MES"},{id:2 ,name:"2 MESES"},{id:3 ,name: "3 MESES"},{id:4 ,name:"4 MESES"},{id:6 ,name:"6 MESES"},{id:9 ,name:"9 MESES"},{id:12 ,name:"12 MESES"},{id:18 ,name:"18 MESES"},{id:24 ,name:"24 MESES"},{id:36 ,name:"36 MESES"}],
       arrayMtoPpal: [],
       arrayVerMto: [],
+      arrayVerAct: [],
+      arrayVerEqHta: [],
+      arrayVerIns: [],
       arrayMtoByPass: [],
       arrayAct: [],
       arrayIns: [],
@@ -1416,13 +1824,17 @@ export default {
       arrayDatos: [],
       arrayTrenEquipos: [],
 
-
+      arrayDel: [],
       arrayTrenPpal: [],
       arrayTrenByPass: [],
       arrayEquipoEtapa: [],
       arrayEstacion: [],
       arrayNomEstacion: [],
       arrayTpEstacion: [],
+      arrayInsumo: [],
+      arrayDetInsumo: [],
+      arrayDetEqHta: [],
+
       arrayEtapa: [],
       arrayEquipo: [],
       arrayEtapas: [],
@@ -1433,8 +1845,12 @@ export default {
       modal3: 0,
       modal4: 0,
       modal5: 0,
+      modal6: 0,
+      modal7: 0,
       bDetEtapa: 1,
       bVerE: 0,
+      bVerEqH: 0,
+      bVerIns: 0,
       bVerA: 0,
       bEtapa: null,
       textoEtapa: "",
@@ -1450,7 +1866,7 @@ export default {
         to: 0
       },
       offset: 3,
-      criterio: "nomref",
+      criterio: "",
       buscar: ""
     };
   },
@@ -1606,22 +2022,36 @@ export default {
       this.tituloModal = "Seleccione uno o varios Equipos";
     },
     abrirModal3(data = []) {
-      this.idRefE=data["idref"];
+      this.idRefE=data["idRefE"];
+      this.idDet=data["idDet"];
       this.modal3 = 1;
       this.tituloModal = "Seleccione una o varias Actividades";
       this.listarActE(1, this.buscar, this.criterio);
     },
     abrirModal4(data = []) {
       this.idRefE=data["idRefE"];
+      this.idDet=data["idDet"];
       this.modal4 = 1;
-      this.tituloModal = "Seleccione una o varios Insumos";
-      this.listarInsE(1, this.idRefE, this.criterio);
+      this.tituloModal = "Seleccione uno o varios Insumos";
+      this.listarInsumos(1, this.idRefE, this.criterio);
     },
     abrirModal5() {
       // this.idRefE=data["idref"];
       this.modal5 = 1;
       this.tituloModal = "Seleccione una o varios Técnicos";
       this.getPerso(1,this.buscar, this.criterio);
+    },
+    abrirModal6() {
+      // this.idRefE=data["idref"];
+      this.modal6 = 1;
+      this.tituloModal = "Seleccione una Etapa";
+    },
+    abrirModal7(data = []) {
+      this.idRefE=data["idRefE"];
+      this.idDet=data["idDet"];
+      this.modal7 = 1;
+      this.tituloModal = "Seleccione una o varias Herramientas";
+      this.listarEqHta(1,"")
     },
     regEquiposPpal(data = []) {
       this.textoEtapa = data["nombre"];
@@ -1653,9 +2083,33 @@ export default {
       this.bVerA=1;
       this.bVerE=null;
       this.textoEtapa = data["nombre"];
-      this.idRefE =data["idref"];
+      this.idRefE =data["idRefE"];
+      this.idDet =data["idDet"];
       this.bEtapa = null;
       this.bDetEtapa = null;
+      this.getActMto();
+    },
+    verEqHta(data = []) {
+      this.bVerEqH=1;
+      this.bVerA=null;
+      this.bVerE=null;
+      this.textoEtapa = data["nombre"];
+      this.idRefE =data["idRefE"];
+      this.idDet =data["idDet"];
+      this.bEtapa = null;
+      this.bDetEtapa = null;
+      this.getEqHta();
+    },
+    verIns(data = []) {
+      this.bVerIns=1;
+      this.bVerA=null;
+      this.bVerE=null;
+      this.textoEtapa = data["nombre"];
+      this.idRefE =data["idRefE"];
+      this.idDet =data["idDet"];
+      this.bEtapa = null;
+      this.bDetEtapa = null;
+      this.getInsEq();
     },
     atras() {
       this.arrayTrenPpal=[];
@@ -1672,6 +2126,8 @@ export default {
       this.bEtapa = null;
       this.bVerE = 1;
       this.bVerA = null;
+      this.bVerIns = null;
+      this.bVerEqH = null;
       this.bDetEtapa = null;
     },
     cerrarModal() {
@@ -1693,6 +2149,14 @@ export default {
     },
     cerrarModal5() {
       this.modal5 = 0;
+      this.tituloModal = "";
+    },
+    cerrarModal6() {
+      this.modal6 = 0;
+      this.tituloModal = "";
+    },
+    cerrarModal7() {
+      this.modal7 = 0;
       this.tituloModal = "";
     },
     encuentra(id) {
@@ -1735,6 +2199,15 @@ export default {
       var sw = 0;
       for (var i = 0; i < this.arrayTec.length; i++) {
         if (this.arrayTec[i].id == id) {
+          sw = true;
+        }
+      }
+      return sw;
+    },
+    encuentra6(id) {
+      var sw = 0;
+      for (var i = 0; i < this.arrayEqHta.length; i++) {
+        if (this.arrayEqHta[i].id == id) {
           sw = true;
         }
       }
@@ -1829,7 +2302,7 @@ export default {
     },
     agregarDetAct(data = []) {
       let me = this;
-
+     
       if (me.encuentra4(data["id"])) {
         swal({
           type: "error",
@@ -1837,14 +2310,30 @@ export default {
           text: "La Actividad seleccionada ya se encuentra agregada!"
         });
       } else {
-          me.arrayMtoAct.push({
-          id: data["id"],
-          idRefE: data["idRef"],          
-          nombre: data["nombre"],
-          desc: data["desc"]
-        });
-          me.mensajeToast("Agregado","bubble","check","success");
+          this.idAct= this.idDet;
+          this.idDetA= data["id"];
+          me.registrarDetAct(this.idAct,this.idDetA);
+          // me.arrayMtoAct.push({
+          // idRefE: data["idRef"],          
+          // nombre: data["nombre"],
+          // desc: data["desc"]
+        // }
+        // )
+        // ;
+          
       }
+    },
+    agregarDetEqHta(data = []) {
+      let me = this;
+          this.idDetEq= data["id"];
+          this.idMtoEq= this.idDet;
+          me.registrarDetEqHta();     
+    },
+    agregarDetInsEq(data = []) {
+      let me = this;
+          this.idDetEq= data["id"];
+          this.idMtoEq= this.idDet;
+          me.registrarDetInsEq();     
     },
     agregarDetalleMto(data = []) {
       let me = this;
@@ -1868,7 +2357,8 @@ export default {
           me.arrayTrenEquipos.push({
           id: data["id"],
           id_equipo: data["idequipo"],
-          tp_tren: 0
+          tp_tren: 0,
+          id_etapa: this.idEtapa
         });
           me.mensajeToast("Agregado","bubble","check","success");
           }
@@ -1892,13 +2382,23 @@ export default {
            me.arrayTrenEquipos.push({
           id: data["id"],
           id_equipo: data["idequipo"],
-          tp_tren: 1
+          tp_tren: 1,
+          id_etapa: this.idEtapa
         });
           me.mensajeToast("Agregado","bubble","check","success");
         }        
         }
     },
+      agregarEtapa(index, data = []) {
+      let me = this;
 
+        me.arrayEtapas.push({
+            id: data["id"], 
+            nombre:data["nombre"]
+        });
+      me.arrayDel.splice(index, 1);
+     
+    },
     getValidationClass(fieldName) {
       const field = this.$v.form[fieldName];
       if (field) {
@@ -1917,8 +2417,15 @@ export default {
     },
     clearForm() {
       this.$v.$reset();
-      this.form.nombre = null;
-      this.form.descripcion = null;
+      this.idEstacion=0;
+      this.idTpEstacion=0;
+      this.idMto=0;
+      this.arrayTec=[];
+      this.arrayAct=[];
+      this.arrayDetInsumo=[];
+      this.arrayDetEqHta=[];
+      // this.form.nombre = null;
+      // this.form.descripcion = null;
     },
     listarMto(page, buscar, criterio) {
       let me = this;
@@ -1930,6 +2437,59 @@ export default {
           var respuesta = response.data;
           me.arrayDatos = respuesta.mto.data;          
           me.pagination = respuesta.pagination;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    listarInsumos(page, buscar, criterio) {
+      let me = this;
+      var url =
+        "/detinsumo/insumose?page=" +
+        page +
+        "&buscar=" +
+        this.idRefE +
+        "&criterio=" +
+        criterio;
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayDetInsumo = respuesta.insumose.data;
+          me.pagination = respuesta.pagination;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    listarEqHta(page, buscar) {
+      let me = this;
+      var url =
+        "/eqtrabajoe/eqtrabajo?page=" +
+        page +
+        "&buscar=" +
+        this.idRefE;
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayDetEqHta = respuesta.deteqtrabajo.data;
+          me.pagination = respuesta.pagination;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    getInsumo() {
+      let me = this;
+
+      var url = "/tpmaterial/selectTpMaterial";
+      axios
+        .get(url)
+        .then(function(response) {
+          //console.log(response);
+          var respuesta = response.data;
+          me.arrayInsumo = respuesta.tpmaterial;
         })
         .catch(function(error) {
           console.log(error);
@@ -2057,12 +2617,55 @@ export default {
     },
     getEqMto() {
       let me = this;
-      var url = "/detmtoes/?buscar=" + this.idMto;
+      var url = "/detmtoes/?buscar=" + me.idMto;
       axios
         .get(url)
         .then(function(response) {
           var respuesta = response.data;
           me.arrayVerMto= respuesta.equipo;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    getActMto() {
+      let me = this;
+      var url = "/detactmto/?buscar=" + me.idDet;
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayVerAct= respuesta.detact.data;
+          me.pagination = respuesta.pagination;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    // traer equipos tren Bypass
+    getEqHta() {
+      let me = this;
+      var url = "/deteqhtamto/?buscar=" + me.idMto;
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayVerEqHta= respuesta.detact.data;
+          me.pagination = respuesta.pagination;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    getInsEq() {
+      let me = this;
+      var url = "/deteinsmto/?buscar=" + me.idMto;
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayVerIns= respuesta.detact.data;
+          me.pagination = respuesta.pagination;
         })
         .catch(function(error) {
           console.log(error);
@@ -2125,6 +2728,59 @@ export default {
           console.log(error);
         });
     },
+    registrarDetAct(idDet, idAct) {
+      let me = this;
+      axios
+        .post("/detactmto/registrar", {
+          // data: this.arrayMtoAct
+          id_Det: idDet,
+          id_Act: idAct          
+        })
+        .then(function(response) {
+          // me.cerrarModal();
+          // me.listarDatos(1, "", "nombre");
+          me.mensajeToast("Agregado","bubble","check","success");
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    registrarDetEqHta() {
+
+      let me = this;
+
+      axios
+        .post("/deteqhtamto/registrar", {
+          // data: this.arrayMtoAct
+          id_Det: this.idMto,
+          id_Act: this.idDetEq          
+        })
+        .then(function(response) {
+          // me.cerrarModal();
+          // me.listarDatos(1, "", "nombre");
+          me.mensajeToast("Agregado","bubble","check","success");
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    registrarDetInsEq() {
+      let me = this;
+      axios
+        .post("/deteinsmto/registrar", {
+          // data: this.arrayMtoAct
+          id_Det: this.idMto,
+          id_Act: this.idDetEq          
+        })
+        .then(function(response) {
+          // me.cerrarModal();
+          // me.listarDatos(1, "", "nombre");
+          me.mensajeToast("Agregado","bubble","check","success");
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
     getEtapa() {
       let me = this;
 
@@ -2167,10 +2823,12 @@ export default {
     mostrarDetalle() {
       this.clearForm();
       let me = this;
+      this.active = 1;
       (this.tipoAccion = 1), (me.listado = 0);
     },
     ocultarDetalle() {
       this.listado = 1;
+      this.listarMto(1,this.buscar, this.criterio);
     },
 
     cambiarPagina(page, buscar, criterio) {
@@ -2178,7 +2836,7 @@ export default {
       //Actualiza la página actual
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
-      me.listarEstacion(page, buscar, criterio);
+      me.listarMto(1, "", "nombre");
     },
     cambiarPaginaE(page, buscar, criterio) {
       let me = this;
@@ -2255,6 +2913,8 @@ export default {
           })
           .then(function(response) {
             me.arrayTrenEquipos=[];
+            var respuesta = response.data;
+           me.idMto = respuesta.idMto;
             // me.ocultarDetalle();
             // me.listarEstacion(1, "", "nombre");
             me.mensaje("Guardado", "Guardo ");
@@ -2284,6 +2944,26 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
+    },
+    registrarMto() {
+      let me = this;
+      axios
+        .post("/mto/registrar2", {
+          id_mto: this.idMto,
+          data: this.arrayTec
+        })
+        .then(function(response) {
+          me.mensajeGuardado();
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    mensajeGuardado() {
+      let me = this;
+      me.mensaje2("Mantenimiento N°-" + this.idMto , " fue programado con éxito para el día " + this.fecR);
+      this.ocultarDetalle();
+      this.atras();
     },
     eliminarEstacion(data = []) {
       swal({
@@ -2321,10 +3001,20 @@ export default {
         }
       });
     },
-    eliminarDetalle(index){
+    eliminarDetalle(index,data=[]){
       let me = this;
+      this.del=1;
       me.arrayEtapas.splice(index, 1);
+      me.arrayDel.push({
+            id: data["id"], 
+            nombre:data["nombre"]
+      
+    });
     },
+    // eliminarDetalle(index){
+    //   let me = this;
+    //   me.arrayEtapas.splice(index, 1);
+    // },
     mensajeToast(msj,tema,icono,tp){
                 let toast = this.$toasted.show(msj, { 
             theme: tema, 
@@ -2336,16 +3026,20 @@ export default {
     },
     mensaje(tipo, crud) {
       swal(tipo, "El registro se " + crud + " con éxito.", "success");
+    },
+    mensaje2(tipo, crud) {
+      swal(tipo,  crud , "success");
     }
   },
     
   mounted() {
     this.getPerso(1,this.buscar, this.criterio);
+    this.listarExEtapa(1, this.buscar, this.criterio);
     this.listarMto(1,this.buscar, this.criterio);
     this.getTpEstacion();
-    // this.getEtapa();
-    this.listarEstacion(1, this.buscar, this.criterio);
-    this.listarExEtapa(1, this.buscar, this.criterio);
+    this.getInsumo();
+    // // this.getEtapa();
+    // this.listarEstacion(1, this.buscar, this.criterio);
   }
 };
 </script>
@@ -2372,4 +3066,6 @@ export default {
 .material-icons.Color2 { color: rgba(52, 139, 64, 0.849); }
 .material-icons.Color3 { color: rgb(31, 114, 134); }
 .material-icons.Color4 { color: rgb(248, 53, 46); }
+.material-icons.Color5 { color: rgb(80, 98, 121); }
+.material-icons.Color6 { color: rgb(19, 168, 226); }
 </style>

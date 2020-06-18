@@ -115,7 +115,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <form action="{{route('guardar')}}" method="post" enctype="multipart/form-data" class="form-horizontal">
+            <form method="post" enctype="multipart/form-data" class="form-horizontal">
               <md-card-content>
                 <md-field :class="getValidationClass('nombre')">
                   <label for="first-name">Nombre</label>
