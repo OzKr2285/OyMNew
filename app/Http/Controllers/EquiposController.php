@@ -229,6 +229,65 @@ class EquiposController extends Controller
             'equipo' => $equipo
         ];
     }
+    public function index4(Request $request)
+    {
+        // if (!$request->ajax()) return redirect('/');
+
+        $buscar = $request->buscar;
+        $criterio = $request->criterio;
+        $criterio2 = $request->criterio2;
+        
+        if ($buscar==''){
+            // $equipo = Equipo::orderBy('id_refequipo', 'asc')->paginate(15);
+            $equipo = Equipo::join('proveedores','equipos.id_proveedor','=','proveedores.id')
+            ->join('ref_equipos','equipos.id_refequipo','=','ref_equipos.id')
+            ->join('modelos','equipos.id_modelo','=','modelos.id')
+            ->join('personas','equipos.id_responsable','=','personas.id')
+            ->join('tp_equipos','ref_equipos.id_tpequipo','=','tp_equipos.id')
+            ->join('marcas','modelos.id_marca','=','marcas.id')
+            ->select('equipos.id as ide','equipos.is_equipo','equipos.serial','equipos.num_fac','equipos.id_proveedor','proveedores.nombre as nomprov','ref_equipos.id','ref_equipos.nombre as nomref','modelos.nombre as modelo','modelos.id as idmodelo','equipos.id_responsable','personas.nombreFull as nomperso',
+            'equipos.tag','equipos.fec_compra','equipos.fec_garantia','equipos.fec_instala','equipos.link','equipos.datachip','equipos.id_refequipo','equipos.desc',
+            'equipos.datachip','tp_equipos.id as tpequipo','marcas.id as idmarca','equipos.edo_mto')
+            // ->distinct('equipos.ref_equipos')
+            ->where('equipos.is_equipo',3)
+            ->orderBy('ref_equipos.nombre', 'asc')->paginate(15);
+        }
+        else{
+            $equipo = Equipo::join('proveedores','equipos.id_proveedor','=','proveedores.id')
+            ->join('ref_equipos','equipos.id_refequipo','=','ref_equipos.id')
+            ->join('modelos','equipos.id_modelo','=','modelos.id')
+            ->join('personas','equipos.id_responsable','=','personas.id')
+            ->join('tp_equipos','ref_equipos.id_tpequipo','=','tp_equipos.id')
+            ->join('marcas','modelos.id_marca','=','marcas.id')
+            ->select('equipos.id as ide','equipos.serial','equipos.num_fac','equipos.id_proveedor','proveedores.nombre as nomprov','ref_equipos.id','ref_equipos.nombre as nomref','modelos.nombre as modelo','modelos.id as idmodelo','equipos.id_responsable','personas.nombreFull as nomperso',
+            'equipos.tag','equipos.fec_compra','equipos.fec_garantia','equipos.fec_instala','equipos.link','equipos.datachip','equipos.id_refequipo','equipos.desc',
+            'equipos.datachip','tp_equipos.id as tpequipo','marcas.id as idmarca','equipos.edo_mto')
+            ->distinct('ref_equipos.id')
+         
+            ->where('equipos.is_equipo',3)
+            ->where('ref_equipos.nombre', 'like', '%'. $buscar . '%')
+            // ->count()
+            // ->orWhere('ref_equipos.'.$criterio, 'like', '%'. $buscar . '%')
+            // ->orWhere('equipos.nombre', 'like', '%'. $buscar . '%')
+            // ->orWhere('equipos.serial', 'like', '%'. $buscar . '%')
+            // ->orWhere('equipos.tag', 'like', '%'. $buscar . '%')
+            ->paginate(15);
+       
+        }
+        
+
+        return [
+            'pagination' => [
+                'total'        => $equipo->total(),
+                'current_page' => $equipo->currentPage(),
+                'per_page'     => $equipo->perPage(),
+                'last_page'    => $equipo->lastPage(),
+                'from'         => $equipo->firstItem(),
+                'to'           => $equipo->lastItem(),
+            ],
+            'equipo' => $equipo
+        ];
+    }
     public function index3old(Request $request)
     {
         // if (!$request->ajax()) return redirect('/');

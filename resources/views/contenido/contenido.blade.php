@@ -233,6 +233,18 @@
             <template v-if="menu==83">
                 <mtoet></mtoet>
             </template>
+
+            <template v-if="menu==84">
+                <emat></emat>
+            </template>
+   
+            <template v-if="menu==85">
+                <actok></actok>
+            </template>
+   
+            <template v-if="menu==86">
+                <reqinsumo></reqinsumo>
+            </template>
    
 
             <!-- Programacion  de Mantenimientos -->
@@ -292,7 +304,9 @@
             <template v-if="menu==83">
                 <mtoet></mtoet>
             </template>
-   
+            <template v-if="menu==69">
+                <mtoveh></mtoveh>
+            </template>
    
             @else
 

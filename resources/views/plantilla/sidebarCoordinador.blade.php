@@ -102,6 +102,9 @@
                                 <li @click="menu=83" >
                                     <a  href="#"><i class="fas fa-tools"></i>Equipos y Herramientas</a>
                                 </li>
+                                <li @click="menu=69" >
+                                    <a  href="#"><i class="fas fa-car"></i>Vehículos</a>
+                                </li>
      
                             </ul>
                         </div>

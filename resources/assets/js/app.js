@@ -29,6 +29,7 @@ Vue.component('fichaes', require('./components/Fichaes.vue'));
 Vue.component('equipo', require('./components/Equipo.vue'));
 Vue.component('ecomputo', require('./components/EquipoComputo.vue'));
 Vue.component('etrabajo', require('./components/EquipoTrabajo.vue'));
+Vue.component('emat', require('./components/EquipoMAT.vue'));
 Vue.component('tpequipo', require('./components/TpEquipo.vue'));
 Vue.component('accesorio', require('./components/Accesorio.vue'));
 Vue.component('fichaveh', require('./components/fichaveh.vue'));
@@ -51,6 +52,7 @@ Vue.component('perfil', require('./components/Perfil.vue'));
 Vue.component('dashboard', require('./components/Dashboard.vue'));
 
 // Programacion de Mantenimientos
+Vue.component('reqinsumo', require('./components/ReqInsumo.vue'));
 Vue.component('mtoes', require('./components/MtoEs.vue'));
 Vue.component('solmtoes', require('./components/SolMtoEs.vue'));
 Vue.component('solmtoec', require('./components/SolMtoEC.vue'));
@@ -64,6 +66,7 @@ Vue.component('eqtrabajoe', require('./components/EqTrabajoE.vue'));
 Vue.component('insumoe', require('./components/InsumoE.vue'));
 Vue.component('refequipo', require('./components/RefE.vue'));
 Vue.component('actividad', require('./components/Actividad.vue'));
+Vue.component('actok', require('./components/ActividadOk.vue'));
 Vue.component('actividadveh', require('./components/ActividadVeh.vue'));
 Vue.component('actividade', require('./components/ActividadE.vue'));
 Vue.component('persona', require('./components/Persona.vue'));

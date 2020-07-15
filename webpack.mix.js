@@ -19,6 +19,7 @@ mix.styles([
     'resources/assets/plantilla/css/style.css',
     'resources/assets/plantilla/css/sidebar-themes.css',
     'resources/assets/plantilla/css/CustomScrollbar.min.css',
+    'resources/assets/plantilla/css/buttons.dataTables.min.css',
     'resources/assets/plantilla/css/dataTables.min.css',
     'resources/assets/plantilla/css/default.css'
 ], 'public/css/plantilla.css')
@@ -33,6 +34,11 @@ mix.styles([
     'resources/assets/plantilla/js/vue-material.min.js',
     'resources/assets/plantilla/js/vue-multiselect.min.js',
     'resources/assets/plantilla/js/jquerydataTables.min.js',
+    'resources/assets/plantilla/js/dataTables.buttons.min.js',
+    'resources/assets/plantilla/js/pdfmake.min.js',
+    'resources/assets/plantilla/js/vfs_fonts.js',
+    'resources/assets/plantilla/js/buttons.html5.min.js',
+    'resources/assets/plantilla/js/jszip.min.js',
     'resources/assets/plantilla/js/dataTables.min.js',
     'resources/assets/plantilla/js/sweetalert2.all.js'
 ], 'public/js/plantilla.js')

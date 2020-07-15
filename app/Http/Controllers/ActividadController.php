@@ -62,5 +62,32 @@ class ActividadController extends Controller
        $actividad->delete();
     
     }
+    public function selectAct(Request $request){
+        // if (!$request->ajax()) return redirect('/');
+        $buscar = $request->buscar;
+        if ($buscar==''){
+            $actividad = Actividad::orderBy('nombre', 'asc')->get();
+        }
+        else{
+            $actividad = Actividad::where('nombre', 'like', '%'. $buscar . '%')
+            ->orderBy('nombre', 'asc')->get();
+        }   
 
+        return ['act' => $actividad];
+  }
+    public function selectActRed(Request $request){
+        // if (!$request->ajax()) return redirect('/');
+        $buscar = $request->buscar;
+        if ($buscar==''){
+            $actividad = Actividad::where('is_equipo',3)
+            ->orderBy('nombre', 'asc')->get();
+        }
+        else{
+            $actividad = Actividad::where('is_equipo',3)
+            ->where('nombre', 'like', '%'. $buscar . '%')
+            ->orderBy('nombre', 'asc')->get();
+        }   
+
+        return ['act' => $actividad];
+  }
 }

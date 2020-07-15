@@ -8,7 +8,7 @@ class Estacion extends Model
 {
     //
     protected $table = 'estaciones';
-    protected $fillable = ['id','idtpestacion','nombre','descripcion'];
+    protected $fillable = ['id','idtpestacion','nombre','descripcion','codigo'];
     public $timestamps = false;
 
     public function tpEstacion(){

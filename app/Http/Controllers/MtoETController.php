@@ -23,6 +23,7 @@ class MtoETController extends Controller
             ->select('ref_equipos.id','ref_equipos.nombre','mto_et.id as idMto','mto_et.edo','mto_et.fec_realiza','mto_et.fec_finaliza','mto_et.tp_mto')
             ->distinct()                                   
             ->orderBy('ref_equipos.nombre', 'asc')
+            ->orderBy('mto_et.fec_realiza', 'asc')
             ->orderBy('mto_et.edo', 'asc')->paginate(15);
         }
         else{
@@ -58,8 +59,13 @@ class MtoETController extends Controller
             $mto = new MtoET();
            
             $mto->fec_realiza = $request->fec_realiza;         
-            $mto->fec_finaliza = $request->fec_finaliza;         
-            $mto->tp_mto = $request->tp_mto;         
+            $mto->fec_finaliza = $request->fec_finaliza;    
+             
+            if($request->tp_mto==1){
+                $mto->tp_mto = "P";         
+            }else{
+                $mto->tp_mto = "C";  
+            }     
             $mto->frec = $request->frec;         
             $mto->id_prov = $request->idProv;         
             $mto->id_refequipo = $request->id_refequipo;         
@@ -75,15 +81,16 @@ class MtoETController extends Controller
             {
                 $detalle = new DetMtoET();
                 $detalle->id_mto = $mto->id;
-                $detalle->id_equipo =$det['id'];                                                                                                                                       
+                $detalle->id_equipo =$det['id'];    
+                $detalle->obs = $request->obs;                                                                                                                                     
                 $detalle->save();
             }          
             foreach($detalles3 as $ep=>$det)
             {
                 $detalle = new DetActMtoET();
                 $detalle->id_mto_et = $mto->id;
-                $detalle->id_equipo =$det['ide'];                                                                                                                                       
-                $detalle->id_actividad =$det['id'];                                                                                                                                       
+                // $detalle->id_equipo =$det['ide'];                                                                                                                                       
+                $detalle->id_actividad =$det['id'];                                                                                                                                                       
                 $detalle->save();
             }          
             // foreach($detalles5 as $ep=>$det)
@@ -98,5 +105,10 @@ class MtoETController extends Controller
         } catch (Exception $e){
             DB::rollBack();
         }      
+    }
+    public function destroy(Request $request)
+    {        
+        $servicio = MtoET::findOrFail($request->id);
+        $servicio->delete();    
     }
 }

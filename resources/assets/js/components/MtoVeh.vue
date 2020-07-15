@@ -29,6 +29,8 @@
                 <thead>
                   <tr class="p-3 mb-2 bg-dark text-white">
                     <th>Tipo Vehículo</th>
+                    <th>Marca</th>
+                    <th>Placa</th>
                     <th>Fecha Realización</th>
                     <th>Fecha Finalización</th>
                     <th>Tipo</th>
@@ -37,8 +39,10 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="objeto in arrayDatos" :key="objeto.id">                                     
+                  <tr v-for="(objeto,index) in arrayDatos" :key="`objeto-${index}`">                                     
                     <td v-text="objeto.tipo"></td>
+                    <td v-text="objeto.nomModelo"></td>
+                    <td v-text="objeto.placa"></td>
                     <td v-text="objeto.fec_realiza"></td>
                     <td v-text="objeto.fec_finaliza"></td>
                     <td>       
@@ -698,7 +702,7 @@
                 </thead>
                 <tbody v-if="arrayAct.length">
                   <tr v-for="(objeto, index)  in arrayAct" :key="`objeto-${index}`">
-                    <td v-text="objeto.desc"></td>
+                    <td v-text="objeto.nombre"></td>
                     <td>
                       <button
                         type="button"
@@ -712,7 +716,7 @@
                 </tbody>
                 <tbody v-else>
                   <tr>
-                    <td colspan="5">NO hay Actividades asignadas al equipo</td>
+                    <td colspan="5">NO hay Actividades asignadas al Vehículo</td>
                   </tr>
                 </tbody>
               </table>
@@ -1900,6 +1904,7 @@ export default {
     },
     ocultarDetalle() {
       this.listado = 1;
+      
     },
 
     cambiarPagina(page, buscar, criterio) {
@@ -1907,14 +1912,14 @@ export default {
       //Actualiza la página actual
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
-      me.listarEstacion(page, buscar, criterio);
+      me.listarMto(this.page,this.buscar, this.criterio);
     },
     cambiarPaginaE(page, buscar, criterio) {
       let me = this;
       //Actualiza la página actual
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
-      me.listarEtapa(page, buscar, criterio);
+      me.listarActVeh(page, buscar, criterio);
     },
     cambiarPaginaTec(page, buscar, criterio) {
       let me = this;
@@ -1959,8 +1964,9 @@ export default {
 
           })
           .then(function(response) {
-
             me.mensaje("Guardado", "Guardo ");
+            this.ocultarDetalle();
+            this.listarMto(1,this.buscar, this.criterio);
           })
           .catch(function(error) {
             console.log(error);

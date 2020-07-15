@@ -20,9 +20,9 @@ class DetInsMtoEsController extends Controller
             ->orderBy('eq_trab_hta.nombre', 'asc')->paginate(15);
         }
         else{
-            $detact = DetInsMtoEs::join('ref_materiales','det_ins_mto_es.id_insumo','=','ref_materiales.id')           
-            ->select('det_ins_mto_es.id as idDet','ref_materiales.id','ref_materiales.nombre','det_ins_mto_es.id_insumo','det_ins_mto_es.id_mto_es')            
-            ->where('det_ins_mto_es.id_mto_es',$buscar)            
+            $detact = DetInsMtoEs::join('ref_materiales','det_insumo_mto_es.id_insumo','=','ref_materiales.id')           
+            ->select('det_insumo_mto_es.id as idDet','ref_materiales.id','ref_materiales.codigo','ref_materiales.nombre','det_insumo_mto_es.id_insumo','det_insumo_mto_es.id_mto_es')            
+            ->where('det_insumo_mto_es.id_mto_es',$buscar)            
             ->orderBy('ref_materiales.nombre', 'asc')->paginate(15);
         }
         

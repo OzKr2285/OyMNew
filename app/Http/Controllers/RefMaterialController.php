@@ -52,7 +52,7 @@ class RefMaterialController extends Controller
             }
         else{
             $refm = RefMaterial::join('tp_material','ref_materiales.id_tp_material','=','tp_material.id')
-            ->select('ref_materiales.id','tp_material.nombre as nomE','ref_materiales.id_tp_material','ref_materiales.nombre','ref_materiales.cant','ref_materiales.und_med','ref_materiales.costo')
+            ->select('ref_materiales.id','tp_material.nombre as nomE','ref_materiales.id_tp_material','ref_materiales.nombre','ref_materiales.cant','ref_materiales.und_med','ref_materiales.costo','ref_materiales.codigo')
             ->where('ref_materiales.id_tp_material', $buscar)
             ->where('ref_materiales.nombre', 'like', '%'. $criterio . '%')
             ->orderBy('tp_material.nombre')->paginate(15);

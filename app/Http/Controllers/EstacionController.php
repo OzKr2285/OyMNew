@@ -17,7 +17,7 @@ class EstacionController extends Controller
         
         if ($buscar==''){
             $estacion = Estacion::join('tp_estacions','estaciones.idtpestacion','=','tp_estacions.id')
-        ->select('estaciones.id','estaciones.idtpestacion','estaciones.nombre','estaciones.descripcion','tp_estacions.nombre as tpnombre')
+        ->select('estaciones.id','estaciones.idtpestacion','estaciones.nombre','estaciones.codigo','estaciones.descripcion','tp_estacions.nombre as tpnombre')
             ->orderBy('estaciones.idtpestacion', 'estaciones.nombre')->paginate(15);
         }
         else{
@@ -67,7 +67,7 @@ class EstacionController extends Controller
         $buscar = $request->buscar;
 
         $estacion = Estacion::join('tp_estacions','tp_estacions.id','=','estaciones.idTpEstacion')
-        ->select('estaciones.id','estaciones.nombre')
+        ->select('estaciones.id','estaciones.nombre','estaciones.codigo')
         ->where('estaciones.idTpEstacion',$buscar)
         ->orderBy('estaciones.nombre', 'asc')->get();
      

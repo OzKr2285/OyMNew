@@ -110,13 +110,16 @@
                                 <a  href="#"><i class="icon-bag"></i>Accesorios</a>
                             </li>
                             <li @click="menu=34" >
-                                <a  href="#"><i class="icon-bag"></i>Actividades</a>
+                                <a  href="#"><i class="icon-bag"></i>Procedimientos</a>
                             </li>
                             <li @click="menu=35" >
-                                <a  href="#"><i class="icon-bag"></i>Act. x Equipo</a>
+                                <a  href="#"><i class="icon-bag"></i>Proc. x Equipo</a>
                             </li> 
+                            <li @click="menu=85" >
+                                <a  href="#"><i class="icon-bag"></i>Validar Act.</a>
+                            </li>
                             <li @click="menu=74" >
-                                <a  href="#"><i class="icon-bag"></i>Act Vehículos</a>
+                                <a  href="#"><i class="icon-bag"></i>Proc Vehículos</a>
                             </li>
                             <li @click="menu=58" >
                                 <a  href="#"><i class="icon-bag"></i>Unds. Constructivas</a>
@@ -181,10 +184,10 @@
                         <div class="sidebar-submenu">
                             <ul>
                                 <li @click="menu=44" >
-                                    <a  href="#"><i class="icon-user-following"></i>Cat. Actividades</a>
+                                    <a  href="#"><i class="icon-user-following"></i>Cat. Procedimientos</a>
                                 </li>
                                 <li @click="menu=45" >
-                                    <a  href="#"><i class="icon-user-following"></i>Actividades</a>
+                                    <a  href="#"><i class="icon-user-following"></i>Procedimientos</a>
                                 </li> 
                             </ul>                            
                         </div>                        
@@ -233,6 +236,9 @@
                                 <li @click="menu=81" >
                                     <a  href="#"><i class="fas fa-tools"></i>Equipos y Herramientas</a>
                                 </li>
+                                <li @click="menu=84" >
+                                    <a  href="#"><i class="fas fa-tools"></i>Módulos GNC</a>
+                                </li>
                                 <li @click="menu=6" >
                                     <a  href="#"><i class="fas fa-car"></i>Vehículos</a>
                                 </li>
@@ -264,6 +270,9 @@
                                 <!-- <li @click="menu=41" >
                                     <a  href="#"><i class="icon-basket-loaded"></i> E. de Estación</a>
                                 </li>                                  -->
+                                <li @click="menu=84" >
+                                    <a  href="#"><i class="fas fa-tools"></i>Módulos GNC</a>
+                                </li>
                                 <li @click="menu=69" >
                                     <a  href="#"><i class="fas fa-car"></i>Vehículos</a>
                                 </li>
@@ -286,6 +295,9 @@
                             <li @click="menu=75" >
                                     <a  href="#"><i class="fas fa-charging-station"></i>Estaciones</a>
                                 </li>
+                            <li @click="menu=86" >
+                                    <a  href="#"><i class="fas fa-charging-station"></i>Req. Insumos</a>
+                                </li>
                                 <li @click="menu=77" >
                                     <a  href="#"><i class="fas fa-laptop"></i> E. de Cómputo</a>
                                 </li>
@@ -295,6 +307,9 @@
                                 <!-- <li @click="menu=41" >
                                     <a  href="#"><i class="icon-basket-loaded"></i> E. de Estación</a>
                                 </li>                                  -->
+                                <li @click="menu=84" >
+                                    <a  href="#"><i class="fas fa-tools"></i>Módulos GNC</a>
+                                </li>
                                 <li @click="menu=69" >
                                     <a  href="#"><i class="fas fa-car"></i>Vehículos</a>
                                 </li>

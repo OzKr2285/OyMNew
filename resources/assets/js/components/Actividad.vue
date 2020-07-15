@@ -171,7 +171,7 @@
                   </div>&nbsp;&nbsp;&nbsp;
                 <div class="md-layout-item">
                   <md-field>
-                    <label for="first-name">Duración - Minutos</label>
+                    <label for="first-name">Minutos - hombre trabajados</label>
                     <md-input
                       type="number"
                       name="first-duracion"
@@ -500,14 +500,14 @@ export default {
           switch (accion) {
             case "registrar": {
               this.modal = 1;
-              this.tituloModal = "Registrar Actividad";
+              this.tituloModal = "Registrar Procedimiento";
               this.tipoAccion = 1;
               break;
             }
             case "actualizar": {
               //console.log(data);
               this.modal = 1;
-              this.tituloModal = "Actualizar Actividad";
+              this.tituloModal = "Actualizar Procedimiento";
               this.tipoAccion = 2;
               this.idInsumo = data["id"];
                 this.arrayIEq.id = data["is_equipo"];

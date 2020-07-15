@@ -9602,7 +9602,19 @@ body {
 .chiller-theme .sidebar-footer>a:last-child {
     border-right: none;
 }
+/*estilos para la tabla*/
+/* table th {
+  background-color: #337ab7 !important;
+  color: white;
+}
+table>tbody>tr>td {
+  vertical-align: middle !important;
+}
 
+/*para alinear los botones y cuadro de busqueda*/
+.btn-group, .btn-group-vertical {
+  position: absolute !important;
+} */
 .ozkr {
   /* Aquí el origen de la imagen */
   background-image: url(../img/estacion.jpg);

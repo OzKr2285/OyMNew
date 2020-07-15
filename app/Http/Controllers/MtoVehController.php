@@ -19,8 +19,9 @@ class MtoVehController extends Controller
         $criterio = $request->criterio;
         
         if ($buscar==''){
-            $mto = MtoVeh::join('fichaveh','mto_veh.placa','=','fichaveh.id')           
-            ->select('fichaveh.id as placa','fichaveh.tipo','fichaveh.desc','mto_veh.edo','mto_veh.placa','mto_veh.fec_realiza','mto_veh.fec_finaliza','mto_veh.tp_mto','mto_veh.obs')
+            $mto = MtoVeh::join('fichaveh','mto_veh.placa','=','fichaveh.id')   
+            ->join('lineas','fichaveh.id_linea','=','lineas.id')              
+            ->select('lineas.nombre as nomModelo','fichaveh.id as placa','fichaveh.tipo','fichaveh.desc','mto_veh.edo','mto_veh.placa','mto_veh.fec_realiza','mto_veh.fec_finaliza','mto_veh.tp_mto','mto_veh.obs')
             ->distinct()                                   
             ->orderBy('fichaveh.id', 'asc')
             ->orderBy('mto_veh.edo', 'asc')->paginate(15);

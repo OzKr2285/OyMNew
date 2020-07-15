@@ -75,6 +75,8 @@ Route::group(['middleware'=>['auth']],function(){
     Route::group(['middleware' => ['Administrador']], function () {
         
         Route::get('/actividad', 'ActividadController@index');
+        Route::get('/actividad/selectact', 'ActividadController@selectAct');
+        Route::get('/actividad/selectactred', 'ActividadController@selectActRed');
         Route::post('/actividad/registrar', 'ActividadController@store');
         Route::put('/actividad/actualizar', 'ActividadController@update');
         Route::post('/actividad/eliminar', 'ActividadController@destroy');
@@ -156,13 +158,19 @@ Route::group(['middleware'=>['auth']],function(){
         Route::get('/detinsumo/insumose', 'DetInsEquipoController@InsumosE');
         
         Route::get('/detactmto', 'DetActMtoEsController@index');
+        Route::get('/detactmto/excel', 'DetActMtoEsController@indexExcel');
         Route::post('/detactmto/registrar', 'DetActMtoEsController@store');
+
         Route::post('/deteqhtamto/registrar', 'DetEqHtaMtoEsController@store');
         Route::post('/deteinsmto/registrar', 'DetInsMtoEsController@store');
         
         Route::get('/deteqhtamto', 'DetEqHtaMtoEsController@index');
 
+        Route::get('/detactok', 'DetActOkController@index');
+
+        Route::get('/detactmtoet', 'DetActMtoETController@index');
         Route::post('/detactmtoet/registrar', 'DetActMtoETController@store');
+        Route::post('/detactmtoet/eliminar', 'DetActMtoETController@destroy');
 
         Route::get('/deteinsmto', 'DetInsMtoEsController@index');
 
@@ -173,6 +181,12 @@ Route::group(['middleware'=>['auth']],function(){
         Route::post('/detmercado/eliminar', 'DetMercadoController@destroy');
 
         Route::get('/detmtoes', 'DetMtoEsController@equiposMto');   
+        Route::get('/detmtoes/excel', 'DetMtoEsController@indexExcel');
+
+        Route::get('/detmtoet', 'DetMtoETController@index');   
+        Route::get('/detmtoet2', 'DetMtoETController@index2');   
+        Route::put('/detmtoet/actualizar', 'DetMtoETController@update');
+        
         // Route::get('/detmtoes/get', 'DetMtoEsController@equiposMto');
 
         Route::post('/detpasoe/registrar', 'DetPasoEController@store');
@@ -246,6 +260,7 @@ Route::group(['middleware'=>['auth']],function(){
         Route::get('/equipo', 'EquiposController@index');
         Route::get('/equipo/computo', 'EquiposController@index2');        
         Route::get('/equipo/trabajo', 'EquiposController@index3');        
+        Route::get('/equipo/emat', 'EquiposController@index4');        
         Route::get('/equipo/equipos', 'EquiposController@indexEquipos');        
         Route::get('/equipo/computoOficina', 'EquiposController@indexEquipoOfc');        
         Route::get('/equipo/exetapa', 'EquiposController@indexExEtapa');
@@ -330,9 +345,12 @@ Route::group(['middleware'=>['auth']],function(){
         Route::get('/mpio/getMpios', 'MpioController@getMpios');
 
         Route::get('/mto', 'MtoEsController@index');
+        Route::get('/mto/fecha', 'MtoEsController@indexFecha');
+        
         Route::post('/mto/registrar', 'MtoEsController@store');
         Route::post('/mto/registrar2', 'MtoEsController@store2');
         Route::put('/mto/actualizar', 'MtoEsController@update');
+        Route::post('/mto/eliminar', 'MtoEsController@destroy');
 
         Route::get('/mtoec', 'MtoECController@index');
         Route::post('/mtoec/registrar', 'MtoECController@store');
@@ -340,6 +358,10 @@ Route::group(['middleware'=>['auth']],function(){
 
         Route::get('/mtoet', 'MtoETController@index');
         Route::post('/mtoet/registrar', 'MtoETController@store');
+        Route::post('/mtoet/eliminar', 'MtoETController@destroy');
+      
+        Route::get('/mtored', 'MtoRedController@index');
+        Route::post('/mtored/registrar', 'MtoRedController@store');
 
         Route::get('/mtoveh', 'MtoVehController@index');
         Route::post('/mtoveh/registrar', 'MtoVehController@store');
@@ -393,6 +415,11 @@ Route::group(['middleware'=>['auth']],function(){
         Route::get('/refmaterial/getRefM', 'RefMaterialController@getRefM');
         Route::get('/refmaterial/getRefInsumo', 'RefMaterialController@getRefInsumo');
         
+        Route::get('/detreqinsumo', 'DetReqInsumoController@index');
+        Route::put('/detreqinsumo/actualizar', 'DetReqInsumoController@update');
+
+        Route::get('/reqinsumo', 'ReqInsumoController@index');
+        Route::post('/reqinsumo/registrar', 'ReqInsumoController@store');
 
         Route::get('/red', 'RedController@index');
         Route::post('/red/registrar', 'RedController@store');

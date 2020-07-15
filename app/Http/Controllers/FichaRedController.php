@@ -18,7 +18,7 @@ class FichaRedController extends Controller
         if ($buscar==''){
             $fichared = FichaRed::join('det_mercados','fichared.id_mpio','=','det_mercados.id')  
             ->join('mercados','det_mercados.id_mercado','=','mercados.id')               
-            ->select('fichared.tp_red','fichared.clasi','fichared.id','fichared.nombre','fichared.desc','fichared.cant_p','fichared.id_mpio','total','mercados.id as idMer','mercados.nombre as nomMercado')
+            ->select('fichared.tp_red','fichared.clasi','fichared.id','fichared.nombre','fichared.codigo','fichared.desc','fichared.cant_p','fichared.id_mpio','total','mercados.id as idMer','mercados.nombre as nomMercado')
             ->orderBy('fichared.tp_red', 'fichared.id_red')->paginate(15);
         }
         else{

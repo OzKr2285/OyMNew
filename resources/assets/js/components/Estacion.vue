@@ -5,7 +5,8 @@
       <!-- Ejemplo de tabla Listado -->
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i> Gestión de Estaciones
+          <i class="m-0 font-weight-bold text-primary fas fa-charging-station"></i> 
+          <strong class="lead">Gestión de Estaciones.</strong >
           <button
             type="button"
             @click="mostrarDetalle()"
@@ -21,6 +22,7 @@
                 <thead>
                   <tr class="p-3 mb-2 bg-dark text-white">
                     <th>Tipo Estacion</th>
+                    <th>Código</th>
                     <th>Nombre</th>
                     <th>Descripción</th>
                     <th>Opciones</th>
@@ -29,6 +31,7 @@
                 <tbody>
                   <tr v-for="objeto in arrayEstacion" :key="objeto.id">
                     <td v-text="objeto.tpnombre"></td>
+                    <td v-text="objeto.codigo"></td>
                     <td v-text="objeto.nombre"></td>
                     <td v-text="objeto.descripcion"></td>
                     <td>

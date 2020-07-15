@@ -19,7 +19,7 @@ class ActividadVehController extends Controller
             $actividad = ActividadVeh::orderBy('nombre', 'asc')->paginate(15);
         }
         else{
-            $actividad = ActividadVeh::where($criterio, 'like', '%'. $buscar . '%')->orderBy('nombre', 'asc')->paginate(15);
+            $actividad = ActividadVeh::where('nombre', 'like', '%'. $buscar . '%')->orderBy('nombre', 'asc')->paginate(15);
         }
 
         return [

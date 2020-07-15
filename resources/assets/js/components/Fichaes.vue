@@ -22,7 +22,7 @@
 
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table table-striped table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-striped table-bordered display" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
                       <th>Tipo de Estación</th>
@@ -1729,7 +1729,7 @@ export default {
     myTable(datas){
       let me = this;
 
-    $(document).ready(function() {
+      $(document).ready(function() {
       
       var table = $('#dataTable').DataTable({destroy: true,
       data:datas,
@@ -1747,6 +1747,29 @@ export default {
                 },
                 "infoFiltered": "(filtrado de _MAX_ total registros)"
             },
+                   responsive: "true",
+      //   dom: 'Bfrtlip',       
+      //   buttons:[ 
+			// {
+			// 	extend:    'excelHtml5',
+			// 	text:      '<i class="fas fa-charging-station"></i> ',
+			// 	titleAttr: 'Exportar a Excel',
+			// 	className: 'btn btn-success'
+			// },
+			// {
+			// 	extend:    'pdfHtml5',
+			// 	text:      '<i class="fas fa-file-pdf"></i> ',
+			// 	titleAttr: 'Exportar a PDF',
+			// 	className: 'btn btn-danger'
+			// },
+			// {
+			// 	extend:    'print',
+			// 	text:      '<i class="fa fa-print"></i> ',
+			// 	titleAttr: 'Imprimir',
+			// 	className: 'btn btn-info'
+      // },
+      
+		// ]	,
           "columns": [
             { "data": "tpnombre" },
             { "data": "nombre" },
@@ -1756,7 +1779,9 @@ export default {
             {"defaultContent": "<button type='button' id='editar' class='editar btn btn-success btn-sm' data-tooltip title='Actualizar' > <i class='fas fa-edit'></i>  </button> <button type='button'id='eliminar' class='eliminar btn btn-danger btn-sm' data-tooltip title='Eliminar' > <i class='fas fa-trash-alt'></i> </button>  "}
             // {"defaultContent": "<button type='button' id='editar' class='editar btn btn-success btn-sm' data-tooltip title='Actualizar' > <i class='fas fa-edit'></i>  </button>"}
             // {"defaultContent": " <button type='button' class='md-raised' @click='this.hola()'> Cerrar </button>"}
-        ]});
+        ]
+    
+        });
 
           $('#dataTable tbody').on( 'click', '.editar', function () {
                 me.datos = table.row( $(this).parents('tr') ).data();

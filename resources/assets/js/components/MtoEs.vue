@@ -15,6 +15,23 @@
           >
             <i class="icon-plus"></i>&nbsp;Nuevo
           </button>
+               <download-excel class="btn btn-success btn-sm"
+              :data   = "arrayDatosExcel"
+              name="Programación Mantenimientos.xls"
+              title="INFORME PROGRAMACIÓN DE MANTENIMIENTOS"
+              >
+
+              <i class="fas fa-file-excel"></i>
+          </download-excel>
+            <download-excel class="btn btn-dark btn-sm"
+              :data   = "arrayDatosExcel2"
+              name="Programación Actividades.xls"
+              title="ACTIVIDADES REALACIONADAS A LA PROGRAMACIÓN DE MANTENIMIENTOS"
+              >
+
+              <i class="fas fa-file-excel"></i>
+          </download-excel>
+
           <button v-show="del==1"
             title="Eliminados"
             type="button"
@@ -26,11 +43,42 @@
         </div>
         <template v-if="listado==1">
           <div class="card-body">
+  
+            <div class="md-layout">
+       
+              <div class="md-layout-item">
+                <md-datepicker
+                  v-model="fecI"
+                  value="fecI"
+                  @input="listarDatosFecha(1)"
+                  md-immediately
+                  :md-model-type="String"
+                >
+                  <label>Fecha de Inicio</label>
+                </md-datepicker>
+              </div>&nbsp;&nbsp;&nbsp;
+              <div class="md-layout-item">
+                <md-datepicker
+                  v-model="fecF"
+                  value="fecF"
+                  @input="listarDatosFecha(1)"
+                  md-immediately
+                  :md-model-type="String"
+                >
+                  <label>Fecha de Final</label>
+                </md-datepicker>
+              </div>&nbsp;&nbsp;&nbsp;
+              <!-- <div class="md-layout-item">                                         -->
+              <!-- <md-checkbox v-model="demo">Finalizados</md-checkbox> -->
+              <!-- </div> -->
+            </div>
             <div class="table-responsive">
               <table class="table table-bordered table-striped table-sm">
                 <thead>
                   <tr class="p-3 mb-2 bg-dark text-white">
-                    <th>Tipo Estacion</th>
+                    <th>N°</th>
+                    <th>Código</th>
+                    <th>Nombre</th>
                     <th>Fecha Realización</th>
                     <th>Fecha Finalización</th>
                     <th>Tipo</th>
@@ -40,6 +88,8 @@
                 </thead>
                 <tbody>
                   <tr v-for="objeto in arrayDatos" :key="objeto.id">                                     
+                    <td v-text="objeto.idMto"></td>
+                    <td v-text="objeto.codigo"></td>
                     <td v-text="objeto.nombre"></td>
                     <td v-text="objeto.fec_realiza"></td>
                     <td v-text="objeto.fec_finaliza"></td>
@@ -73,9 +123,12 @@
                       >
                         <i class="material-icons Color3">edit</i>
                       </md-button>
+                      <md-button class="md-icon-button md-primary " @click="verMtoEs(objeto)" title="Ver Mantenimiento">
+                        <i class="material-icons Color2">visibility</i>
+                      </md-button> 
                       <md-button
                         class="md-icon-button md-primary"
-                        @click="eliminarActE(objeto)"
+                        @click="eliminarMto(objeto)"
                         title="Eliminar"
                       >
                         <i class="material-icons Color4">delete</i>
@@ -116,6 +169,135 @@
               </li>
             </ul>
           </nav>
+          </div>
+        </template>
+        <template v-if="listado==2">
+          <div class="card-body">
+            <h6>Resumen Mantenimiento Estación {{this.textoEtapa}}</h6>
+               <template v-if="bVerE">
+                <table class="table table-bordered table-striped table-sm">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>                  
+                    <th>Modelo</th>
+                    <th>Etapa</th>
+                    <th>Serial</th>
+                    <th>Tren</th>                  
+                    <th>TAG</th>
+                    <th>Opciones</th>
+                  </tr>
+                </thead>
+                <tbody v-if="arrayVerMto.length">
+                  <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
+                  <tr v-for="(detalle, index) in arrayVerMto" :key="`detalle-${index}`">
+                    <td v-text="detalle.nombre"></td>                  
+                    <td v-text="detalle.modelo"></td>
+                    <td v-text="detalle.nomEtapa"></td>
+                    <td v-text="detalle.serial"></td>
+                    <td>
+                       <template v-if="detalle.tp_tren==0">
+                        <span class="badge badge-success">Principal</span>
+                      </template>
+                      <template v-if="detalle.tp_tren==1">
+                        <span class="badge badge-primary">By Pass</span>
+                      </template>
+                    </td>                  
+                    <td v-text="detalle.tag"></td>
+                    <td>
+                    <md-button class="md-icon-button " @click="abrirModal3(detalle)" title="Agregar Actividades">                         
+                        <i class="material-icons Color1">playlist_add_check</i>
+                    </md-button>
+                    <md-button class="md-icon-button md-primary " @click="verAct(detalle)" title="Ver Actividades">
+                        <i class="material-icons Color2">visibility</i>
+                      </md-button>
+                    <md-button class="md-icon-button" @click="abrirModal7(detalle)" title="Agregar Herramientas">
+                        <i class="material-icons Color5">build</i>
+                      </md-button>
+                    <md-button class="md-icon-button md-primary" @click="verEqHta(detalle)" title="Ver Herramientas">
+                        <i class="material-icons Color3">visibility</i>
+                      </md-button>
+                    <md-button class="md-icon-button" @click="abrirModal4(detalle)" title="Agregar Insumos">
+                        <i class="material-icons Color6">format_paint</i>
+                      </md-button>
+                    <md-button class="md-icon-button md-primary" @click="verIns(detalle)" title="Ver Insumos">
+                        <i class="material-icons Color3">visibility</i>
+                      </md-button>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody v-else>
+                  <tr>
+                    <td colspan="7">NO hay Equipos relacionados a la etapa seleccionada.</td>
+                  </tr>
+                </tbody>
+              </table>
+
+               </template>
+                 <template v-if="bVerA">
+              <!-- ver las actividades asignadas a cada equipo -->
+              <div class="table-responsive col-md-12">
+                  <tr v-for="(act, index)  in arrayNomEstacion" :key="`etapa-${index}`">                 
+                  <h5><td  v-text="'Actividades - '+ act.nombre"></td></h5></tr>
+                    <table class="table table-bordered table-striped table-sm">
+                <thead>
+                  <tr>
+                    <th>Actividad</th>                 
+                    <th>Opciones</th>
+                  </tr>
+                </thead>
+                <tbody v-if="arrayVerAct.length">
+                  <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
+                  <tr v-for="(detalle, index) in arrayVerAct" :key="`detalle-${index}`">
+                    <td v-text="detalle.nombre"></td>               
+
+                    <td>
+                      <!-- <button
+                        @click="abrirModal3(detalle)"
+                        type="button"
+                        class="btn btn-dark btn-sm"
+                        data-tooltip
+                        title="Agregar Actividades"
+                      >
+                        <i class="icon-plus"></i>
+                      </button> -->
+                      <button
+                        @click="abrirModal3(detalle)"
+                        type="button"
+                        class="btn btn-info btn-sm"
+                        data-tooltip
+                        title="Ver Actividades"
+                      >
+                        <i class="fa fa-tasks"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody v-else>
+                  <tr>
+                    <td colspan="5">NO hay Actividades relacionados a la etapa seleccionada.</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              </div>
+                <div class="modal-footer">
+                  <md-card-actions>
+                    <!-- <md-button type="submit" class="md-dense md-raised" @click="ocultarDetalle()">Cerrar</md-button> -->
+                    <md-button type="submit" class="md-dense md-raised"  @click="atrasMnt()">Atras</md-button>
+                  </md-card-actions>
+
+              </div>
+            </template>
+          
+
+          <div class="modal-footer">
+            <md-card-actions>
+              <md-button type="submit" class="md-dense md-raised" @click="ocultarDetalle()">Cerrar</md-button>
+            </md-card-actions>
+          </div>
+
+
+     
           </div>
         </template>
         <template v-else-if="listado==0">
@@ -195,7 +377,7 @@
                           v-for="(estacion,index) in arrayEstacion"
                           :key="`estacion-${index}`"
                           :value="estacion.id"                        
-                        >{{estacion.nombre}}</md-option>
+                        >{{estacion.codigo}}</md-option>
                       </md-select>
                     </md-field>
                   </div>
@@ -203,6 +385,7 @@
                 <div class="md-layout"></div>
 
                 <md-button class="md-raised md-primary" @click="setDone('first', 'second')">Continue</md-button>
+                <md-button type="submit" class="md-dense md-raised" @click="ocultarDetalle()">Cerrar</md-button>
               </md-step>
 
               <md-step
@@ -303,7 +486,9 @@
                     </table>
                   </div>
                 </div>
-</template>
+        </template>
+
+
 
         <template v-if="bEtapa">
           <!-- Template equipos etapa principal -->
@@ -347,12 +532,12 @@
                     >
                       <i class="icon-check"></i>
                     </button> -->
-                     <template v-if="detalle.edo_mto=='1'">
+                     <!-- <template v-if="detalle.edo_mto=='1'">
                         <button type="button" class="btn btn-info btn-sm" data-tooltip title="En Mantenimiento" @click="dessetTecnico(articulo.id)">
                           <i class="fa fa-hourglass-start"></i>
                         </button>
-                    </template>
-                    <template v-else>
+                    </template> -->
+                    <template>
                  
                         <button type="button" class="btn btn-success btn-sm" data-tooltip title="Disponible" @click="agregarDetalleMto(detalle)">
                             <i class="icon-check"></i>
@@ -548,6 +733,7 @@
                   </md-card-actions>
               </div>
             </template>
+         
                 <!-- <md-button class="md-raised md-primary" @click="setDone('third')">Done</md-button> -->
             
             <template v-if="bVerA">
@@ -771,7 +957,7 @@
             :md-done.sync="fourt"
           >
           <div class="modal-body">
-      <div class="md-layout">
+          <div class="md-layout">
         <!-- <div class="md-layout-item">
           <md-field md-clearable>
             <label>Asignado a:</label>
@@ -892,6 +1078,23 @@
             </md-card-actions>
           </div>
           </md-step>
+          <!-- <md-step
+            id="five"
+            md-label="Resumen Mantenimiento"            
+            :md-done.sync="five"
+          >
+          <div class="modal-body">
+
+          </div>
+   
+          <div class="modal-footer">
+          <md-card-actions>
+            <md-button type="submit" class="md-dense md-raised" @click="ocultarDetalle()">Cerrar</md-button>
+                      
+          </md-card-actions>
+    
+          </div>
+          </md-step> -->
           </md-steppers>
           </div>          
         </template>
@@ -1192,7 +1395,7 @@
                     <td>
                       <button
                         type="button"
-                        @click="agregarDetAct(objeto)"
+                        @click="agregarDetAct(objeto,index)"
                         class="btn btn-success btn-sm"
                       >
                         <i class="icon-check"></i>
@@ -1301,7 +1504,7 @@
                     <td>
                       <button
                         type="button"
-                        @click="agregarDetInsEq(objeto)"
+                        @click="agregarDetInsEq(objeto,index)"
                         class="btn btn-success btn-sm"
                       >
                         <i class="icon-check"></i>
@@ -1635,7 +1838,7 @@
                     <td>
                       <button
                         type="button"
-                        @click="agregarDetEqHta(objeto)"
+                        @click="agregarDetEqHta(objeto,index)"
                         class="btn btn-success btn-sm"
                       >
                         <i class="icon-check"></i>
@@ -1721,6 +1924,7 @@
 import format from "date-fns/format";
 import Toasted from 'vue-toasted';
 import vSelect from "vue-select";
+import JsonExcel from 'vue-json-excel'
 
 import { validationMixin } from "vuelidate";
 import {
@@ -1744,6 +1948,7 @@ Vue.use(MdMenu);
 Vue.use(MdList);
 Vue.use(MdDatepicker);
 Vue.use(MdSteppers);
+Vue.component('downloadExcel', JsonExcel);
 
 import { required, minLength } from "vuelidate/lib/validators";
 import { MdAutocomplete } from 'vue-material/dist/components';
@@ -1822,6 +2027,8 @@ export default {
       arrayPerso: [],
       arrayTec: [],
       arrayDatos: [],
+      arrayDatosExcel: [],
+      arrayDatosExcel2: [],
       arrayTrenEquipos: [],
 
       arrayDel: [],
@@ -1849,9 +2056,12 @@ export default {
       modal7: 0,
       bDetEtapa: 1,
       bVerE: 0,
+      bVerMtoE: 0,
       bVerEqH: 0,
       bVerIns: 0,
       bVerA: 0,
+      fecI: format(now, dateFormat),
+      fecF: format(now, dateFormat),
       bEtapa: null,
       textoEtapa: "",
       tituloModal: "",
@@ -2007,8 +2217,15 @@ export default {
       this.secondStepError = null;
         if (index) {      
           this.active = index;
-        }
-      
+        } 
+    },
+     setDone5(id, index) {
+
+      this[id] = true;
+      this.secondStepError = null;
+        if (index) {      
+          this.active = index;
+        } 
     },
     setError() {
       this.secondStepError = "This is an error!";
@@ -2073,6 +2290,18 @@ export default {
       this.bVerE=1;
       this.textoEtapa = data["nombre"];
       this.idEtapa =data["id"];
+      this.bEtapa = null;
+      this.bDetEtapa = null;
+      this.getEqMto();
+      // this.getExEtapa();
+      // this.getExEtapa1();
+    },
+    verMtoEs(data = []) {
+      this.listado=2;
+      this.bVerE=1;
+      this.textoEtapa = data["nombre"];
+      this.idEtapa =data["id"];
+      this.idMto =data["idMto"];
       this.bEtapa = null;
       this.bDetEtapa = null;
       this.getEqMto();
@@ -2300,7 +2529,7 @@ export default {
         me.mensajeToast("Agregado","bubble","check","success");
       }
     },
-    agregarDetAct(data = []) {
+    agregarDetAct(data = [],index) {
       let me = this;
      
       if (me.encuentra4(data["id"])) {
@@ -2313,6 +2542,7 @@ export default {
           this.idAct= this.idDet;
           this.idDetA= data["id"];
           me.registrarDetAct(this.idAct,this.idDetA);
+          me.arrayAct.splice(index, 1);
           // me.arrayMtoAct.push({
           // idRefE: data["idRef"],          
           // nombre: data["nombre"],
@@ -2323,17 +2553,19 @@ export default {
           
       }
     },
-    agregarDetEqHta(data = []) {
+    agregarDetEqHta(data = [],index) {
       let me = this;
-          this.idDetEq= data["id"];
           this.idMtoEq= this.idDet;
-          me.registrarDetEqHta();     
+          this.idDetEq= data["id"];
+          me.registrarDetEqHta(this.idMtoEq,this.idDetEq);     
+          me.arrayDetEqHta.splice(index, 1); 
     },
-    agregarDetInsEq(data = []) {
+    agregarDetInsEq(data = [],index) {
       let me = this;
-          this.idDetEq= data["id"];
           this.idMtoEq= this.idDet;
-          me.registrarDetInsEq();     
+          this.idDetEq= data["id"];
+          me.registrarDetInsEq(this.idMtoEq,this.idDetEq); 
+          me.arrayDetInsumo.splice(index, 1);    
     },
     agregarDetalleMto(data = []) {
       let me = this;
@@ -2426,6 +2658,69 @@ export default {
       this.arrayDetEqHta=[];
       // this.form.nombre = null;
       // this.form.descripcion = null;
+    },
+    listarDatosFecha(page) {
+      let me = this;
+      var url =
+        "/mto/fecha?page=" +
+        page +
+        "&fecI=" +
+        me.fecI +
+        "&fecF=" +
+        me.fecF;
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayDatos = respuesta.mto.data;
+          me.pagination = respuesta.pagination;
+          me.listarDatosExcel(page);
+          me.listarDatosExcel2(page);
+          
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    listarDatosExcel(page) {
+      let me = this;
+      var url =
+        "/detmtoes/excel?page=" +
+        page +
+        "&fecI=" +
+        me.fecI +
+        "&fecF=" +
+        me.fecF ;
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayDatosExcel = respuesta.mto;
+          
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    listarDatosExcel2(page) {
+      let me = this;
+      var url =
+        "/detactmto/excel?page=" +
+        page +
+        "&fecI=" +
+        me.fecI +
+        "&fecF=" +
+        me.fecF ;
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayDatosExcel2 = respuesta.detact;
+          
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     listarMto(page, buscar, criterio) {
       let me = this;
@@ -2745,15 +3040,15 @@ export default {
           console.log(error);
         });
     },
-    registrarDetEqHta() {
+    registrarDetEqHta(idMto, idDetEq) {
 
       let me = this;
 
       axios
         .post("/deteqhtamto/registrar", {
           // data: this.arrayMtoAct
-          id_Det: this.idMto,
-          id_Act: this.idDetEq          
+          id_Det: idMto,
+          id_Act: idDetEq          
         })
         .then(function(response) {
           // me.cerrarModal();
@@ -2764,13 +3059,13 @@ export default {
           console.log(error);
         });
     },
-    registrarDetInsEq() {
+    registrarDetInsEq(idMto, idDetEq) {
       let me = this;
       axios
         .post("/deteinsmto/registrar", {
           // data: this.arrayMtoAct
-          id_Det: this.idMto,
-          id_Act: this.idDetEq          
+          id_Det: idMto,
+          id_Act: idDetEq          
         })
         .then(function(response) {
           // me.cerrarModal();
@@ -2836,7 +3131,7 @@ export default {
       //Actualiza la página actual
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
-      me.listarMto(1, "", "nombre");
+      me.listarMto(page, buscar, criterio);
     },
     cambiarPaginaE(page, buscar, criterio) {
       let me = this;
@@ -2989,6 +3284,42 @@ export default {
             .then(function(response) {
               me.ocultarDetalle();
               me.listarEstacion(1, "", "nombre");
+              me.mensaje("Eliminado", "Eliminó ");
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+        } else if (
+          // Read more about handling dismissals
+          result.dismiss === swal.DismissReason.cancel
+        ) {
+        }
+      });
+    },
+    eliminarMto(data = []) {
+      swal({
+        title: "Esta seguro de Eliminar el Mto N° " + data["idMto"]+ ' estación de '+ data["nombre"],
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Aceptar!",
+        cancelButtonText: "Cancelar",
+        confirmButtonClass: "btn btn-success",
+        cancelButtonClass: "btn btn-danger",
+        buttonsStyling: false,
+        reverseButtons: true
+      }).then(result => {
+        if (result.value) {
+          let me = this;
+          this.idMto = data["idMto"];
+          axios
+            .post("/mto/eliminar", {
+              id: this.idMto
+            })
+            .then(function(response) {
+              me.cerrarModal();
+              me.listarMto(1, "", "");
               me.mensaje("Eliminado", "Eliminó ");
             })
             .catch(function(error) {

@@ -7,13 +7,14 @@ use Illuminate\Support\Facades\DB;
 use App\MtoEs;
 use App\DetMtoEs;
 use App\TecMtoEs;
+use App\DetActMtoEs;
 
 class MtoEsController extends Controller
 {
     //     
     public function index(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        // if (!$request->ajax()) return redirect('/');
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;
@@ -23,7 +24,7 @@ class MtoEsController extends Controller
             ->select('estaciones.id as idEstacion','estaciones.nombre','mto_es.id as idMto','mto_es.estado','mto_es.fec_realiza','mto_es.fec_finaliza','mto_es.tp_mto','mto_es.frec')
             ->distinct()                                   
             ->orderBy('estaciones.nombre', 'asc')
-            ->orderBy('mto_es.estado', 'asc')->paginate(15);
+            ->orderBy('mto_es.id', 'asc')->paginate(15);
         }
         else{
             $mto = MtoEs::join('actividadese','det_act_equipo.id_act','=','actividadese.id')    
@@ -48,6 +49,45 @@ class MtoEsController extends Controller
             'mto' => $mto
         ];
     }
+    public function indexFecha(Request $request)
+    {
+        // if (!$request->ajax()) return redirect('/');
+        $buscar = $request->buscar;
+        $fecI = $request->fecI;
+        $fecF = $request->fecF;
+        
+        if ($buscar==''){
+            $mto = MtoEs::join('estaciones','mto_es.id_estacion','=','estaciones.id')           
+            ->select('estaciones.id as idEstacion','estaciones.nombre','estaciones.codigo','mto_es.id as idMto','mto_es.estado','mto_es.fec_realiza','mto_es.fec_finaliza','mto_es.tp_mto','mto_es.frec')
+            ->distinct()  
+            ->whereDate('mto_es.fec_realiza','>=',$fecI)->whereDate('mto_es.fec_realiza','<=',$fecF)                                  
+            ->orderBy('mto_es.id', 'asc')
+            ->orderBy('estaciones.nombre', 'asc')->paginate(15);
+        }
+        else{
+            $mto = MtoEs::join('actividadese','det_act_equipo.id_act','=','actividadese.id')    
+            ->join('ref_equipos','det_act_equipo.id_equipo','=','ref_equipos.id')
+            ->select('actividadese.id','det_act_equipo.id_equipo as idRefE','actividadese.nombre','actividadese.desc')
+            ->distinct()
+            ->where('det_act_equipo.id_equipo',$buscar)            
+            
+            ->orderBy('actividades.nombre', 'asc')->paginate(15);
+        }
+        
+
+        return [
+            'pagination' => [
+                'total'        => $mto->total(),
+                'current_page' => $mto->currentPage(),
+                'per_page'     => $mto->perPage(),
+                'last_page'    => $mto->lastPage(),
+                'from'         => $mto->firstItem(),
+                'to'           => $mto->lastItem(),
+            ],
+            'mto' => $mto
+        ];
+    }
+ 
     public function store2(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
@@ -103,5 +143,12 @@ class MtoEsController extends Controller
         } catch (Exception $e){
             DB::rollBack();
         }      
+    }
+
+    public function destroy(Request $request)
+    {        
+        // $registros=DetActMtoEs::where('id','tal')->get()->toArray();
+        $servicio = MtoEs::findOrFail($request->id);
+        $servicio->delete();    
     }
 }
