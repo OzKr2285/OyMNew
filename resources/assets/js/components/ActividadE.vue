@@ -5,7 +5,7 @@
       <!-- Ejemplo de tabla Listado -->
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i> Gestión de Actividades por Equipo
+          <i class="fa fa-align-justify"></i> Gestión de Procedimientos por Equipo
           <button
             type="button"
             @click="mostrarDetalle()"

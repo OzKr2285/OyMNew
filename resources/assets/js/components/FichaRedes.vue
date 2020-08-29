@@ -330,7 +330,7 @@
               </div>
               <div>
 
-              <div class="md-layout">
+              <div class="md-layout" v-show="verX==1">
                 <md-field>
                   <label>Observación</label>
                   <md-textarea v-model="obs"></md-textarea>
@@ -436,6 +436,7 @@ export default {
       sending: false,
       idTpEstacion: 0,
       idDetRed: 0,
+      verX: 1,
 
       arrayDpto: [],
       arrayDetRed: [],
@@ -642,7 +643,6 @@ export default {
     },
     getGrupoC() {
       let me = this;
-
       var url = "/detTpMaterial/?buscar="+this.arrayMat.id;
       axios
         .get(url)

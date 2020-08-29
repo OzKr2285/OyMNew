@@ -14,12 +14,12 @@
         <meta name="user" content="{{Auth::user()->id}} ">
         <!-- Icons -->
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+
         <!-- <link rel="stylesheet" href="../node_modules/material-design-icons-iconfont/dist/material-design-icons.css"> -->
-        {{-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" --}}
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
         
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
-        
-        > 
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
         
         {{-- <link rel="stylesheet" href="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.min.css"> --}}
         <link href="css/plantilla.css" rel="stylesheet">

@@ -169,6 +169,7 @@ Route::group(['middleware'=>['auth']],function(){
         Route::get('/detactok', 'DetActOkController@index');
 
         Route::get('/detactmtoet', 'DetActMtoETController@index');
+        Route::get('/detactmtoet/excel', 'DetActMtoETController@indexExcel');
         Route::post('/detactmtoet/registrar', 'DetActMtoETController@store');
         Route::post('/detactmtoet/eliminar', 'DetActMtoETController@destroy');
 
@@ -376,6 +377,8 @@ Route::group(['middleware'=>['auth']],function(){
         Route::post('/novedad/eliminar', 'NovedadController@destroy');
         Route::get('/novedad/selectNovedad', 'NovedadController@selectNovedad');
 
+        Route::get('/nummto', 'NumMtoEsController@getNum');   
+
         Route::get('/objpqrs', 'ObjPQRSController@index');
         Route::post('/objpqrs/registrar', 'ObjPQRSController@store');
         Route::put('/objpqrs/actualizar', 'ObjPQRSController@update');
@@ -419,6 +422,7 @@ Route::group(['middleware'=>['auth']],function(){
         Route::put('/detreqinsumo/actualizar', 'DetReqInsumoController@update');
 
         Route::get('/reqinsumo', 'ReqInsumoController@index');
+        Route::get('/reqinsumo/getedo', 'ReqInsumoController@getEdo');
         Route::post('/reqinsumo/registrar', 'ReqInsumoController@store');
 
         Route::get('/red', 'RedController@index');
@@ -441,6 +445,8 @@ Route::group(['middleware'=>['auth']],function(){
 
         Route::get('/tecserv', 'TecServPqrsController@index');
         Route::get('/tecserv/detTecnicos', 'TecServPqrsController@detTecnicos');
+        
+        Route::get('/tecmto', 'TecMtoEsController@index');
 
         Route::get('/ticketserv', 'TicketServController@index');
         Route::get('/ticketserv/fecha', 'TicketServController@indexFecha');
@@ -501,6 +507,9 @@ Route::group(['middleware'=>['auth']],function(){
         Route::put('/venta/desactivar', 'ventaController@desactivar');
         Route::get('/venta/obtenerCabecera', 'ventaController@obtenerCabecera');
         Route::get('/venta/obtenerDetalles', 'ventaController@obtenerDetalles');
+
+        Route::get('/valprot/getProt', 'ValProtocolosController@selectPro');
+        Route::get('/valdetprot', 'ValDetProtocoloController@index');
 
 
     });

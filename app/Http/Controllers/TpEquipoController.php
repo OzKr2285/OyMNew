@@ -60,7 +60,7 @@ class TpEquipoController extends Controller
     }
 
     public function selectTpEquipo(Request $request){
-          if (!$request->ajax()) return redirect('/');
+        //   if (!$request->ajax()) return redirect('/');
          $tpequipo = TpEquipo::select('id','nombre')->orderBy('nombre', 'asc')->get();
         return ['tpequipo' =>  $tpequipo];
     }

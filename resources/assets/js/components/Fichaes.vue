@@ -379,7 +379,7 @@
               <tbody v-if="arrayTrenPpal.length">
                 <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
                 <tr v-for="(detalle, index) in arrayTrenPpal" :key="`detalle-${index}`">
-                  <td v-text="detalle.nomequipo"></td>                  
+                  <td v-text="detalle.nombre"></td>                  
                   <td v-text="detalle.modelo"></td>
                   <td v-text="detalle.serial"></td>
                   <td v-text="detalle.tag"></td>
@@ -451,7 +451,7 @@
               <tbody v-if="arrayTrenByPass.length">
                 <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
                 <tr v-for="(detalle, index) in arrayTrenByPass" :key="`detalle-${index}`">
-                  <td v-text="detalle.nomequipo"></td>
+                  <td v-text="detalle.nombre"></td>
                   <td v-text="detalle.modelo"></td>
                   <td v-text="detalle.serial"></td>
                   <td v-text="detalle.tag"></td>

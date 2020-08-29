@@ -168,14 +168,14 @@
                     <span class="badge badge-danger">Pendiente</span>
                   </template>
                 </td>
-                <td>
+                <!-- <td>
                     <md-button
                     class="md-icon-button"
                     @click="verActOk(objeto)"
                     title="Ejecutar"
                   >
                     <i class="material-icons Color3">verified</i>
-                  </md-button>
+                  </md-button> -->
 <!--   
                   <md-button
                     class="md-icon-button md-primary"
@@ -184,7 +184,7 @@
                   >
                     <i class="material-icons Color4">delete</i>
                   </md-button> -->
-                </td>
+                <!-- </td> -->
               </tr>
             </tbody>
             <tbody v-else>
@@ -219,7 +219,7 @@
             </tbody>
             <tbody v-else>
               <tr>
-                <td colspan="3">NO hay Actividades asignadas comuniquese con el Técnico lider.</td>
+                <td colspan="3">NO hay Equipos asignados comuniquese con el Técnico lider.</td>
               </tr>
             </tbody>
           </table>
@@ -348,10 +348,17 @@
                 </tbody>
               </table>
                 </div>             
+              <div class="md-layout" md-clearable>
+                  <md-field  >
+                    <label>Observación del Mantenimiento</label>
+                    <md-textarea v-model="obsMto"></md-textarea>
+                    <md-icon>description</md-icon>
+                  </md-field>
+                </div>
               </div>
                 <md-button class="md-raised md-primary" @click="ocultarDetalle()">Cerrar</md-button>
         </md-step>
-              <md-step
+          <md-step
                 id="second"
                 md-label="Solicitar Insumos"
                 :md-error="secondStepError"
@@ -390,6 +397,9 @@
                   <md-button class="md-icon-button md-primary" @click="abrirModal7()">
                     <md-icon>playlist_add_check</md-icon>
                   </md-button>  
+                  <md-button class="md-icon-button md-accent " @click="getReqIns()">
+                    <md-icon>update</md-icon>
+                  </md-button>  
                   <h6>
                     <small class="text-muted">Insumos requeridos para Ejecutar el mantenimiento</small>
                   </h6>                                                  
@@ -414,7 +424,7 @@
                           <td v-text="detalle.codigo"></td>
                           <td v-text="detalle.nombre"></td>
                           <td v-text="detalle.cant"></td>
-                          <td v-text="detalle.und_med"></td>
+                          <td v-text="detalle.und_med"></td>                        
                           <td>
                             <template v-if="detalle.edo==0">
                               <span class="badge badge-warning">Solicitado</span>
@@ -426,7 +436,7 @@
                               <span class="badge badge-dark">Entregado</span>
                             </template>
                           </td>
-                          <td v-text="detalle.fecE"></td>
+                            <td v-text="detalle.fec_entrega"></td>
 
                           <td>   
                             <md-button class="md-icon-button md-primary " @click="eliminarInsumo(index)" title="Eliminar">
@@ -448,7 +458,7 @@
               <md-card-actions>
               <md-button
                 type="submit"
-                v-if="tipoAccion==0"
+                v-if="edoReqIns==0"
                    class="md-raised md-primary"
                     @click="registarReqIns()"
                 :disabled="sending"
@@ -456,10 +466,10 @@
               >Solicitar</md-button>              
               <md-button
                 type="submit"
-                v-if="tipoAccion==1"
+                v-if="edoReqIns==1"
                 class="md-dense md-raised md-primary"
                 :disabled="sending"
-                @click="setDone2('third', 'fourth')"
+                @click="setDone2('second', 'third')"
               >Continue</md-button>
             </md-card-actions>
                   <!-- <md-button
@@ -685,67 +695,164 @@
 
           <template v-if="bVerE">
             <!-- Ver equipos en Mto etapa principal y Bypass -->
-
-            <div class="table-responsive col-md-12">
-              <tr v-for="(etapa, index)  in arrayNomEstacion" :key="`etapa-${index}`">                 
-                <h5><td  v-text="'Estación - '+ etapa.nombre"></td></h5>
+          <h6>
+            Reporte de mantenimiento realizado al equipo de   
+            <small class="text-muted">{{this.textoEtapa}}    </small>
+              Código Mto:  <small class="text-muted">{{this.codMto}}    </small>
+            </h6>
+          <div class="table-responsive">
+           <small class="text-muted">Procedimiento que debe realizar en el mantenimiento</small>
+          <table class="table table-bordered table-striped table-sm">
+            <thead>
+              <tr class="p-3 mb-2 bg-dark text-white">
+                <th>Procedimiento</th>
+                <th>Estado</th>
+                <th>Opciones</th>
               </tr>
-              <h6> {{"Mantenimiento de Equipos "}}
-              
-              </h6>                  
-              <br>
-              <table class="table table-bordered table-striped table-sm">
-                <thead>
-                  <tr>
-                    <th>Etapa</th>
-                    <th>TAG</th>
-                    <th>Serial</th>
-                    <th>Modelo</th>
-                    <th>Nombre</th>                  
-                    <th>Tren</th>                  
-                    <th>Opciones</th>
-                  </tr>
-                </thead>
-                <tbody v-if="arrayMtoPpal.length">
-                  <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
-                  <tr v-for="(detalle, index) in arrayMtoPpal" :key="`detalle-${index}`">
-                    <td v-text="detalle.nomEtapa"></td>
-                    <td v-text="detalle.tag"></td>
-                    <td v-text="detalle.serial"></td>
-                    <td v-text="detalle.modelo"></td>
-                    <td v-text="detalle.nombre"></td>                  
-                    <td>
-                       <template v-if="detalle.tp_tren==0">
-                        <span class="badge badge-success">Principal</span>
-                      </template>
-                      <template v-if="detalle.tp_tren==1">
-                        <span class="badge badge-primary">By Pass</span>
-                      </template>
-                    </td>                  
-                    <td>
-                    <md-button class="md-icon-button " @click="abrirModal3(detalle)" title="Agregar Actividades">                         
-                        <i class="material-icons Color1">playlist_add_check</i>
-                    </md-button>
-                    <md-button class="md-icon-button md-primary " @click="verAct(detalle)" title="Ver Actividades">
-                        <i class="material-icons Color2">visibility</i>
-                      </md-button>
-                    <md-button class="md-icon-button" @click="abrirModal4(detalle)" title="Agregar Insumos">
-                        <i class="material-icons Color1">build</i>
-                      </md-button>
-                    <md-button class="md-icon-button md-primary" @click="verAct(detalle)" title="Ver Insumos">
-                        <i class="material-icons Color3">visibility</i>
-                      </md-button>
-                    </td>
-                  </tr>
-                </tbody>
-                <tbody v-else>
-                  <tr>
-                    <td colspan="7">NO hay Equipos relacionados a la etapa seleccionada.</td>
-                  </tr>
-                </tbody>
-              </table>
-                </div>
-            
+            </thead>
+            <tbody v-if="arrayVerAct.length">
+              <tr v-for="(objeto,index) in arrayVerAct" :key="`detalle-${index}`">                                     
+                <td v-text="objeto.nombre"></td>
+                <td>       
+                  <template v-if="objeto.edo==1">
+                    <span class="badge badge-success">Realizado</span>
+                  </template>
+                  <template v-else>
+                    <span class="badge badge-danger">Pendiente</span>
+                  </template>
+                </td>
+                 <td>
+                    <md-button
+                    class="md-icon-button"
+                    @click="verActOk(objeto)"
+                    title="Ejecutar"
+                  >
+                    <i class="material-icons Color3">verified</i>
+                  </md-button> 
+  
+                  <md-button
+                    class="md-icon-button md-primary"
+                    @click="eliminarActE(objeto)"
+                    title="Eliminar"
+                  >
+                    <i class="material-icons Color4">delete</i>
+                  </md-button>
+                </td>
+              </tr>
+            </tbody>
+            <tbody v-else>
+              <tr>
+                <td colspan="3">NO hay Actividades asignadas comuniquese con el Técnico lider.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-responsive">
+          <div class="d-flex flex-row-reverse">
+            <md-button class="md-icon-button md-primary" @click="abrirModal9()">
+              <md-icon>playlist_add_check</md-icon>
+            </md-button>     
+            <h6>
+              <small class="text-muted">Reporte Insumos utilizados en el mantenimiento</small>
+            </h6>                                                  
+          </div>
+           <!-- <small class="text-muted">Reporte Insumos utilizados en el mantenimiento</small> -->
+          <table class="table table-bordered table-striped table-sm">
+            <thead>
+              <tr class="p-3 mb-2 bg-success text-white">
+                  <th>Código</th>
+                  <th>Nombre</th>
+                  <th>Cant. Solicita</th>
+                  <th>Unidad Medida</th>
+                  <th>Cant. Utiliza</th>
+                  <th>Devolución insumos</th>
+                   <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody v-if="arrayDevIns.length">
+              <tr v-for="(objeto,index) in arrayDevIns" :key="`detalle-${index}`">                                     
+                <td v-text="objeto.codigo"></td>
+                <td v-text="objeto.nombre"></td>
+                <td v-text="objeto.cantS"></td>
+                <td v-text="objeto.undMed"></td>
+                <td v-text="objeto.cant"></td>
+                <td v-text="objeto.cantE"></td>
+ 
+                 <td>
+                    <md-button
+                    class="md-icon-button"
+                    @click="verActOk(objeto)"
+                    title="Ejecutar"
+                  >
+                    <i class="material-icons Color3">verified</i>
+                  </md-button> 
+  
+                  <md-button
+                    class="md-icon-button md-primary"
+                    @click="eliminarActE(objeto)"
+                    title="Eliminar"
+                  >
+                    <i class="material-icons Color4">delete</i>
+                  </md-button>
+                </td>
+              </tr>
+            </tbody>
+            <tbody v-else>
+              <tr>
+                <td colspan="7">NO hay Insumos pendientes por devolución, comuniquese con el Técnico lider.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+            <div class="table-responsive">
+          <div class="d-flex flex-row-reverse">
+            <md-button class="md-icon-button md-primary" @click="abrirModal10()">
+              <md-icon>playlist_add_check</md-icon>
+            </md-button>     
+            <h6>
+              <small class="text-muted">Reporte Técnicos que ejecutaron el mantenimiento</small>
+            </h6>                                                  
+          </div>
+           <!-- <small class="text-muted">Reporte Insumos utilizados en el mantenimiento</small> -->
+          <table class="table table-bordered table-striped table-sm">
+            <thead>
+              <tr class="p-3 mb-2 bg-danger text-white">                  
+                  <th>Nombre</th>
+                  <th>Cargo</th>
+                  <th>Tiempo</th>
+                   <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody v-if="arrayTecMto.length">
+              <tr v-for="(objeto,index) in arrayTecMto" :key="`detalle-${index}`">                                                     
+                <td v-text="objeto.nombre"></td>
+                <td v-text="objeto.cargo"></td>
+                <td v-text="objeto.cant"></td>                
+                 <td>
+                  <md-button
+                    class="md-icon-button md-primary"
+                    @click="eliminarActE(objeto)"
+                    title="Eliminar"
+                  >
+                    <i class="material-icons Color4">delete</i>
+                  </md-button>
+                </td>
+              </tr>
+                <tr style="background-color: #d0d2dd;">
+                <!-- <td colspan="1"></td> -->
+                <td colspan="2" align="right"><strong>Total:</strong></td>
+                <td>{{parseFloat(calcularTotal)}} min</td>
+                <td>{{total=calcularTotalH}} hrs</td>
+                <td colspan="4"></td>
+              </tr>
+            </tbody>
+            <tbody v-else>
+              <tr>
+                <td colspan="7">NO hay Insumos pendientes por devolución, comuniquese con el Técnico lider.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>    
                 <div class="modal-footer">
                   <md-card-actions>
                     <md-button type="submit" class="md-dense md-raised" @click="ocultarDetalle()">Cerrar</md-button>
@@ -831,140 +938,202 @@
           </md-step>
           <md-step
             id="fourth"
-            md-label="Asignar Técnicos"            
+            md-label="Validar Mantenimiento"            
             :md-done.sync="fourt"
           >
-          <div class="modal-body">
-            <div class="table-responsive">
-              <table class="table table-bordered table-striped table-sm">
-                <thead>
-                  <tr>
-                    <th>Orden</th>
-                    <th>Nombre</th>
-                    <th>Opciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(objeto, index)  in arrayActOk" :key="`objeto-${index}`">
-                    <td v-text="objeto.orden"></td>
-                    <td v-text="objeto.nombre"></td>
-                    <td>
-                      <!-- <button
-                        type="button"
-                        @click="agregarDetalleModal(objeto)"
-                        class="btn btn-success btn-sm"
-                      >
-                        <i class="icon-check"></i>
-                      </button> -->
-                      <md-button
-                        class="md-icon-button"
-                        @click="eliminarActOk(index)"
-                        title="Ejecutar"
-                      >
-                        <i class="material-icons Color2">verified_user</i>
-                      </md-button>
- 
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+          <div class="card-body">
+            <h6>
+                Validación de mantenimiento realizado al equipo de   
+                <small class="text-muted">{{this.textoEtapa}}    </small>
+                  Código Mto:  <small class="text-muted">{{this.codMto}}    </small>
+            </h6>
+            <!-- <div class="md-layout">
+            <div class="md-layout-item">
+                <md-switch v-model="vArriba" >Válvula Aguas Arriba</md-switch>
             </div>
-      <!-- <div class="md-layout"> -->
-        <!-- <div class="md-layout-item">
-          <md-field md-clearable>
-            <label>Asignado a:</label>
-            <md-select v-model="idTec" md-dense>
-              <md-option v-for="(objeto, index)  in arrayPerso" :value="objeto.id"  :key="`objeto-${index}`" @change="agregarTecnico(objeto)"     
-              >{{objeto.nombreFull}}</md-option>
-            </md-select>
-          </md-field>
-        </div>&nbsp;&nbsp;&nbsp; -->
-           <!-- <div class="md-layout-item">
-            <md-field md-clearable>
-              <label>Técnico</label>
-              <md-select v-model="idTec" md-dense>
-                <md-option
-                  v-for="perso in arrayPerso"
-                  :key="perso.id"
-                  :value="perso.id"
-                >{{perso.nombre}}</md-option>
-              </md-select>
-             </md-field>
-            </div>&nbsp;&nbsp;&nbsp;  -->
-            <!-- <div class="md-layout-item">
-            <md-field md-clearable>
-                <label>Responsabilidad</label>
-                <md-select v-model="idRespo" md-dense >
-                  <md-option
-                    v-for="frec in arrayRespo"
-                    :key="frec.id"
-                    :value="arrayRespo.indexOf(frec)"
-                  >{{frec}}</md-option>
-                </md-select>
+            <div class="md-layout-item">
+                <md-switch v-model="vAbajo" >Válvula Aguas Abajo</md-switch>
+            </div>
+             <div class="md-layout-item">
+                <md-field md-clearable>
+                <label for="first-name">Manómetro Direrencial Registrando que marque 0 psi</label>
+                <md-input
+                  name="cant"
+                  type="number"
+                  id="cant"
+                  autocomplete="cant"
+                  v-model="cant"
+                  :disabled="sending"
+                />
               </md-field>
-            </div>&nbsp;&nbsp;&nbsp;  -->
-   
-      
-                <!-- <md-button class="md-icon-button md-dense md-raised md-primary" @click="abrirModal5()">
-                  <md-icon>supervisor_account</md-icon>
-                </md-button> -->
-                <!-- <md-button class="md-fab-bottom-left md-mini" @click="abrirModal5()">
-                 <md-icon>group_add</md-icon>
-                </md-button> -->
-            <!-- </div> -->
-            
-            <!-- <div class="table-responsive col-md-12">     
-              <table class="table table-bordered table-striped table-sm">
-                <thead>
-                  <tr>
-                    <th>Técnico Asignado</th>
-                    <th>Rol</th>
-                    <th>Opciones</th>
-                  </tr>
-                </thead>
-                <tbody v-if="arrayTec.length">
-                  <tr v-for="(objeto, index)  in arrayTec" :key="`objeto-${index}`">
-                    <td v-text="objeto.nombre"></td>
-                    <td>
-                      <template v-if="objeto.Rol">
-                       <span class="badge badge-primary">Responsable</span>
-                      </template>
-                      <template v-else>
-                        <span class="badge badge-secondary">Auxiliar</span>
-                      </template>
-                    </td>
-                    <td>
-                      <md-button class="md-icon-button md-primary " @click="eliminarDetalle(index)" title="Eliminar">
-                        <i class="material-icons Color4">delete</i>
-                      </md-button>
-                      <template v-if="objeto.Rol==0">
-                        <md-button class="md-icon-button md-primary " @click="setTecnico(arrayTec.indexOf(objeto))" title="Ascender a Lider">
-                        <i class="material-icons Color3">arrow_upward</i>
-                      </md-button>
-                      </template>
-                      <template v-else>
-                        <md-button class="md-icon-button md-primary " @click="unsetTecnico(arrayTec.indexOf(objeto))" title="Descender a Lider">
-                        <i class="material-icons Color1">arrow_downward</i>
-                        </md-button>
-                      </template>
-                   
-                    </td>                         
-                  </tr>
-                </tbody>
-                <tbody v-else>
-                  <tr>
-                    <td colspan="5">NO hay Técnicos asignados al mantenimiento</td>
-                  </tr>
-                </tbody>
-              </table>
-            <div class="md-layout" md-clearable>
-                  <md-field  >
-                    <label>Observación del Mantenimiento</label>
-                    <md-textarea v-model="descripcion"></md-textarea>
-                    <md-icon>description</md-icon>
-                  </md-field>
-                </div>
+          </div>
             </div> -->
+            <div class="md-layout" md-clearable>
+              <md-field  >
+                <label>Descripción del Mantenimiento</label>
+                <md-textarea v-model="obsMto"></md-textarea>
+                <md-icon>description</md-icon>
+              </md-field>
+            </div>
+
+  <div class="card-body">
+      <h6>
+          <small class="text-muted">Revise y valide el estado en el cual debe quedar la estación {{this.textoEstación}}</small>
+      </h6> 
+    <md-steppers md-vertical>
+      <md-step id="first" md-label="Validación Etapa" md-description="Optional">
+          <table class="table table-bordered table-striped table-sm">
+            <thead>
+              <tr class="p-3 mb-2 bg-success text-white">                  
+                  <th>Nombre</th>
+                  <th>Cargo</th>
+                  <th>Tiempo</th>
+                   <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody v-if="arrayMtoPpal.length">
+              <tr v-for="(objeto,index) in arrayMtoPpal" :key="`detalle-${index}`">                                                     
+                <td v-text="objeto.nombre"></td>
+                <td v-text="objeto.cargo"></td>
+                <td v-text="objeto.cant"></td>                
+                 <td>
+                  <md-button
+                    class="md-icon-button md-primary"
+                    @click="eliminarActE(objeto)"
+                    title="Eliminar"
+                  >
+                    <i class="material-icons Color4">delete</i>
+                  </md-button>
+                </td>
+              </tr>
+   
+            </tbody>
+            <tbody v-else>
+              <tr>
+                <td colspan="7">NO hay Insumos pendientes por devolución, comuniquese con el Técnico lider.</td>
+              </tr>
+            </tbody>
+          </table>
+
+      </md-step>
+
+      <md-step id="second" md-label="Validación Estación">
+           <table class="table table-bordered table-striped table-sm">
+            <thead>
+              <tr class="p-3 mb-2 bg-danger text-white">                  
+                  <th>Etapa</th>
+                  <th>Variable</th>
+                  <th>Brazo Ppal</th>
+                  <th>Brazo ByPass</th>
+                   <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody v-if="arrayDetProto.length">
+              <tr v-for="(objeto,index) in arrayDetProto" :key="`detalle-${index}`">                                                     
+                <td v-text="objeto.nomEtapa"></td>
+                <td v-text="objeto.nombre"></td>
+                <!-- <td v-text="objeto.brazo_ppal"></td> -->
+                <!-- <td v-text="objeto.brazo_bypass"></td> -->
+            <td>
+              <template v-if="objeto.brazo_ppal=='Cerrada'">
+                <span class="badge badge-dark">Cerrada</span>
+              </template>
+              <template v-if="objeto.brazo_ppal=='Abierta'">
+                <span class="badge badge-success">Abierta</span>
+              </template>
+              <template v-if="objeto.brazo_ppal=='Encendida'">
+                <span class="badge badge-success">Encendida</span>
+              </template>
+              <template v-if="objeto.brazo_ppal=='Verde'">
+                <span class="badge badge-success">Verde</span>
+              </template>
+              <template v-if="objeto.brazo_ppal=='Rutina'">
+                <span class="badge badge-primary">Rutina Operando</span>
+              </template>
+            </td>              
+            <td>
+              <template v-if="objeto.brazo_bypass=='Cerrada'">
+                <span class="badge badge-dark">Cerrada</span>
+              </template>
+              <template v-if="objeto.brazo_bypass=='Abierta'">
+                <span class="badge badge-success">Abierta</span>
+              </template>
+              <template v-if="objeto.brazo_bypass=='Encendida'">
+                <span class="badge badge-success">Encendida</span>
+              </template>
+              <template v-if="objeto.brazo_bypass=='Verde'">
+                <span class="badge badge-success">Verde</span>
+              </template>
+              <template v-if="objeto.brazo_ppal=='Rutina'">
+                <span class="badge badge-primary">Rutina Operando</span>
+              </template>
+            </td>              
+                 <td>
+                  <md-button
+                    class="md-icon-button md-primary"
+                    @click="validarProto(objeto)"
+                    title="Eliminar"
+                  >
+                    <i class="material-icons Color2">verified_user</i>
+                  </md-button>
+                </td>
+              </tr>
+
+            </tbody>
+            <tbody v-else>
+              <tr>
+                <td colspan="7">NO hay Insumos pendientes por devolución, comuniquese con el Técnico lider.</td>
+              </tr>
+            </tbody>
+          </table>
+
+      </md-step>
+
+      <!-- <md-step id="third" md-label="Third Step">
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias doloribus eveniet quaerat modi cumque quos sed, temporibus nemo eius amet aliquid, illo minus blanditiis tempore, dolores voluptas dolore placeat nulla.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias doloribus eveniet quaerat modi cumque quos sed, temporibus nemo eius amet aliquid, illo minus blanditiis tempore, dolores voluptas dolore placeat nulla.</p>
+      </md-step> -->
+    </md-steppers>
+  </div>
+
+
+<div
+          class="uploader"
+          @dragenter="OnDragEnter"
+          @dragleave="OnDragLeave"
+          @dragover.prevent
+          @drop="onDrop"
+          :class="{ dragging: isDragging }"
+        >
+          <div class="upload-control" v-show="images.length">
+            <!-- <label for="file">Anexar otra Imágen</label> -->
+            <button @click="upload">Cambiar</button>
+            <button @click="abrirList">Cancelar</button>
+          </div>
+
+          <div v-show="!images.length">
+            <i class="fa fa-cloud-upload"></i>
+            <p>Arrastra tus imágenes aquí</p>
+            <div>O</div>
+            <div class="file-input">
+              <label for="file">Selecciona una Imágen</label>
+              <input type="file" id="file" @change="onInputChange" multiple>
+            </div>
+         
+          </div>
+
+          <div class="images-preview" v-show="images.length">
+            <div class="img-wrapper" v-for="(image, index) in images" :key="index">
+              <img :src="image" :alt="`Image Uplaoder ${index}`">
+              <div class="details">
+                <span class="name" v-text="files[index].name"></span>
+                <span class="size" v-text="getFileSize(files[index].size)"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+
             </div>
    
           <div class="modal-footer">
@@ -1556,13 +1725,212 @@
   <div
       class="modal fade"
       tabindex="-1"
+      :class="{'mostrar' : modal9}"
+      role="dialog"
+      aria-labelledby="myModalLabel"
+      style="display: none;"
+      aria-hidden="true"
+    >
+    <div class="modal-dialog modal-primary modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" v-text="tituloModal"></h4>
+            <button type="button" class="close" @click="cerrarModal9()" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+    <div class="modal-body">
+      <div class="md-layout">
+
+             <div class="md-layout-item md-size-20">
+                <md-field md-clearable>
+                <label for="first-name">Cant. Utilizada</label>
+                <md-input
+                  name="cant"
+                  type="number"
+                  id="cant"
+                  autocomplete="cant"
+                  v-model="cant"
+                  :disabled="sending"
+                />
+              </md-field>
+          </div>
+          </div>
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped table-sm">
+                <thead>
+                  <tr>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Cant. Solicitada</th>
+                    <th>Und. Medida</th>
+                    <th>Opciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(objeto, index)  in arrayReqIns" :key="`objeto-${index}`">
+                    <td v-text="objeto.codigo"></td>
+                    <td v-text="objeto.nombre"></td>
+                    <td v-text="objeto.cant"></td>
+                    <td v-text="objeto.und_med"></td>
+                    <td>
+  
+                      <md-button
+                        class="md-icon-button"
+                        @click="agregarDevIns(objeto,index)"
+                        title="Ejecutar"
+                      >
+                        <i class="material-icons Color2">fact_check</i>
+                      </md-button>
+ 
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+         
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="cerrarModal9()">Cerrar</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>  
+  <div
+      class="modal fade"
+      tabindex="-1"
+      :class="{'mostrar' : modal11}"
+      role="dialog"
+      aria-labelledby="myModalLabel"
+      style="display: none;"
+      aria-hidden="true"
+    >
+    <div class="modal-dialog modal-primary modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" v-text="tituloModal"></h4>
+            <button type="button" class="close" @click="cerrarModal11()" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+    <div class="modal-body">
+      <div class="md-layout">
+        <div v-show="valSw==0" class="md-layout-item">
+          <md-field md-clearable>
+          <label for="first-name">Ingrese el valor</label>
+          <md-input
+            name="cant"
+            type="number"
+            id="cant"
+            autocomplete="cant"
+            v-model="variable"
+            :disabled="sending"
+          />
+        </md-field>
+        </div>
+        <div v-show="valSw==1" class="md-layout-item">
+        
+          <md-switch class="Color2" v-model="swBPpal">Unidad 1</md-switch>
+          <md-switch v-model="swBByP">Unidad 2</md-switch>
+
+        </div>
+      </div>
+     
+         
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="cerrarModal11()">Cerrar</button>
+            <button type="button" class="btn btn-primary" @click="validarVar()">Validar</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>  
+  <div
+      class="modal fade"
+      tabindex="-1"
+      :class="{'mostrar' : modal10}"
+      role="dialog"
+      aria-labelledby="myModalLabel"
+      style="display: none;"
+      aria-hidden="true"
+    >
+    <div class="modal-dialog modal-primary modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" v-text="tituloModal"></h4>
+            <button type="button" class="close" @click="cerrarModal10()" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+    <div class="modal-body">
+      <div class="md-layout">
+
+             <div class="md-layout-item md-size-20">
+                <md-field md-clearable>
+                <label for="first-name">Tiempo Utilizado (Minutos)</label>
+                <md-input
+                  name="cant"
+                  type="number"
+                  id="cant"
+                  autocomplete="cant"
+                  v-model="cant"
+                  :disabled="sending"
+                />
+              </md-field>
+          </div>
+          </div>
+            <div class="table-responsive">
+              <table class="table table-bordered table-striped table-sm">
+                <thead>
+                  <tr>    
+                    <th>Nombre</th>
+                    <th>Cargo</th>                    
+                    <th>Opciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(objeto, index)  in arrayTec" :key="`objeto-${index}`">                    
+                    <td v-text="objeto.nombreFull"></td>
+                    <td v-text="objeto.nombre"></td>                    
+                    <td>
+  
+                      <md-button
+                        class="md-icon-button"
+                        @click="agregarTecMto(objeto,index)"
+                        title="Agregar Técnico"
+                      >
+                        <i class="material-icons Color2">fact_check</i>
+                      </md-button>
+ 
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+         
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="cerrarModal10()">Cerrar</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>  
+  <div
+      class="modal fade"
+      tabindex="-1"
       :class="{'mostrar' : modal7}"
       role="dialog"
       aria-labelledby="myModalLabel"
       style="display: none;"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-primary modal-lg" role="document">
+    <div class="modal-dialog modal-primary modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h4 class="modal-title" v-text="tituloModal"></h4>
@@ -1914,6 +2282,13 @@ export default {
       second: false,
       third: false,
       fourt: false,
+
+      //variables imagen
+      selectedFile: null,
+      isDragging: false,
+      dragCount: 0,
+      files: [],
+      images: [],
       secondStepError: null,
       fourtStepError: null,
 
@@ -1941,6 +2316,11 @@ export default {
       idInsumo: 0,
       codMto: 0,
       cant: 1,
+      variable: 1,
+      valor: 0,
+      valor2: 0,
+      signo: null,
+      obs: "",
 
       idEtapa: 0,
       idMto: 0,
@@ -1957,6 +2337,8 @@ export default {
       fecE: format(now, dateFormat),
       fecInstala: "",
       descripcion: "",
+      obsMto: "",
+      answers: [],
 
       // array Mto Estacion
       
@@ -1967,13 +2349,18 @@ export default {
       arrayAct: [],
       arrayIns: [],
       arrayReqIns: [],
+      arrayDevIns: [],
       arrayInsumo: [],
       arrayDetInsumo: [],
       arrayMtoAct: [],
       arrayPerso: [],
       arrayTec: [],
+      arrayTecMto: [],
       arrayDatos: [],
       arrayTrenEquipos: [],
+      vArriba: [],
+      vAbajo: [],
+      arrayDetProto: [],
 
       arrayActOk: [],
       arrayVerAct: [],
@@ -1999,12 +2386,25 @@ export default {
       modal6: 0,
       modal7: 0,
       modal8: 0,
+      modal9: 0,
+      modal10: 0,
+      modal11: 0,
       bDetEtapa: 1,
+      idP: 0,
       bVerE: 0,
       bVerA: 0,
       bEtapa: null,
       textoEtapa: "",
+      textoEstación: "",
       tituloModal: "",
+      idProto: 0  ,
+      edoReqIns: 0  ,
+      valSw: 0  ,
+      demo: false  ,
+      swBPpal: false  ,
+      swBByP: false  ,
+      DatBPpal: null  ,
+      DatBByP: null  ,
 
       pagination: {
         total: 0,
@@ -2034,6 +2434,22 @@ export default {
   },
 
   computed: {
+    calcularTotal: function(){
+        var resultado=0;
+        for(var i=0;i<this.arrayTecMto.length;i++){
+            resultado=resultado+(parseInt(this.arrayTecMto[i].cant))
+        }
+        return resultado;
+    },
+    calcularTotalH: function(){
+        var resultado=0;
+        var rta=0;
+        for(var i=0;i<this.arrayTecMto.length;i++){
+            resultado=resultado+(parseInt(this.arrayTecMto[i].cant))
+        }
+        rta=(resultado/60).toFixed(2);
+        return rta;
+    },
     type() {
       if (
         typeof this.dynamicByModel === "object" &&
@@ -2095,6 +2511,95 @@ export default {
     }
   },
   methods: {
+      changeImg() {
+        this.listado=0;
+      },
+      abrirList() {
+        this.listado=1;
+      },
+      OnDragEnter(e) {
+      e.preventDefault();
+
+      this.dragCount++;
+      this.isDragging = true;
+
+      return false;
+    },
+    OnDragLeave(e) {
+      e.preventDefault();
+      this.dragCount--;
+
+      if (this.dragCount <= 0) this.isDragging = false;
+    },
+    onInputChange(e) {
+      const files = e.target.files;
+
+      Array.from(files).forEach(file => this.addImage(file));
+    },
+    onDrop(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      this.isDragging = false;
+
+      const files = e.dataTransfer.files;
+
+      Array.from(files).forEach(file => this.addImage(file));
+    },
+    addImage(file) {
+      if (!file.type.match("image.*")) {
+        this.$toastr.e(`${file.name} is not an image`);
+        return;
+      }
+
+      this.files.push(file);
+
+      const img = new Image(),
+        reader = new FileReader();
+
+      reader.onload = e => this.images.push(e.target.result);
+
+      reader.readAsDataURL(file);
+    },
+    getFileSize(size) {
+      const fSExt = ["Bytes", "KB", "MB", "GB"];
+      let i = 0;
+
+      while (size > 900) {
+        size /= 1024;
+        i++;
+      }
+      return `${Math.round(size * 100) / 100} ${fSExt[i]}`;
+    },
+      getImage(event) {
+      //Asignamos la imagen a  nuestra data
+      // console.log(event)
+      this.selectedFile = event.target.files[0];
+      // this.upload();
+    },
+    onInputChange(e) {
+      const files = e.target.files;
+
+      Array.from(files).forEach(file => this.addImage(file));
+    },
+    upload() {
+      let me = this;
+      const formData = new FormData();
+
+      this.files.forEach(file => {
+        formData.append("images[]", file, file.name);
+      });
+
+      axios.post("/user/imagen", formData).then(response => {
+        this.listado=1;
+        this.getImg();
+        me.mensaje("Guardado", "Todas las imagenes se han almacenado ");
+       
+        // this.$toastr.s("All images uplaoded successfully");
+        this.images = [];
+        this.files = [];
+      });
+    },
     toString() {
       this.toDate();
       this.dynamicByModel =
@@ -2122,7 +2627,7 @@ export default {
    
     setDone2(id, index) {
       this[id] = true;
-      this.bDetEtapa=1;
+      // this.bDetEtapa=1;
       this.bEtapa = null;
       this.listado = 0;
       this.secondStepError = null;
@@ -2133,7 +2638,7 @@ export default {
     },
     setDone3(id, index) {
       this[id] = true;
-      
+      this.bDetEtapa=1;
       if (!this.arrayMtoPpal.length){
            this.fourtStepError = "Seleccione un Equipo";
       }
@@ -2147,7 +2652,7 @@ export default {
       }
     },
      setDone4(id, index) {
-      this.abrirModal5();
+      // this.abrirModal5();
       this[id] = true;
       this.secondStepError = null;
         if (index) {      
@@ -2202,6 +2707,24 @@ export default {
       this.tituloModal = "Insumos requeridos en el mantenimiento";
       this.listarInsumos(1, this.buscar, this.criterio);
     },
+    abrirModal9() {
+      // this.idRefE=data["idref"];
+      this.modal9 = 1;
+      this.tituloModal = "Reporte de Insumos utilizados en el mantenimiento";
+      this.getReqIns();
+   
+    },
+    abrirModal10() {
+      // this.idRefE=data["idref"];
+      this.modal10 = 1;
+      this.tituloModal = "Técnicos asociados al mantenimiento";
+      this.getTecMto();
+    },
+    abrirModal11() {
+      // this.idRefE=data["idref"];
+      this.modal11 = 1;
+      this.tituloModal = "Validación de variables"; 
+    },
     regEquiposPpal(data = []) {
       this.textoEtapa = data["nombre"];
       this.idEtapa =data["id"];
@@ -2220,24 +2743,29 @@ export default {
     },
     verEquipos(data = []) {
       this.listado = 0;
-      this.codMto=data["codigo"];
+      this.codMto=data["cod_mto"];
+      this.obsMto=data["obs"];
       this.bVerE=1;
       this.idMto = data["idMto"];
-      this.textoEtapa = data["nombre"];
+      this.textoEstación = data["nombre"];
       this.idEtapa =data["id"];
+      this.idEstacion =data["idEstacion"];
       this.bEtapa = null;
       this.bDetEtapa = null;
       this.getEqMto();
+      this.getProtocolo();
+      this.getEdoReq();
+     
       // this.getExEtapa();
       // this.getExEtapa1();
     },
     verActOk(data = []) {
       this.idActOk = data['id'];
       this.abrirModal6();
-      this.bVerA=1;
-      this.bVerE=null;
+      this.bVerA=0;
+      this.bVerE=1;
       // this.textoEtapa = data["nombre"];
-      this.bDetEtapa = null;
+      this.bDetEtapa = 1;
     },
     verAct(data = []) {
       this.bVerA=1;
@@ -2251,6 +2779,7 @@ export default {
       this.listado=2;
       this.bVerE=1;
       this.textoEtapa = data["nombre"];
+      // this.textoEtapa = data["nombre"];
       // this.idMto =data["idMto"];
       this.bEtapa = null;
       this.bDetEtapa = null;
@@ -2262,6 +2791,7 @@ export default {
       this.getInsEq();
       this.getEqHta();
       this.getReqIns();
+       this.getDetProtocolo();    
       // this.getExEtapa();
       // this.getExEtapa1();
     },
@@ -2314,6 +2844,18 @@ export default {
     },
     cerrarModal8() {
       this.modal8 = 0;
+      this.tituloModal = "";
+    },
+    cerrarModal9() {
+      this.modal9 = 0;
+      this.tituloModal = "";
+    },
+    cerrarModal10() {
+      this.modal10 = 0;
+      this.tituloModal = "";
+    },
+    cerrarModal11() {
+      this.modal11 = 0;
       this.tituloModal = "";
     },
     encuentra(id) {
@@ -2447,13 +2989,27 @@ export default {
       }
     },
     getReqIns() {
+      this.getEdoReq();
       let me = this;
-      var url = "/detreqinsumo/?buscar=" + 19;
+      var url = "/detreqinsumo/?buscar=" + this.idMto;
       axios
         .get(url)
         .then(function(response) {
           var respuesta = response.data;
           me.arrayReqIns = respuesta.req;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    getTecMto() {
+      let me = this;
+      var url = "/tecmto/?buscar=" + this.idMto;
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayTec = respuesta.tecmto;
         })
         .catch(function(error) {
           console.log(error);
@@ -2472,6 +3028,133 @@ export default {
         // me.arrayIns.splice(index, 1);
         me.mensajeToast("Agregado", "bubble", "check", "success");
       
+    },
+    agregarTecMto(data = [],index) {
+      let me = this;
+        me.arrayTecMto.push({
+          id: data["id"],          
+          nombre: data["nombreFull"],
+          cargo: data["nombre"],          
+          cant: this.cant
+        });
+        // me.arrayIns.splice(index, 1);
+        me.mensajeToast("Agregado", "bubble", "check", "success");
+      
+    },
+    agregarDevIns(data = [],index) {
+      let me = this;
+        if (this.cant>data["cant"]) {
+          me.mensajeToast2("Error en la cantidad a devolver, supera las solicitadas", "bubble", "error", "danger");
+        }else{
+        
+        me.cantE=data["cant"]-this.cant;
+        me.arrayDevIns.push({
+          id: data["id"],
+          codigo: data["codigo"],
+          nombre: data["nombre"],
+          undMed: data["und_med"],
+          cantS: data["cant"],
+          cantE: me.cantE,
+          edo: 0,
+          cant: this.cant
+        });
+          me.mensajeToast("Agregado", "bubble", "check", "success");
+        me.arrayReqIns.splice(index, 1);
+        }
+      
+    },
+    validarProto(data = []) {
+      let me = this;
+
+      if (data["is_valida"]==1){
+        this.valor=data['valor'];
+        this.valor2=data['valor2'];
+        this.signo=data['signo'];
+        this.obs=data['obs'];
+        this.DatBPpal=data['brazo_ppal'];
+        this.DatBByP=data['brazo_bypass'];
+        if(this.signo=="sw"){
+          this.valSw=1; 
+          }  
+        this.abrirModal11();
+        // swal({
+        //   type: "error",
+        //   title: "Error...",
+        //   text: "Validacion!"
+        // });
+      } else {
+          me.arrayMtoAct.push({
+          id: data["id"],
+          idRefE: data["idRef"],          
+          nombre: data["nombre"],
+          desc: data["desc"]
+        });
+          me.mensaje("Agregar", "Agrego ");
+      }
+    },
+    validarVar() {
+      let me = this;
+   
+      // tener en cuenta las diferentes combinaciones de signos > >= <= = etc y tambien la observacion seria el mensaje en el caso que exista algun erro es lo que debera mostrar
+      if(this.signo=="="){
+        if(this.variable > this.valor){
+          swal({
+            type: "error",
+            title: "Error...",
+            text: this.obs
+          });
+
+        }else{
+             me.arrayDetProto.push({edoDemo:1})
+          this.mensajeComment();
+        //   swal({
+        //   type: "success",
+        //   title: "Correcto!",
+        //   text: "Validación Exitosa"
+        // });
+        }
+      } 
+      if(this.signo=="sw"){
+          if(this.swBPpal && this.swBByP){
+          //   swal({
+          //     type: "success",
+          //     title: "Correcto!",
+          //     text: "Validación Exitosa"
+          // });
+          this.mensajeComment();
+        }else{
+          swal({
+            type: "error",
+            title: "Error...",
+            text: this.obs
+          });
+        }
+
+        // }
+      }
+    
+      if (this.valor2>0){
+        if(this.variable > this.valor && this.variable < this.valor2){
+      //  swal({
+      //     type: "success",
+      //     title: "Correcto!",
+      //     text: "Validación Exitosa"
+      //   });
+          this.mensajeComment();
+        }else{
+          swal({
+          type: "error",
+          title: "Error...",
+          text: this.obs
+        });
+       
+        }
+        // swal({
+        //   type: "error",
+        //   title: "Error...",
+        //   text: "Validacion!"
+        // });
+      }
     },
     agregarDetAct(data = []) {
       let me = this;
@@ -2800,6 +3483,45 @@ export default {
         .then(function(response) {
           var respuesta = response.data;
           me.arrayMtoPpal= respuesta.equipo;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    getProtocolo() {
+      let me = this;
+      var url = "/valprot/getProt/?buscar=" + this.idEstacion;
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.idProto= respuesta.prot;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    getDetProtocolo() {
+      let me = this;
+      var url = "/valdetprot/?buscar=" + this.idProto;
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayDetProto= respuesta.prot;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
+    getEdoReq() {
+      let me = this;
+      var url = "/reqinsumo/getedo/?buscar=" + this.idMto;
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.edoReqIns= respuesta.prot;
         })
         .catch(function(error) {
           console.log(error);
@@ -3134,8 +3856,34 @@ export default {
       duration : 2000
     });
     },
+    mensajeToast2(msj,tema,icono,tp){
+      let toast = this.$toasted.show(msj, { 
+      theme: tema, 
+      type: tp, 
+      position: "top-right", 
+      icon: icono, 
+      duration : 4000
+    });
+    },
     mensaje(tipo, crud) {
       swal(tipo, "El registro se " + crud + " con éxito.", "success");
+    },
+    mensajeComment(){
+       swal({
+          title: 'Indique brevemente un comentario',
+          input: 'text',     
+          inputAttributes: {
+            autocapitalize: 'off'
+          },
+          showCancelButton: true,
+          confirmButtonText: 'OK',
+          showLoaderOnConfirm: true,
+          allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+          if (result.value) {
+            this.answers.push({comment:result.value});
+          }
+        })
     }
   },
 
@@ -3169,6 +3917,7 @@ export default {
   color: red !important;
   font-weight: bold;
 }
+
 .material-icons.Color1 { color: rgb(31, 33, 34); }
 .material-icons.Color2 { color: rgba(52, 139, 64, 0.849); }
 .material-icons.Color3 { color: rgb(31, 114, 134); }

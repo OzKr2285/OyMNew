@@ -22,8 +22,9 @@ class DetReqInsumoController extends Controller
         else{
             $req = DetReqInsumo::join('req_insumos','det_req_insumos.id_req_insumo','=','req_insumos.id')  
             ->join('ref_materiales','det_req_insumos.id_insumo','=','ref_materiales.id')          
-            ->select('det_req_insumos.fec_entrega','det_req_insumos.id','det_req_insumos.edo','ref_materiales.codigo','ref_materiales.nombre','det_req_insumos.cant','ref_materiales.und_med')                                   
-            ->where('det_req_insumos.id_req_insumo',$buscar)            
+            ->join('mto_es','req_insumos.id_mto','=','mto_es.id')          
+            ->select('det_req_insumos.fec_entrega','det_req_insumos.id','det_req_insumos.edo','ref_materiales.codigo','ref_materiales.nombre','det_req_insumos.cant','ref_materiales.und_med','req_insumos.edo as edoReqIns')                                   
+            ->where('req_insumos.id_mto',$buscar)            
             ->orderBy('det_req_insumos.id', 'asc')->get();
         }
         
@@ -40,4 +41,6 @@ class DetReqInsumoController extends Controller
         $req->fec_entrega=$request->fecE;
         $req->save();    
     }
+
+
 }

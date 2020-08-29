@@ -8,7 +8,7 @@ class MtoEs extends Model
 {
     //
     protected $table = 'mto_es';
-    protected $fillable = ['id','fec_realiza','fec_finaliza','tp_mto','frec','id_estacion','estado'];
+    protected $fillable = ['id','fec_realiza','fec_finaliza','tp_mto','frec','id_estacion','estado','cod_mto','obs'];
     public $timestamps = false;
 
     public function detMtoEs()

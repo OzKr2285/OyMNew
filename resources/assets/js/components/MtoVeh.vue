@@ -1912,7 +1912,7 @@ export default {
       //Actualiza la página actual
       me.pagination.current_page = page;
       //Envia la petición para visualizar la data de esa página
-      me.listarMto(this.page,this.buscar, this.criterio);
+      me.listarMto(page,buscar, criterio);
     },
     cambiarPaginaE(page, buscar, criterio) {
       let me = this;

@@ -1,1 +1,0 @@
-Agregar cantidad a los insumos cuando se realiza la programación del mantenimiento

@@ -11,8 +11,13 @@ class FichaPasoE extends Model
     protected $fillable = [
         'id', 
         'id_red', 
+        'codigo',
         'nombre',
         'desc',
+        'nivel',
+        'id_tp_estru',
+        'id_tp_tub',
+        'fec_opera',
         'total',
         'plano'       
     ];

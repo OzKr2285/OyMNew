@@ -301,6 +301,7 @@ export default {
       modal: 0,
       tituloModal: "",
       tipoAccion: 0,
+      idMto: 0,
 
       pagination: {
         total: 0,
@@ -383,6 +384,7 @@ export default {
       (this.tipoAccion = 2), (me.listado = 0);
 
       this.idReq = data["id"];
+      this.idMto = data["id_mto"];
       this.nombreTec = data["nombreFull"];
       this.obs = data["obs"];
       this.fecS = data["fec_solicitud"];
@@ -396,6 +398,7 @@ export default {
     },
     ocultarDetalle() {
       this.listado = 1;
+      this.listarReq(1, this.buscar, this.criterio);
     },
     listarReq(page, buscar, criterio) {
       let me = this;
@@ -421,7 +424,7 @@ export default {
     },
     getReqIns() {
       let me = this;
-      var url = "/detreqinsumo/?buscar=" + this.idReq;
+      var url = "/detreqinsumo/?buscar=" + this.idMto;
       axios
         .get(url)
         .then(function(response) {
@@ -449,24 +452,7 @@ export default {
           console.log(error);
         });
     },
-    actualizarEtapa() {
-      let me = this;
 
-      axios
-        .put("/etapa/actualizar", {
-          nombre: this.form.nombre.toUpperCase(),
-          desc: this.form.descripcion.toUpperCase(),
-          id: this.idEtapa
-        })
-        .then(function(response) {
-          me.ocultarDetalle();
-          me.listarReq(1, "", "nombre");
-          me.mensaje("Actualizado", "Actualizó ");
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-    },
     actReqIns(data=[]) {
       let me = this;
 
@@ -477,7 +463,7 @@ export default {
         })
         .then(function(response) {
           // me.ocultarDetalle();
-          me.getReqIns();
+          me.getReqIns();          
           me.mensaje("Aprobado", "Aprobó ");
         })
         .catch(function(error) {

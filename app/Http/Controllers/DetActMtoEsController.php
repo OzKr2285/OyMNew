@@ -53,16 +53,23 @@ class DetActMtoEsController extends Controller
             ->join('modelos','equipos.id_modelo','=','modelos.id')         
             ->join('estaciones','mto_es.id_estacion','=','estaciones.id')    
             ->join('actividades','det_act_mto_es.id_actividad','=','actividades.id')           
-            ->select('estaciones.nombre as Estacion','mto_es.id as COD MTO','mto_es.fec_realiza as FECHA INICIO','mto_es.fec_finaliza as FECHA FIN','ref_equipos.nombre as TP EQUIPO','modelos.nombre as MODELO','equipos.serial as SERIAL','det_act_mto_es.id as idDet','actividades.id','actividades.nombre','det_act_mto_es.id_actividad','det_act_mto_es.id_det_mto')                                   
-            ->distinct('mto_es.id')
+            ->select('estaciones.nombre as Estacion','mto_es.id as COD MTO','mto_es.fec_realiza as FECHA INICIO','mto_es.fec_finaliza as FECHA FIN','ref_equipos.nombre as TP EQUIPO','modelos.nombre as MODELO','actividades.nombre AS ACTIVIDAD','mto_es.obs as OBSERVACION')                                   
+            // ->distinct('mto_es.id')
             ->whereDate('mto_es.fec_realiza','>=',$fecI)->whereDate('mto_es.fec_realiza','<=',$fecF)    
             ->orderBy('actividades.nombre', 'asc')->get();
         }
         else{
-            $detact = DetActMtoEs::join('actividades','det_act_mto_es.id_actividad','=','actividades.id')           
-            ->select('det_act_mto_es.id as idDet','actividades.id','actividades.nombre','det_act_mto_es.id_actividad','det_act_mto_es.id_det_mto')            
-            ->where('det_act_mto_es.id_det_mto',$buscar)            
-            ->orderBy('actividades.nombre', 'asc')->paginate(15);
+            $detact = DetActMtoEs::join('det_mto_es','det_act_mto_es.id_det_mto','=','det_mto_es.id')   
+            ->join('mto_es','det_mto_es.id_mto','=','mto_es.id')
+            ->join('equipos','det_mto_es.id_equipo','=','equipos.id')                       
+            ->join('ref_equipos','equipos.id_refequipo','=','ref_equipos.id')          
+            ->join('modelos','equipos.id_modelo','=','modelos.id')         
+            ->join('estaciones','mto_es.id_estacion','=','estaciones.id')    
+            ->join('actividades','det_act_mto_es.id_actividad','=','actividades.id')           
+            ->select('estaciones.nombre as Estacion','mto_es.id as COD MTO','mto_es.fec_realiza as FECHA INICIO','mto_es.fec_finaliza as FECHA FIN','ref_equipos.nombre as TP EQUIPO','modelos.nombre as MODELO','actividades.nombre AS ACTIVIDAD','mto_es.obs as OBSERVACION')                                   
+            // ->distinct('mto_es.id')
+            ->whereDate('mto_es.fec_realiza','>=',$fecI)->whereDate('mto_es.fec_realiza','<=',$fecF)    
+            ->orderBy('actividades.nombre', 'asc')->get();
         }
         
         return [

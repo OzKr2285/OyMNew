@@ -13,6 +13,13 @@
           >
             <i class="icon-plus"></i>&nbsp;Nuevo
           </button>
+          <button
+            type="button"
+            @click="abrirModal2()"
+            class="btn btn-dark btn-sm"
+          >
+            <i class="icon-plus"></i>&nbsp;Código Barras
+          </button>
         </div>
         <div class="card-body">
           <template v-if="listado==1">
@@ -225,6 +232,21 @@
                         <md-input
                           autocomplete="given-name"
                           v-model="form.serial"
+                          :disabled="sending"
+                        />
+                        <span
+                          class="md-error"
+                          v-if="!$v.form.serial.required"
+                        >El Serial es requerido</span>
+                        <!-- <span class="md-error" v-else-if="!$v.form.firstName.minlength">Invalid first name</span> -->
+                      </md-field>
+                    </div>&nbsp;&nbsp;&nbsp;
+                    <div class="md-layout-item">
+                      <md-field>
+                        <label>Código Contable</label>
+                        <md-input
+                          autocomplete="given-name"
+                          v-model="codContable"
                           :disabled="sending"
                         />
                         <span
@@ -510,6 +532,43 @@
         <!-- /.modal-dialog -->
       </div>
     </div>
+    <div
+      class="modal fade"
+      tabindex="-1"
+      :class="{'mostrar' : modal2}"
+      role="dialog"
+      aria-labelledby="myModalLabel"
+      style="display: none;"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-primary modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" v-text="tituloModal"></h4>
+            <button type="button" class="close" @click="cerrarModal2()" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group row">
+              <div class="col-md-12">
+                  <input type="text" v-model="form.serial" class="form-control" placeholder="Código de barras"> 
+                <div class="input-group">
+                  <barcode :value="form.serial" :options="{ format: 'EAN-13' }">
+                      Generando código de barras.    
+                  </barcode>                  
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="cerrarModal2()">Cerrar</button>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+        <!-- /.modal-dialog -->
+      </div>
+    </div>
     <!-- /.modal-dialog -->
 
     <!--Fin del modal-->
@@ -517,9 +576,10 @@
 </template>
 
 <script>
-  import parse from 'date-fns/parse'
+  import parse from 'date-fns/parse';
+  import VueBarcode from 'vue-barcode';
   // import { parseISO, format } from 'date-fns' ...
-  import format from 'date-fns/format'
+  import format from 'date-fns/format';
   // import isValid from 'date-fns/isValid'
 // var moment = require('moment');
 // import moment from 'moment';
@@ -599,6 +659,7 @@ export default {
       idRefEquipo: "",
       tag: "",
       idAccesorio: "",
+      codContable: "",
 
       desc: "",
       rgTemp: 0,
@@ -664,6 +725,7 @@ export default {
         "1985"
       ],
       modal: 0,
+      modal2: 0,
       tituloModal: "",
       tipoAccion: 0,
 
@@ -682,7 +744,8 @@ export default {
     };
   },
   components: {
-    vSelect
+    vSelect,
+    'barcode': VueBarcode
   },
 
   validations: {
@@ -792,9 +855,17 @@ export default {
       this.demo = 0;
       this.tituloModal = "";
     },
+    cerrarModal2() {
+      this.modal2 = 0;
+      this.tituloModal = "";
+    },
     abrirModal() {
       this.modal = 1;
       this.tituloModal = "Seleccione uno o varios Accesorios";
+    },
+    abrirModal2() {
+      this.modal2 = 1;
+      this.tituloModal = "Generar Código de barras";
     },
     getValidationClass(fieldName) {
       const field = this.$v.form[fieldName];

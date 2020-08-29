@@ -39,6 +39,43 @@ class DetActMtoETController extends Controller
             'detact' => $detact
         ];
     }
+    public function indexExcel(Request $request)
+    {
+        // if (!$request->ajax()) return redirect('/');
+        $buscar = $request->buscar;
+        $fecI = $request->fecI;
+        $fecF = $request->fecF;
+        
+        if ($buscar==''){
+            $detact = DetActMtoET::join('det_mto_et','det_act_mto_et.id_mto_et','=','det_mto_et.id')   
+            ->join('mto_et','det_mto_et.id_mto','=','mto_et.id')
+            ->join('equipos','det_mto_et.id_equipo','=','equipos.id')                       
+            ->join('ref_equipos','equipos.id_refequipo','=','ref_equipos.id')          
+            ->join('modelos','equipos.id_modelo','=','modelos.id')                     
+            ->join('actividades','det_act_mto_et.id_actividad','=','actividades.id')           
+            ->select('mto_et.id as COD MTO','mto_et.fec_realiza as FECHA INICIO','mto_et.fec_finaliza as FECHA FIN','ref_equipos.nombre as TP EQUIPO','equipos.serial as SERIAL','modelos.nombre as MODELO','actividades.nombre AS ACTIVIDAD','mto_et.obs as OBSERVACION')                                   
+            // ->distinct('mto_et.id')
+            // ->whereDate('mto_et.fec_realiza','>=',$fecI)->whereDate('mto_et.fec_realiza','<=',$fecF)    
+            ->orderBy('actividades.nombre', 'asc')->get();
+        }
+        else{
+            $detact = DetActMtoET::join('det_mto_et','det_act_mto_et.id_mto_et','=','det_mto_et.id')   
+            ->join('mto_et','det_mto_et.id_mto','=','mto_et.id')
+            ->join('equipos','det_mto_et.id_equipo','=','equipos.id')                       
+            ->join('ref_equipos','equipos.id_refequipo','=','ref_equipos.id')          
+            ->join('modelos','equipos.id_modelo','=','modelos.id')           
+            ->join('actividades','det_act_mto_et.id_actividad','=','actividades.id')           
+            ->select('mto_et.id as COD MTO','mto_et.fec_realiza as FECHA INICIO','mto_et.fec_finaliza as FECHA FIN','ref_equipos.nombre as TP EQUIPO','equipos.serial as SERIAL','modelos.nombre as MODELO','actividades.nombre AS ACTIVIDAD','mto_et.obs as OBSERVACION')                                   
+            // ->distinct('mto_et.id')
+            ->whereDate('mto_et.fec_realiza','>=',$fecI)->whereDate('mto_et.fec_realiza','<=',$fecF)    
+            ->orderBy('actividades.nombre', 'asc')->get();
+        }
+        
+        return [
+           
+            'detact' => $detact
+        ];
+    }
     public function store(Request $request)
     {
 

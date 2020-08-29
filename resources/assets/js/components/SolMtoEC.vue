@@ -249,6 +249,131 @@
                     </span>
                 </md-field>
               </div>
+    <div class="card-body">
+      <h6>
+          <small class="text-muted">Revise y valide el estado en el cual debe quedar el equipo {{nomModelo}}</small>
+      </h6> 
+    <md-steppers md-vertical>
+
+
+      <md-step id="first" md-label="Validar Equipo">
+           <table class="table table-bordered table-striped table-sm">
+            <thead>
+              <tr class="p-3 mb-2 bg-danger text-white">                                
+                  <th>Descripción</th>
+                  <!-- <th>Brazo Ppal</th>
+                  <th>Brazo ByPass</th> -->
+                   <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody v-if="arrayValida.length">
+              <tr v-for="(objeto,index) in arrayValida" :key="`detalle-${index}`">                                                     
+                <!-- <td v-text="objeto.nomEtapa"></td> -->
+                <td v-text="objeto.nombre"></td>
+                <!-- <td v-text="objeto.brazo_ppal"></td> -->
+                <!-- <td v-text="objeto.brazo_bypass"></td> -->
+            <!-- <td>
+              <template v-if="objeto.brazo_ppal=='Cerrada'">
+                <span class="badge badge-dark">Cerrada</span>
+              </template>
+              <template v-if="objeto.brazo_ppal=='Abierta'">
+                <span class="badge badge-success">Abierta</span>
+              </template>
+              <template v-if="objeto.brazo_ppal=='Encendida'">
+                <span class="badge badge-success">Encendida</span>
+              </template>
+              <template v-if="objeto.brazo_ppal=='Verde'">
+                <span class="badge badge-success">Verde</span>
+              </template>
+              <template v-if="objeto.brazo_ppal=='Rutina'">
+                <span class="badge badge-primary">Rutina Operando</span>
+              </template>
+            </td>               -->
+            <!-- <td>
+              <template v-if="objeto.brazo_bypass=='Cerrada'">
+                <span class="badge badge-dark">Cerrada</span>
+              </template>
+              <template v-if="objeto.brazo_bypass=='Abierta'">
+                <span class="badge badge-success">Abierta</span>
+              </template>
+              <template v-if="objeto.brazo_bypass=='Encendida'">
+                <span class="badge badge-success">Encendida</span>
+              </template>
+              <template v-if="objeto.brazo_bypass=='Verde'">
+                <span class="badge badge-success">Verde</span>
+              </template>
+              <template v-if="objeto.brazo_ppal=='Rutina'">
+                <span class="badge badge-primary">Rutina Operando</span>
+              </template>
+            </td>               -->
+                 <td>
+                  <md-button
+                    class="md-icon-button md-primary"
+                    @click="validarProto(objeto)"
+                    title="Eliminar"
+                  >
+                    <i class="material-icons Color2">verified_user</i>
+                  </md-button>
+                </td>
+              </tr>
+
+            </tbody>
+            <tbody v-else>
+              <tr>
+                <td colspan="7">NO hay Equipos pendientes por validar, comuniquese con el Técnico lider.</td>
+              </tr>
+            </tbody>
+          </table>
+
+      </md-step>
+      <md-step id="second" md-label="Registro Fotográfico">
+        <div
+          class="uploader"
+          @dragenter="OnDragEnter"
+          @dragleave="OnDragLeave"
+          @dragover.prevent
+          @drop="onDrop"
+          :class="{ dragging: isDragging }"
+        >
+          <div class="upload-control" v-show="images.length">
+            <!-- <label for="file">Anexar otra Imágen</label> -->
+            <button @click="upload">Cambiar</button>
+            <button @click="abrirList">Cancelar</button>
+          </div>
+
+          <div v-show="!images.length">
+            <i class="fa fa-cloud-upload"></i>
+            <p>Arrastra tus imágenes aquí</p>
+            <div>O</div>
+            <div class="file-input">
+              <label for="file">Selecciona una Imágen</label>
+              <input type="file" id="file" @change="onInputChange" multiple>
+            </div>
+         
+          </div>
+
+          <div class="images-preview" v-show="images.length">
+            <div class="img-wrapper" v-for="(image, index) in images" :key="index">
+              <img :src="image" :alt="`Image Uplaoder ${index}`">
+              <div class="details">
+                <span class="name" v-text="files[index].name"></span>
+                <span class="size" v-text="getFileSize(files[index].size)"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+
+           
+
+      </md-step>
+
+      <!-- <md-step id="third" md-label="Third Step">
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias doloribus eveniet quaerat modi cumque quos sed, temporibus nemo eius amet aliquid, illo minus blanditiis tempore, dolores voluptas dolore placeat nulla.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias doloribus eveniet quaerat modi cumque quos sed, temporibus nemo eius amet aliquid, illo minus blanditiis tempore, dolores voluptas dolore placeat nulla.</p>
+      </md-step> -->
+    </md-steppers>
+  </div>
               </md-card-content>
             </form>
           </div>
@@ -945,6 +1070,14 @@ export default {
     return {
       active: "first",
 
+      //variables imagen
+      selectedFile: null,
+      isDragging: false,
+      dragCount: 0,
+      files: [],
+      images: [],
+      secondStepError: null,
+      fourtStepError: null,
 
 
       form: {
@@ -1009,6 +1142,7 @@ export default {
       arrayEtapa: [],
       arrayEquipo: [],   
       arrayMarca: [],
+      arrayValida: [{nombre:"VERIFICAR RESPALDO DE INFORMACIÓN"},{nombre:"EL EQUIPO ENCIENDE CORRECTAMENTE"},{nombre:"VERIFICAR SOFTWARE OFIMATICO (WORD-EXCEL-ANTIVIRUS)"},      {nombre:"EL EQUIPO FUNCIONA CORRECTAMENTE - VERIFICAR PROCESOS ADMINISTRADOR DE TAREAS"}],
       modal: 0,
       modal2: 0,
       modal3: 0,
@@ -1048,7 +1182,7 @@ export default {
     
   },
 
-  computed: {
+  computed: {    
     type() {
       if (
         typeof this.dynamicByModel === "object" &&
@@ -1110,6 +1244,95 @@ export default {
     }
   },
   methods: {
+     changeImg() {
+        this.listado=0;
+      },
+      abrirList() {
+        this.listado=1;
+      },
+      OnDragEnter(e) {
+      e.preventDefault();
+
+      this.dragCount++;
+      this.isDragging = true;
+
+      return false;
+    },
+    OnDragLeave(e) {
+      e.preventDefault();
+      this.dragCount--;
+
+      if (this.dragCount <= 0) this.isDragging = false;
+    },
+    onInputChange(e) {
+      const files = e.target.files;
+
+      Array.from(files).forEach(file => this.addImage(file));
+    },
+    onDrop(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      this.isDragging = false;
+
+      const files = e.dataTransfer.files;
+
+      Array.from(files).forEach(file => this.addImage(file));
+    },
+    addImage(file) {
+      if (!file.type.match("image.*")) {
+        this.$toastr.e(`${file.name} is not an image`);
+        return;
+      }
+
+      this.files.push(file);
+
+      const img = new Image(),
+        reader = new FileReader();
+
+      reader.onload = e => this.images.push(e.target.result);
+
+      reader.readAsDataURL(file);
+    },
+    getFileSize(size) {
+      const fSExt = ["Bytes", "KB", "MB", "GB"];
+      let i = 0;
+
+      while (size > 900) {
+        size /= 1024;
+        i++;
+      }
+      return `${Math.round(size * 100) / 100} ${fSExt[i]}`;
+    },
+      getImage(event) {
+      //Asignamos la imagen a  nuestra data
+      // console.log(event)
+      this.selectedFile = event.target.files[0];
+      // this.upload();
+    },
+    onInputChange(e) {
+      const files = e.target.files;
+
+      Array.from(files).forEach(file => this.addImage(file));
+    },
+    upload() {
+      let me = this;
+      const formData = new FormData();
+
+      this.files.forEach(file => {
+        formData.append("images[]", file, file.name);
+      });
+
+      axios.post("/user/imagen", formData).then(response => {
+        this.listado=1;
+        this.getImg();
+        me.mensaje("Guardado", "Todas las imagenes se han almacenado ");
+       
+        // this.$toastr.s("All images uplaoded successfully");
+        this.images = [];
+        this.files = [];
+      });
+    },
     toString() {
       this.toDate();
       this.dynamicByModel =

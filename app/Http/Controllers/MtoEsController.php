@@ -21,7 +21,7 @@ class MtoEsController extends Controller
         
         if ($buscar==''){
             $mto = MtoEs::join('estaciones','mto_es.id_estacion','=','estaciones.id')           
-            ->select('estaciones.id as idEstacion','estaciones.nombre','mto_es.id as idMto','mto_es.estado','mto_es.fec_realiza','mto_es.fec_finaliza','mto_es.tp_mto','mto_es.frec')
+            ->select('estaciones.id as idEstacion','estaciones.nombre','mto_es.id as idMto','mto_es.estado','mto_es.fec_realiza','mto_es.fec_finaliza','mto_es.tp_mto','mto_es.frec','mto_es.cod_mto','mto_es.obs')
             ->distinct()                                   
             ->orderBy('estaciones.nombre', 'asc')
             ->orderBy('mto_es.id', 'asc')->paginate(15);
@@ -58,20 +58,20 @@ class MtoEsController extends Controller
         
         if ($buscar==''){
             $mto = MtoEs::join('estaciones','mto_es.id_estacion','=','estaciones.id')           
-            ->select('estaciones.id as idEstacion','estaciones.nombre','estaciones.codigo','mto_es.id as idMto','mto_es.estado','mto_es.fec_realiza','mto_es.fec_finaliza','mto_es.tp_mto','mto_es.frec')
+            ->select('estaciones.id as idEstacion','estaciones.nombre','estaciones.codigo','mto_es.id as idMto','mto_es.estado','mto_es.fec_realiza','mto_es.fec_finaliza','mto_es.tp_mto','mto_es.frec','mto_es.cod_mto','mto_es.obs')
             ->distinct()  
             ->whereDate('mto_es.fec_realiza','>=',$fecI)->whereDate('mto_es.fec_realiza','<=',$fecF)                                  
             ->orderBy('mto_es.id', 'asc')
             ->orderBy('estaciones.nombre', 'asc')->paginate(15);
         }
         else{
-            $mto = MtoEs::join('actividadese','det_act_equipo.id_act','=','actividadese.id')    
-            ->join('ref_equipos','det_act_equipo.id_equipo','=','ref_equipos.id')
-            ->select('actividadese.id','det_act_equipo.id_equipo as idRefE','actividadese.nombre','actividadese.desc')
-            ->distinct()
-            ->where('det_act_equipo.id_equipo',$buscar)            
-            
-            ->orderBy('actividades.nombre', 'asc')->paginate(15);
+            $mto = MtoEs::join('estaciones','mto_es.id_estacion','=','estaciones.id')           
+            ->select('estaciones.id as idEstacion','estaciones.nombre','estaciones.codigo','mto_es.id as idMto','mto_es.estado','mto_es.fec_realiza','mto_es.fec_finaliza','mto_es.tp_mto','mto_es.frec')
+            ->distinct()  
+            ->whereDate('mto_es.fec_realiza','>=',$fecI)->whereDate('mto_es.fec_realiza','<=',$fecF)                                  
+            ->where('mto_es.id_estacion','=',$buscar)                                  
+            ->orderBy('mto_es.id', 'asc')
+            ->orderBy('estaciones.nombre', 'asc')->paginate(15);
         }
         
 
@@ -117,12 +117,22 @@ class MtoEsController extends Controller
             DB::beginTransaction();
            
             $mto = new MtoEs();
-           
+            $detalles2 = $request->data2;//Array de detalles
             $mto->fec_realiza = $request->fec_realiza;         
             $mto->fec_finaliza = $request->fec_finaliza;         
             $mto->tp_mto = $request->tp_mto;         
             $mto->frec = $request->frec;         
+                   
             $mto->id_estacion = $request->id_estacion;         
+            
+            foreach($detalles2 as $ep=>$det)
+            {                
+                if($det['num']<10){
+                    $mto->cod_mto = $det['abrev']."00".$det['num'];  
+                }else{
+                    $mto->cod_mto = $det['abrev'].'0'.$det['num'];  
+                }                    
+            }       
             // $equipo->tp_tren = $request->tp_tren;
             // $equipo->id_mpio = $request->id_mpio;
             $mto->save();
@@ -137,7 +147,11 @@ class MtoEsController extends Controller
                 $detalle->tp_tren =$det['tp_tren'];                                                                     
                 $detalle->id_etapa =$det['id_etapa'];                                                                     
                 $detalle->save();
-            }          
+            }   
+            $mto = MtoEs::findOrFail($mto->id);
+            $mto->obs = $request->obs;  
+            $mto->save();
+
             DB::commit();
             return ['idMto' => $mto->id];
         } catch (Exception $e){

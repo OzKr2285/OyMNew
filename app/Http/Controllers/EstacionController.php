@@ -79,7 +79,7 @@ class EstacionController extends Controller
         $buscar = $request->buscar;
 
         $estacion = Estacion::join('tp_estacions','tp_estacions.id','=','estaciones.idTpEstacion')
-        ->select('estaciones.nombre')
+        ->select('estaciones.nombre','estaciones.codigo')
         ->where('estaciones.id',$buscar)
         ->orderBy('estaciones.nombre', 'asc')->get();
      

@@ -12,7 +12,8 @@ let mix = require('laravel-mix');
  */
 
 mix.styles([
-    'resources/assets/plantilla/css/fontawesome.min.css',
+    // 'resources/assets/plantilla/css/materialdesignicons.min.css',
+    'resources/assets/plantilla/css/fontawesome.css',
     'resources/assets/plantilla/css/simple-line-icons.min.css',
     'resources/assets/plantilla/css/vue-material.min.css',
     'resources/assets/plantilla/css/vue-multiselect.min.css',

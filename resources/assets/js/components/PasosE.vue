@@ -5,7 +5,7 @@
       <!-- Ejemplo de tabla Listado -->
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i> Gestion Pasos Especiales
+          <i class="fa fa-align-justify"></i> Gestion Cruces Especiales
           <button
             type="button"
             @click="mostrarDetalle()"
@@ -98,7 +98,20 @@
                   <div class="md-layout">
                   <div class="md-layout-item">
                     <md-field md-clearable>
-                      <label for="first-name">Ingrese el nombre del Paso Especial</label>
+                      <label for="first-name">Ingrese un Código</label>
+                      <br>
+                      <md-input
+                        name="first-code"
+                        id="first-code"
+                        autocomplete="given-code"
+                        v-model="codPaso"
+                        :disabled="sending"
+                      />
+                    </md-field>
+                  </div>&nbsp;&nbsp;&nbsp;                  
+                  <div class="md-layout-item">
+                    <md-field md-clearable>
+                      <label for="first-name">Ingrese un nombre</label>
                       <br>
                       <md-input
                         name="first-name"
@@ -120,6 +133,34 @@
                       >{{objeto.nombre}}</md-option>
                     </md-select>
                   </md-field>
+                  </div> &nbsp;&nbsp;&nbsp;
+                  <div class="md-layout-item">
+                     <md-field md-clearable>
+                    <label>Seleccione Nivel</label>
+                      <md-select v-model="idNivel" md-dense >
+                      <md-option
+                        v-for="objeto in arrayNivel"
+                        :key="objeto.id"
+                        :value="objeto.id"
+                      >{{objeto.nombre}}</md-option>
+                    </md-select>
+                  </md-field>
+                  </div> &nbsp;&nbsp;&nbsp;
+                  <div class="md-layout-item">
+                    <md-field>
+                      <label>Longitud</label>
+                      <md-input v-model="longitud" type="number"></md-input>
+                    </md-field>
+                    </div> &nbsp;&nbsp;&nbsp;
+                  <div class="md-layout-item">
+                    <md-datepicker
+                      v-model="fecN"
+                      value="fecN"                      
+                      md-immediately
+                      :md-model-type="String"
+                    >
+                      <label>Fecha de Operación</label>
+                    </md-datepicker>
                   </div>
        
                   <!-- <div class="md-layout-item">
@@ -134,16 +175,58 @@
                     ></multiselect>
                 </div> -->
                 </div>
-                <div class="md-layout">
+              <div class="md-layout">
+                <div class="md-layout-item">
+                  <span class="md-caption">Tipo de Estructura</span>
+               
+                    <multiselect
+                      v-model="arrayTR"
+                      :options="arraytpRed"
+                      placeholder="Seleccione un Tipo de Estructura"
+                      :custom-label="nameWithNombre"
+                      label="nombre"
+                      track-by="nombre"
+                    ></multiselect>
+     
+                  </div>&nbsp;&nbsp;&nbsp;
+                 <div class="md-layout-item">
+                <span class="md-caption">Grupo unidad Constructiva</span>
+                <multiselect
+                  v-model="arrayMat"
+                  @input="getGrupoC"
+                  :options="arrayMaterial"
+                  placeholder="Seleccione un tipo Grupo"
+                  :custom-label="nameWithTub"
+                  label="nombre"
+                  track-by="nombre"
+                ></multiselect>
+              </div>&nbsp;&nbsp;&nbsp;
+              <div class="md-layout-item">
+                <span class="md-caption">Unidad Constructiva</span>
+           
+                <multiselect
+                  v-model="arrayT"
+                  @input="setVerX"
+                  :options="arrayTub"
+                  placeholder="Seleccione unidad constructiva"
+                  :custom-label="nameWithNombre"
+                  label="nombre"
+                  track-by="nombre"
+                ></multiselect>        
+              </div>
+              
+              </div>
+              
+                <div class="md-layout" v-show="verX==1">
                 <md-field>
                   <label>Descripción</label>
                   <md-textarea v-model="obs"></md-textarea>
                   <md-icon>description</md-icon>
                 </md-field>
               </div>
-                <div class="md-layout-item">
+                <div class="md-layout" v-show="verX==1">
                   <md-field md-clearable>
-                    <label>Manual de la Red</label>
+                    <label>Manual de cruce Especial</label>
                     <md-file v-model="planoC" placeholder="Seleccione el manual de la Red"/>
                   </md-field>
                 </div>
@@ -202,6 +285,7 @@ import {
 } from "vue-material/dist/components";
 import Multiselect from "vue-multiselect";
 import Datepicker from 'vuejs-datepicker';
+
 // import VueMaterial from 'vue-material'
 // Vue.use(VueMaterial)
 Vue.use(MdButton);
@@ -213,6 +297,7 @@ Vue.use(MdSwitch);
 Vue.use(MdDivider);
 Vue.use(MdList);
 import { required, minLength } from "vuelidate/lib/validators";
+
 
 export default {
   mixins: [validationMixin],
@@ -235,6 +320,7 @@ export default {
       idMp: 0,
       idMp2: 0,
       idRed: 0,
+      idNivel: 0,
       tpDiam: 0,
       fecN: format(now, dateFormat),
       fecN2: "",
@@ -246,6 +332,7 @@ export default {
       nombre: "",
       descripcion: "",
       obs: "",
+      verX:  0,
       longitud: "",
       idMercado: "",
 
@@ -254,16 +341,37 @@ export default {
       sending: false,
       idPaso: 0,
       estacion_id: 0,
+      codPaso: "",
 
       arrayDpto: [],
       arrayDetRed: [],
       arrayMpio: [],
+      arrayNivel: [
+        {id:"1",nombre:"Básico"},
+        {id:"2",nombre:"Intermedio"},
+        {id:"3",nombre:"Complejo"}
+        ],
       arrayM: { id: 0, nombre: "", nomDpto: "" },
+      arrayMat: { id: 0, nombre: ""},
+      arrayT: { id: 0, nombre: ""},
+      arrayTR: { id: 0, nombre: ""},
+      arraytpRed: [
+        { id: "1", nombre: "TUBERÍA GALVANIZADA CON ANCLAJE" },
+        { id: "2", nombre: "CERCHA" },
+        { id: "3", nombre: "IZADO DE GUAYA CON ANCLAJE " },
+        { id: "4", nombre: "TORRE CON IZADO DE GUAYA" },
+        { id: "5", nombre: "SUBFLUVIAL" },
+        { id: "6", nombre: "PERFORACIÓN DIRIGIDA" },
+        { id: "7", nombre: "SUBTERRANEO POR ALCANTARILLA" },
+        { id: "8", nombre: "PONTON" }
+      ],
 
       arrayRed: [],
       arrayMercado: [],
       arrayDetM: [],
       arrayDatos: [],
+      arrayMaterial: [],
+      arrayTub: [],
   
 
       modal: 0,
@@ -373,17 +481,37 @@ export default {
       this.desc = "";
 
     },
+    nameWithTub({ nombre }) {
+      return `${nombre}`;
+    },
     nameWithMpio({ nombre, nomDpto }) {
       return `${nombre} — [${nomDpto}]`;
     },
-    nameWithNombre({ nombre }) {
+    nameWithNombre({ nombre }) {    
       return `${nombre}`;
+    },
+    setVerX() {    
+      this.verX=1;    
     },
 
     mostrarDetalle() {
       this.clearForm();
       let me = this;
       (this.tipoAccion = 1), (me.listado = 0);
+    },
+    getGrupoC() {
+      let me = this;
+      var url = "/detTpMaterial/?buscar="+this.arrayMat.id;
+      axios
+        .get(url)
+        .then(function(response) {
+          //console.log(response);
+          var respuesta = response.data;
+          me.arrayTub = respuesta.dettpm;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
   getFRed() {
       let me = this;
@@ -445,7 +573,21 @@ export default {
           console.log(error);
         });
     },
+    getMaterial() {
+      let me = this;
 
+      var url = "/tpmaterialred/selectTpMaterial";
+      axios
+        .get(url)
+        .then(function(response) {
+          //console.log(response);
+          var respuesta = response.data;
+          me.arrayMaterial = respuesta.tpmaterial;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
     getMpio() {
       let me = this;
       var url = "/mpio/selectMpio";
@@ -534,6 +676,7 @@ export default {
       axios
         .post("/fichapasoe/registrar", {
           id_red: this.idRed,
+          codigo: this.codPaso,
           nombre: this.nombre.toUpperCase(),
           desc: this.obs,
           plano_g: this.planoG,
@@ -613,9 +756,9 @@ export default {
   },
 
   mounted() {
-
+    this.getMaterial();
     this.getFRed();
-    // this.getDpto();
+    // this.getGrupoC();
     // this.getRed();
     // this.getDiam();
     this.listarDatos(1, this.buscar, this.criterio);
@@ -641,4 +784,6 @@ export default {
   color: red !important;
   font-weight: bold;
 }
+/* // fix multiselect weird height when using a placeholder */
+
 </style>

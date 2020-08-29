@@ -20,7 +20,7 @@ class ReqInsumoController extends Controller
             $req = ReqInsumo::join('personas','req_insumos.id_tecnico','=','personas.id')           
             ->select('personas.nombreFull','req_insumos.id','req_insumos.fec_solicitud','req_insumos.edo','req_insumos.obs','req_insumos.cod_estacion','req_insumos.id_mto')                                   
             // ->where('req_insumos.edo',0)
-            ->orderBy('req_insumos.id', 'asc')->paginate(15);
+            ->orderBy('req_insumos.id', 'desc')->paginate(15);
         }
         else{
             $req = ReqInsumo::join('actividades','det_act_mto_et.id_actividad','=','actividades.id')           
@@ -77,5 +77,18 @@ class ReqInsumoController extends Controller
             DB::rollBack();
         }      
     }
+    public function getEdo(Request $request){
+        $buscar = $request->buscar;
+        $edo = 0;
+        // if (!$request->ajax()) return redirect('/');
+        $prot = ReqInsumo::select('edo')
+        ->where('id_mto',$buscar)
+        ->get();
 
+        foreach($prot as $ep=>$det)
+        {
+            $edo =$det['edo'] ;
+        } 
+      return ['prot' => $edo];
+  }
 }

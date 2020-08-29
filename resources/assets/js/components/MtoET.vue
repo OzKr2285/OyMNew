@@ -23,6 +23,14 @@
           >
             <i class="icon-plus"></i>&nbsp;Nuevo
           </button>
+          <download-excel class="btn btn-dark btn-sm"
+              :data   = "arrayDatosExcel"
+              name="Programación Actividades.xls"
+              title="ACTIVIDADES REALACIONADAS A LA PROGRAMACIÓN DE MANTENIMIENTOS"
+              >
+
+              <i class="fas fa-file-excel"></i>
+          </download-excel>
             <!-- <md-button
               class="md-icon-button md-primary"
               @click="eliminarDetalle(index)"
@@ -439,7 +447,7 @@
                 <tbody v-if="arrayMtoAct.length">
                   <!-- <tr v-for="(equipo,index) in arrayEquipo" :key="`equipo-${index}`"> -->
                   <tr v-for="(detalle, index) in arrayMtoAct" :key="`detalle-${index}`">
-                    <td v-text="detalle.tag"></td>               
+                    <td v-text="detalle.nombre"></td>               
 
                     <td>
                       <button
@@ -452,7 +460,7 @@
                         <i class="icon-plus"></i>
                       </button>
                       <button
-                        @click="abrirModal3(detalle)"
+                        @click="verAct(detalle)"
                         type="button"
                         class="btn btn-info btn-sm"
                         data-tooltip
@@ -1490,6 +1498,7 @@
 import format from "date-fns/format";
 import Toasted from 'vue-toasted';
 import vSelect from "vue-select";
+import JsonExcel from 'vue-json-excel';
 
 import { validationMixin } from "vuelidate";
 import {
@@ -1513,6 +1522,7 @@ Vue.use(MdMenu);
 Vue.use(MdList);
 Vue.use(MdDatepicker);
 Vue.use(MdSteppers);
+Vue.component('downloadExcel', JsonExcel);
 
 import { required, minLength } from "vuelidate/lib/validators";
 import { MdAutocomplete } from 'vue-material/dist/components';
@@ -1583,6 +1593,7 @@ export default {
       arrayReqIns: [],
 
       arrayVerMto: [],
+      arrayDatosExcel: [],
       arrayRefEquipo: [],
       idProv: 0,
       arrayProv: [],
@@ -1791,7 +1802,7 @@ export default {
     abrirModal3(data = []) {
       this.idRefE=data["idRef"];
       this.idEquipo=data["idEquipo"];
-      // this.idDetMto=data["id"];
+      this.idDetMto=data["idDetMto"];
       this.modal3 = 1;
       this.tituloModal = "Seleccione una o varias Actividades";
       this.listarActE(1, this.buscar, this.criterio);
@@ -1840,6 +1851,26 @@ export default {
       this.bEtapa = 0;
       this.bDetEtapa = 0;
       this.getExEtapa1();
+    },
+    listarDatosExcel(page) {
+      let me = this;
+      var url =
+        "/detactmtoet/excel?page=" +
+        page +
+        "&fecI=" +
+        me.fecI +
+        "&fecF=" +
+        me.fecF ;
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayDatosExcel = respuesta.detact;
+          
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     getOficina() {
       let me = this;
@@ -1900,7 +1931,7 @@ export default {
       this.textoEtapa = data["nombre"];
       this.idRefE =data["idRefE"];
       this.idDet =data["id_mto"];
-      this.idDetMto=data["id"];
+      this.idDetMto=data["idDetMto"];
       this.bEtapa = null;
       this.bDetEtapa = null;
       this.getActMto();
@@ -1920,7 +1951,7 @@ export default {
       this.bEtapa = null;
       this.bVerE = 1;
       this.bVerA = null;
-      this.bDetEtapa = null;
+      this.bDetEtapa = 1;
     },
     cerrarModal() {
       this.modal = 0;
@@ -2100,17 +2131,12 @@ export default {
     agregarDetAct(data = [],index) {
       let me = this;
      
-      if (me.encuentra4(data["id"])) {
-        swal({
-          type: "error",
-          title: "Error...",
-          text: "La Actividad seleccionada ya se encuentra agregada!"
-        });
-      } else {
+  
         if(this.tipoAccion==1){
           me.arrayMtoAct.push({
-            id: data["id"],          
-            idDetMto: this.idDetMto
+            id: data["id"]  ,        
+            nombre: data["nomAct"]          
+            // idDetMto: this.idDetMto
         });
         me.mensajeToast("Agregado","bubble","check","success");
         }else{
@@ -2119,6 +2145,7 @@ export default {
           // this.idDetMto= data["id"];
           me.registrarDetAct(this.idAct,this.idDetMto);
           me.arrayAct.splice(index, 1);
+
           // me.arrayMtoAct.push({
             // idRefE: data["idRef"],          
           // nombre: data["nombre"],
@@ -2126,7 +2153,7 @@ export default {
         // }
         // )
         // ;
-        }
+        
           
       }
     },
@@ -2243,6 +2270,7 @@ export default {
       this.form.nombre = null;
       this.listado=0;
       this.arrayDetM=[];
+      this.arrayMtoAct=[];
       this.arrayTec=[];
       this.arrayProv=[];
       this.second=false;
@@ -2522,6 +2550,7 @@ export default {
     mostrarDetalle() {
       this.clearForm();
       let me = this;
+      this.bDetEtapa=1;
       (this.tipoAccion = 1), (me.listado = 0);
     },
     ocultarDetalle() {
@@ -2572,6 +2601,7 @@ export default {
     },
     verMtoEs(data = []) {
       this.listado=2;
+      this.tipoAccion=2;
       this.bVerE=1;
       this.textoEtapa = data["nombre"];
       this.idDetMto =data["id"];
@@ -2812,6 +2842,7 @@ export default {
     this.getPerso(1,this.buscar, this.criterio);
     this.listarMto(1,this.buscar, this.criterio);
     this.getRefE();
+    this.listarDatosExcel();
     // this.getEtapa();
     // this.listarExEtapa(1, this.buscar, this.criterio);
   }

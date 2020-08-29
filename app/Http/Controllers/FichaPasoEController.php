@@ -42,12 +42,16 @@ class FichaPasoEController extends Controller
         if (!$request->ajax()) return redirect('/');
         $fichapasoe = new FichaPasoE();
         $fichapasoe->id_red = $request->id_red;
+        $fichapasoe->codigo = $request->codigo;
         $fichapasoe->nombre = $request->nombre;
         $fichapasoe->desc = $request->desc;
+        $fichapasoe->nivel = $request->nivel;
+        $fichapasoe->id_tp_estru = $request->id_tp_estru;
+        $fichapasoe->id_tp_tub = $request->id_tp_tub;
+        $fichapasoe->fec_opera = $request->fec_opera;
+        $fichapasoe->total = $request->total;
         $fichapasoe->plano = $request->plano;
-        // $fichapasoe->plano_a = $request->plano_a;
-        // $fichapasoe->plano_c = $request->plano_c;
-        // $fichapasoe->plano_p = $request->plano_p;
+
         $fichapasoe->save();
     }
     public function update(Request $request)
@@ -55,9 +59,16 @@ class FichaPasoEController extends Controller
         if (!$request->ajax()) return redirect('/');
         $fichapasoe = FichaPasoE::findOrFail($request->id);
         $fichapasoe->id_red = $request->id_red;
+        $fichapasoe->codigo = $request->codigo;
         $fichapasoe->nombre = $request->nombre;
         $fichapasoe->desc = $request->desc;
+        $fichapasoe->nivel = $request->nivel;
+        $fichapasoe->id_tp_estru = $request->id_tp_estru;
+        $fichapasoe->id_tp_tub = $request->id_tp_tub;
+        $fichapasoe->fec_opera = $request->fec_opera;
+        $fichapasoe->total = $request->total;
         $fichapasoe->plano = $request->plano;
+        
         $fichapasoe->save();
     }
     public function destroy(Request $request)

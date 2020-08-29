@@ -245,7 +245,7 @@
                                 <li @click="menu=9" >
                                     <a  href="#"><i class="fas fa-project-diagram"></i>Redes</a>
                                 </li>
-                                <li @click="menu=11" >
+                                <li @click="menu=78" >
                                     <a  href="#"><i class="fas fa-bacon"></i>Cruces Esp.</a>
                                 </li>
                             </ul>

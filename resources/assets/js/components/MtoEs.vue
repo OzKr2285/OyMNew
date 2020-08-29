@@ -68,6 +68,30 @@
                   <label>Fecha de Final</label>
                 </md-datepicker>
               </div>&nbsp;&nbsp;&nbsp;
+                  <div class="md-layout-item">
+                    <md-field md-clearable>
+                      <label>Tipo de Estación</label>
+                      <md-select v-model="idTpEstacion" md-dense @input="getEstacion">
+                        <md-option
+                          v-for="(tpestacion,index) in arrayTpEstacion"
+                          :key="`tpestacion-${index}`"
+                          :value="tpestacion.id"
+                        >{{tpestacion.nombre}}</md-option>
+                      </md-select>
+                    </md-field>
+                  </div>&nbsp;&nbsp;&nbsp;
+                  <div class="md-layout-item">
+                    <md-field md-clearable>
+                      <label>Estación</label>
+                      <md-select v-model="idEstacion" md-dense  @input="listarDatosFecha(1)">
+                        <md-option
+                          v-for="(estacion,index) in arrayEstacion"
+                          :key="`estacion-${index}`"
+                          :value="estacion.id"                        
+                        >{{estacion.codigo}}</md-option>
+                      </md-select>
+                    </md-field>
+                  </div>
               <!-- <div class="md-layout-item">                                         -->
               <!-- <md-checkbox v-model="demo">Finalizados</md-checkbox> -->
               <!-- </div> -->
@@ -496,6 +520,7 @@
             <tr v-for="(etapa, index)  in arrayNomEstacion" :key="`etapa-${index}`">                 
               <h5><td  v-text="'Estación - '+ etapa.nombre"></td></h5>
             </tr>
+  
           <h6> {{"Registro Equipos "+this.textoEtapa +"  (Principal)"}}
         
           <!-- <button type="button" @click="abrirModal2()" class="btn btn-dark btn-sm">
@@ -609,7 +634,7 @@
                   <td v-text="detalle.serial"></td>
 
                   <td>
-                    <template v-if="detalle.edo_mto">
+                    <!-- <template v-if="detalle.edo_mto">
                       <button type="button" class="btn btn-info btn-sm" data-tooltip title="En Mantenimiento" @click="dessetTecnico(articulo.id)">
                         <i class="fa fa-hourglass-start"></i>
                       </button>
@@ -618,6 +643,11 @@
                       <button type="button" class="btn btn-success btn-sm" data-tooltip title="Disponible" @click="agregarDetalleMto(detalle)">
                         <i class="icon-check"></i>
                       </button>
+                    </template> -->
+                    <template>                 
+                        <button type="button" class="btn btn-success btn-sm" data-tooltip title="Disponible" @click="agregarDetalleMto(detalle)">
+                            <i class="icon-check"></i>
+                        </button>
                     </template>
                   </td>
                 </tr>
@@ -1986,6 +2016,8 @@ export default {
       idRefE:0,
       idTec:0,
       idRespo:0,
+      numMto:null,
+      abrevMto:null,
 
       idTpEstacion: 0,
       idEquipo: 0,
@@ -2030,6 +2062,7 @@ export default {
       arrayDatosExcel: [],
       arrayDatosExcel2: [],
       arrayTrenEquipos: [],
+      arrayNumMto: [],
 
       arrayDel: [],
       arrayTrenPpal: [],
@@ -2174,6 +2207,8 @@ export default {
     },
     setDone(id, index) {
       this[id] = true;
+      this.getNumMto();
+      // this.setNumMto();
       this.secondStepError = null;
         if (index) {      
           this.active = index;
@@ -2277,6 +2312,7 @@ export default {
       this.bEtapa = 1;
       this.bDetEtapa = 0;
       this.getExEtapa();
+      
     },
     regEquiposByPass(data = []) {
       this.textoEtapa = data["nombre"];
@@ -2667,7 +2703,9 @@ export default {
         "&fecI=" +
         me.fecI +
         "&fecF=" +
-        me.fecF;
+        me.fecF +
+        "&buscar=" +
+        me.idEstacion;
       axios
         .get(url)
         .then(function(response) {
@@ -2967,6 +3005,20 @@ export default {
         });
     },
     // traer equipos tren Bypass
+    getNumMto() {
+      let me = this;
+      var url = "/nummto/?buscar=" + this.idEstacion;
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayNumMto= respuesta.num;
+          
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
     getExEtapa1() {
       let me = this;
       var url = "/detequipoestacion/bypass/?buscar=" + this.idEtapa + '&estacion='+ this.idEstacion;
@@ -3179,15 +3231,17 @@ export default {
             fec_finaliza: this.fecF,
             tp_mto: this.tpMto,
             frec: this.frec,
+            obs: this.descripcion,
 
-            data: this.arrayTrenEquipos
+            data: this.arrayTrenEquipos,
+            data2: this.arrayNumMto,
 
           })
           .then(function(response) {
             me.arrayTrenEquipos=[];
             // me.ocultarDetalle();
-          var respuesta = response.data;
-          me.idMto = respuesta.idMto;
+            var respuesta = response.data;
+            me.idMto = respuesta.idMto;
             // me.listarMto(1, "", "nombre");
 
             me.mensaje("Guardado", "Guardo ");
@@ -3203,7 +3257,9 @@ export default {
             fec_finaliza: this.fecF,
             tp_mto: this.tpMto,
             frec: this.frec,
+            obs: this.descripcion,
             data: this.arrayTrenEquipos,
+            data2: this.arrayNumMto,
 
           })
           .then(function(response) {
