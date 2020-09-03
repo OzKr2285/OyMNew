@@ -165,7 +165,7 @@
                   </div>&nbsp;&nbsp;&nbsp;
                   <div class="md-layout-item">
                     <md-field md-clearable>
-                      <label>Tipo de Red</label>
+                      <label>Selecciona una Red</label>
                       <md-select v-model="idTpRed" md-dense>
                         <md-option
                           v-for="(objeto,index) in arrayRed"

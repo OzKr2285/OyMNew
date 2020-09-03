@@ -5,7 +5,8 @@
       <!-- Ejemplo de tabla Listado -->
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i> Mantenimiento Pasos Especiales.
+        <i class="m-0 font-weight-bold text-primary fas fa-bacon"></i>
+          <strong class="lead">Mantenimiento Pasos Especiales.</strong>          
           <button
             type="button"
             @click="mostrarDetalle()"
@@ -141,7 +142,7 @@
                       <label>Fecha de Finalización</label>
                     </md-datepicker>
                   </div>&nbsp;&nbsp;&nbsp;
-                  <div class="md-layout-item">
+                  <!-- <div class="md-layout-item">
                  <md-field md-clearable>
                       <label>Tipo Mantenimiento</label>
                       <md-select v-model="tpMto" md-dense>
@@ -152,8 +153,8 @@
                         >{{tipoM.name}}</md-option>
                       </md-select>
                     </md-field>
-                  </div>&nbsp;&nbsp;&nbsp;
-                  <div class="md-layout-item">
+                  </div>&nbsp;&nbsp;&nbsp; -->
+                  <!-- <div class="md-layout-item">
                  <md-field md-clearable>
                       <label>Frecuencia</label>
                       <md-select v-model="frec" md-dense >
@@ -164,32 +165,20 @@
                         >{{frec.name}}</md-option>
                       </md-select>
                     </md-field>
-                  </div>&nbsp;&nbsp;&nbsp;
-                  <div class="md-layout-item">
-                    <md-field md-clearable>
-                      <label>Tipo de Equipo</label>
-                      <md-select v-model="idTpEstacion" md-dense @input="getEstacion">
-                        <md-option
-                          v-for="(tpestacion,index) in arrayTpEstacion"
-                          :key="`tpestacion-${index}`"
-                          :value="tpestacion.id"
-                        >{{tpestacion.nombre}}</md-option>
-                      </md-select>
-                    </md-field>
-                  </div>&nbsp;&nbsp;&nbsp;
-                  <div class="md-layout-item">
-                    <md-field md-clearable>
-                      <label>Equipo</label>
-                      <md-select v-model="idEstacion" md-dense  @input="getNomEstacion">
-                        <md-option
-                          v-for="(estacion,index) in arrayEstacion"
-                          :key="`estacion-${index}`"
-                          :value="estacion.id"                        
-                        >{{estacion.nombre}}</md-option>
-                      </md-select>
-                    </md-field>
-                  </div>
+                  </div>&nbsp;&nbsp;&nbsp; -->
+ 
                 </div>
+                <div class="md-layout">
+                <span class="md-body text-muted">Selecciona una cruce especial</span>
+                <multiselect
+                  v-model="arrayP"                  
+                  :options="arrayPaso"
+                  placeholder="Selecciona un cruce especial"
+                  :custom-label="nameWithPaso"
+                  label="nombre"
+                  track-by="codigo"
+                ></multiselect>
+              </div>
                 <div class="md-layout"></div>
 
                 <md-button class="md-raised md-primary" @click="setDone('first', 'second')">Continue</md-button>
@@ -657,7 +646,7 @@
                   </tr>
                 </tbody>
               </table>
-            <div class="md-layout" md-clearable>
+              <div class="md-layout" md-clearable>
                   <md-field  >
                     <label>Observación del Mantenimiento</label>
                     <md-textarea v-model="descripcion"></md-textarea>
@@ -1291,7 +1280,7 @@ import {
   MdDatepicker,
   MdSteppers
 } from "vue-material/dist/components";
-
+import Multiselect from "vue-multiselect";
 Vue.use(MdButton);
 Vue.use(MdContent);
 Vue.use(MdField);
@@ -1301,12 +1290,12 @@ Vue.use(MdList);
 Vue.use(MdDatepicker);
 Vue.use(MdSteppers);
 
+
 import { required, minLength } from "vuelidate/lib/validators";
 import { MdAutocomplete } from 'vue-material/dist/components';
 
 export default {
   mixins: [validationMixin],
-
   data() {
     let dateFormat = this.$material.locale.dateFormat || "yyyy-MM-dd";
     let now = new Date();
@@ -1357,10 +1346,12 @@ export default {
 
       // array Mto Estacion
       
-      arrayTpMto: [{id: 1, name:"PREVENTIVO"},{id: 2 ,name:"CORRECTIVO"}],      
+           
       arrayFrec: [{id:0 ,name:"INMEDIATO"},{id:1 ,name:"1 MES"},{id:2 ,name:"2 MESES"},{id:3 ,name: "3 MESES"},{id:4 ,name:"4 MESES"},{id:6 ,name:"6 MESES"},{id:9 ,name:"9 MESES"},{id:12 ,name:"12 MESES"},{id:18 ,name:"18 MESES"},{id:24 ,name:"24 MESES"},{id:36 ,name:"36 MESES"}],
       arrayMtoPpal: [],
       arrayMtoByPass: [],
+      arrayPaso: [],
+      arrayP: {codigo:"",nombre:""},
       arrayAct: [],
       arrayIns: [],
       arrayMtoAct: [],
@@ -1408,7 +1399,8 @@ export default {
     };
   },
   components: {
-    vSelect
+    vSelect,
+    Multiselect  
   },
   validations: {
     form: {
@@ -1692,6 +1684,9 @@ export default {
         }
       }
       return sw;
+    },
+    nameWithPaso({ codigo, nombre }) {
+      return `${codigo} — [${nombre}]`;
     },
     setTecnico(id){
       swal({
@@ -1992,6 +1987,19 @@ export default {
           console.log(error);
         });
     },
+    getPaso() {
+      let me = this;
+      var url = "/fichapasoe/selectPasoE";
+      axios
+        .get(url)
+        .then(function(response) {
+          var respuesta = response.data;
+          me.arrayPaso = respuesta.fichapasoe;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
     // Traer equipos tren principal
     getExEtapa() {
       let me = this;
@@ -2282,11 +2290,11 @@ export default {
 
   mounted() {
     this.getPerso(1,this.buscar, this.criterio);
-    this.listarMto(1,this.buscar, this.criterio);
+    // this.listarMto(1,this.buscar, this.criterio);
     this.getTpEstacion();
-    // this.getEtapa();
-    this.listarEstacion(1, this.buscar, this.criterio);
-    this.listarExEtapa(1, this.buscar, this.criterio);
+    this.getPaso();
+    // this.listarEstacion(1, this.buscar, this.criterio);
+    // this.listarExEtapa(1, this.buscar, this.criterio);
   }
 };
 </script>

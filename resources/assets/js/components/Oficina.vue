@@ -175,7 +175,7 @@
                     </md-field>
                   </div>
                 </div>
-                <div class="md-layaut">
+                <div class="md-layout">
                   <!-- multiselect Ciudad -->
                   <div class="md-layout-item">
                     <span class="md-caption">Ciudad</span>

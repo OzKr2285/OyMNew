@@ -5,7 +5,8 @@
       <!-- Ejemplo de tabla Listado -->
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i> Gestión de Actividades
+          <i class="m-0 font-weight-bold text-primary fas fa-server"></i>
+          <strong class="lead">Gestión de Procedimientos</strong>
           <button
             type="button"
             @click="abrirModal('actividad','registrar')"
@@ -295,7 +296,8 @@ export default {
         { id: 1, nombre: "EQ-COMPUTO" },
         { id: 2, nombre: "EQ-TRABAJO" },
         { id: 3, nombre: "RED" },
-        { id: 4, nombre: "PASO ESPECIAL" }
+        { id: 4, nombre: "PASO ESPECIAL" },
+        { id: 5, nombre: "OPERACIÓN" }
       ],
       pagination: {
         total: 0,

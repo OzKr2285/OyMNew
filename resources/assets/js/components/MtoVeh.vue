@@ -5,7 +5,8 @@
       <!-- Ejemplo de tabla Listado -->
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i> Mantenimiento de Vehiculos.
+          <i class="m-0 font-weight-bold text-primary fas fa-car"></i>
+          <strong class="lead">Mantenimiento Vehículos</strong>
           <button
             type="button"
             @click="mostrarDetalle()"
@@ -86,7 +87,7 @@
                   </tr>
                 </tbody>
               </table>
-          <nav>
+            <nav>
             <ul class="pagination">
               <li class="page-item" v-if="pagination.current_page > 1">
                 <a
@@ -2032,6 +2033,65 @@ export default {
     },
     mensaje(tipo, crud) {
       swal(tipo, "El registro se " + crud + " con éxito.", "success");
+    },
+    myTable(datas){
+      let me = this;
+
+      $(document).ready(function() {
+      
+      var table = $('#dataTable').DataTable({destroy: true,
+      data:datas,
+               "createdRow": function( row, data, dataIndex){
+                if( data[6] ==  `0`){
+                    $(row).addClass('redClass');
+                }
+            },
+      "language": {
+                "lengthMenu": "Ver _MENU_ registros por página",
+                "zeroRecords": "NO existen Datos",
+                "info": "mostrando la página _PAGE_ de _PAGES_",
+                "infoEmpty": "No hay registros disponibles",
+                "search":         "Buscar:",
+                 "paginate": {
+                    "first":      "Prim",
+                    "last":       "Ant",
+                    "next":       "Sig",
+                    "previous":   "Ant"
+                },
+                "infoFiltered": "(filtrado de _MAX_ total registros)"
+            },
+                   responsive: "true",
+          "columns": [
+            { "data": "id_mto" },
+            { "data": "tpEquipo" },
+            { "data": "modelo" },
+            { "data": "serial" },
+            { "data": "obs" },
+            { "data": "fec_realiza" },
+            { "data": "fec_finaliza" },
+            { "data": "tp_mto" },
+            
+            { "data": "edo" },
+            // {"defaultContent": "<button class='btn'> <i class='fa fa-home'></i></button>"}
+            // {"defaultContent": "<button type='button' @click='hola() class='btn btn-success btn-sm' data-tooltip title='Actualizar' > <i class='icon-pencil'></i>  </button> "},
+            {"defaultContent": "<button type='button' id='editar' class='editar btn btn-success btn-sm' data-tooltip title='Actualizar' > <i class='fas fa-edit'></i>  </button> <button type='button'id='eliminar' class='eliminar btn btn-danger btn-sm' data-tooltip title='Eliminar' > <i class='fas fa-trash-alt'></i> </button>  "}
+            // {"defaultContent": "<button type='button' id='editar' class='editar btn btn-success btn-sm' data-tooltip title='Actualizar' > <i class='fas fa-edit'></i>  </button>"}
+            // {"defaultContent": " <button type='button' class='md-raised' @click='this.hola()'> Cerrar </button>"}
+        ]
+      
+        });
+
+          $('#dataTable tbody').on( 'click', '.editar', function () {
+                me.datos = table.row( $(this).parents('tr') ).data();
+                me.verMtoEs(me.datos);
+                    //  console.log(data['nombre']);
+            } );
+          $('#dataTable tbody').on( 'click', '.eliminar', function () {
+                me.datos= table.row( $(this).parents('tr') ).data();
+                me.eliminarMto(me.datos);
+                    //  console.log(data['modelo']);
+            } );
+    });   
     }
   },
 

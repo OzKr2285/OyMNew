@@ -347,13 +347,13 @@
                             <i class="fa fa-globe"></i>
                             <span class="menu-text">Act. de Operación</span>
                         </a>
-                        {{-- <div class="sidebar-submenu">
+                        <div class="sidebar-submenu">
                             <ul>
-                            <li @click="menu=40" >
-                                <a  href="#"><i class="icon-user-following"></i>PQR'S</a>
+                            <li @click="menu=87" >
+                                <a  href="#"><i class="icon-user-following"></i>Programación</a>
                             </li>
                             </ul>
-                        </div> --}}
+                        </div>
                         <li class="sidebar-dropdown">
                         <a href="#">
                             <i class="fa fa-globe"></i>

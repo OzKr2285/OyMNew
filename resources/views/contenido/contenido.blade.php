@@ -246,6 +246,10 @@
                 <reqinsumo></reqinsumo>
             </template>
    
+            <template v-if="menu==87">
+                <progopera></progopera>
+            </template>
+   
 
             <!-- Programacion  de Mantenimientos -->
             <template v-if="menu==20">

@@ -5,7 +5,7 @@
       <!-- Ejemplo de tabla Listado -->
       <div class="card">
         <div class="card-header">
-          <i class="m-0 font-weight-bold text-primary fas fa-charging-station"></i> 
+          <i class="m-0 font-weight-bold text-primary fas fa-briefcase"></i> 
           <strong class="lead">Mantenimiento Equipos de Trabajo.</strong >
        
         <!-- <md-button
@@ -69,52 +69,6 @@
                   </tr>
                 </thead>
                 <tbody>
-           
-                  <!-- <tr v-for="(objeto, index) in arrayDatos" :key="`objeto-${index}`">                                     
-                    <td v-text="objeto.id_mto"></td>
-                    <td v-text="objeto.tpEquipo"></td>
-                    <td v-text="objeto.modelo"></td>
-                    <td v-text="objeto.serial"></td>
-                    <td v-text="objeto.obs"></td>
-                    <td v-text="objeto.fec_realiza"></td>
-                    <td v-text="objeto.fec_finaliza"></td>
-                    <td>       
-                      <template v-if="objeto.tp_mto==1">
-                        <span class="badge badge-secondary">Preventivo</span>
-                      </template>
-                      <template v-else>
-                        <span class="badge badge-danger">Correctivo</span>
-                      </template>
-                    </td>
-                    <td>
-                      <template v-if="objeto.edo==0">
-                        <span class="badge badge-primary">Programado</span>
-                      </template>
-                      <template v-if="objeto.edo==1">
-                        <span class="badge badge-warning">En Ejecución</span>
-                      </template>
-                      <template v-if="objeto.edo==2">
-                        <span class="badge badge-success">Finalizado</span>
-                      </template>
-                      <template else v-if="objeto.edo==3">
-                        <span class="badge badge-dark">Reprogramado</span>
-                      </template>
-                    </td>
-                  
-                    <td>
-                      <md-button class="md-icon-button md-primary " @click="verMtoEs(objeto)" title="Ver Mantenimiento">
-                        <i class="material-icons Color2">visibility</i>
-                      </md-button> 
-       
-                      <md-button
-                        class="md-icon-button md-primary"
-                        @click="eliminarActE(objeto)"
-                        title="Eliminar"
-                      >
-                        <i class="material-icons Color4">delete</i>
-                      </md-button>
-                    </td>
-                  </tr> -->
                 </tbody>
                   <tfoot>
                     <tr>
